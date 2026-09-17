@@ -1,27 +1,17 @@
 /* Base Styling & Background */
 html {
     background-color: #ffffff;
-    padding: 2%;
 }
 body {
     font-family: "Fira Sans", sans-serif;
     font-weight: 400;
     font-style: normal;
-    text-align: left;
-}
-
-.subtitle {
-    text-align: center;
 }
 
 h1 {
     font-family: "DM Serif Display", serif;
     font-weight: 800;
     font-style: bold;
-}
-
-.main-title {
-    text-align: center;
 }
 
 h2 {
