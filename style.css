@@ -1,6 +1,7 @@
 /* Base Styling & Background */
 html {
     background-color: #ffffff;
+    padding: 2%;
 }
 body {
     font-family: "Fira Sans", sans-serif;
