@@ -13,3 +13,11 @@ body {
 html {
     padding: 2%;
 }
+
+.chart-container > div {
+    width: 100%;
+}
+
+.vega-embed {
+    width: 100%;
+}
