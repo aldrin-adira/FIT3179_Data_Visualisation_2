@@ -1,0 +1,52 @@
+"flagCode","country","PetOwnershipDogPopulation","PetOwnershipCatPopulation","PetOwnershipBirdPopulation"
+"US","United States",69929000,74059000,
+"CN","China",27400000,53100000,
+"RU","Russia",17643000,23262000,
+"GB","United Kingdom",12700000,11900000,1300000
+"JP","Japan",12000000,7300000,
+"PH","Philippines",11600000,,
+"DE","Germany",10600000,15200000,3500000
+"IN","India",10200000,,
+"ES","Spain",9313000,5860000,5082000
+"AR","Argentina",9200000,3000000,
+"IT","Italy",8755000,10228000,12883000
+"PL","Poland",8109000,7250000,1174000
+"FR","France",7600000,14900000,5800000
+"ZA","South Africa",7400000,2000000,
+"ET","Ethiopia",5000000,,
+"UA","Ukraine",4948000,7575000,773000
+"RO","Romania",4244000,4424000,296000
+"AU","Australia",3700000,2200000,
+"PT","Portugal",2840000,1957000,740000
+"HU","Hungary",2800000,2380000,411000
+"CZ","Czechia",2208000,1364000,68000
+"BE","Belgium",2029000,2536000,330000
+"NL","Netherlands",1830000,3010000,1408000
+"TR","Turkey",1409000,4737000,11840000
+"SE","Sweden",1051000,1715000,314000
+"SK","Slovakia",911000,541000,31000
+"LT","Lithuania",850000,638000,22000
+"AT","Austria",837000,1985000,128000
+"FI","Finland",797000,1002000,58000
+"BG","Bulgaria",752000,817000,44000
+"HR","Croatia",735500,434000,25000
+"GR","Greece",655000,606000,967000
+"DK","Denmark",643000,698000,210000
+"CH","Switzerland",544000,1853000,108000
+"IE","Ireland",520000,373000,96000
+"NO","Norway",500000,720000,195000
+"SI","Slovenia",299000,461000,41000
+"LV","Latvia",268000,407000,12000
+"EE","Estonia",243500,300400,10000
+"RS","Serbia",,,29000
+"BA","Bosnia and Herzegovina",,,11000
+"MD","Moldova",,,12000
+"AL","Albania",,,6000
+"MK","North Macedonia",,,5000
+"CY","Cyprus",,,87000
+"LU","Luxembourg",,,25000
+"ME","Montenegro",,,2000
+"MT","Malta",,,109000
+"IS","Iceland",,,10000
+"LI","Liechtenstein",,,1000
+,"Total",263063000,270792400,48163000
