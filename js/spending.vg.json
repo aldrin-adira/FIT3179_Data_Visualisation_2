@@ -619,9 +619,6 @@
       "zindex": 2,
       "encode": {
         "enter": {
-          "baseline": {
-            "value": "bottom"
-          },
           "lineHeight": {
             "value": 17
           },
@@ -640,16 +637,19 @@
         },
         "update": {
           "x": {
-            "signal": "narrow ? 8 : width - 8"
+            "signal": "includeFood && !narrow ? (scale('x', 884) + scale('x', 1090)) / 2 : narrow ? 8 : width - 8"
           },
           "y": {
-            "signal": "narrow ? plotHeight + 100 : plotHeight - 30"
+            "signal": "includeFood && !narrow ? scale('y', 'Food') + bandwidth('y') + 10 : narrow ? plotHeight + 100 : plotHeight - 30"
           },
           "align": {
-            "signal": "narrow ? 'left' : 'right'"
+            "signal": "includeFood && !narrow ? 'center' : narrow ? 'left' : 'right'"
           },
           "text": {
             "signal": "narrow ? (includeFood ? datum.foodShort : datum.noFoodShort) : (includeFood ? datum.food : datum.noFood)"
+          },
+          "baseline": {
+            "signal": "includeFood && !narrow ? 'top' : 'bottom'"
           }
         }
       }
