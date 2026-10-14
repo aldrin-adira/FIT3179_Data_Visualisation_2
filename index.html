@@ -38,22 +38,16 @@
                     <span class="section-number" aria-hidden="true">01</span>
                     <h2 id="section-1-title">A worldwide bond</h2>
                     <p class="section-question"><strong>How does Australia compare?</strong></p>
-                    <p class="section-body">Pet ownership connects households around the world. Begin by placing Australia alongside countries with comparable household ownership surveys.</p>
+                    <p class="section-body">Pet ownership connects households around the world. Begin by placing Australia alongside the 42 other countries with recent national surveys of how many households own a dog or a cat. Most are in Europe; the rest of the world has no comparable survey.</p>
                 </div>
-                <div class="pure-u-1 pure-u-md-2-3 chart-container">
-                    <div id="chart1_chart" class="chart-placeholder">
-                        <h3>World choropleth</h3>
-                        <p>Percentage of households owning pets in countries with comparable data.</p>
-                        <p><em>Planned visualisation — data to be verified.</em></p>
-                    </div>
-                </div>
-                <div class="pure-u-1 pure-u-md-1-3 chart-container">
-                    <div id="chart2_chart" class="chart-placeholder">
-                        <h3>Ranked dot plot</h3>
-                        <p>Australia highlighted among the countries covered.</p>
-                        <p><em>Planned visualisation — data to be verified.</em></p>
-                    </div>
-                </div>
+                <figure class="pure-u-1 chart-container chart-figure">
+                    <div id="chart1_chart"></div>
+                    <figcaption class="chart-source">Sources: European Pet Food Industry Federation, <em>Facts and Figures 2026</em> (40 European countries, mostly 2024 data); Animal Medicines Australia (2025); Companion Animals New Zealand (2024); United Kingdom Pet Food (2026); American Pet Products Association (2025, 2024 data). These are separate national surveys with different methods and years, so small differences between countries should not be over-read. Spain's published figure is held for review and not shown. Boundaries: Natural Earth (public domain).</figcaption>
+                </figure>
+                <figure class="pure-u-1 chart-container chart-figure">
+                    <div id="chart2_chart"></div>
+                    <figcaption class="chart-source">Sources as for the map above. Rankings compare separate national surveys with different methods and years (2024 to 2026), so countries a few points apart may not truly differ. Spain is not shown because its published figure is held for review. Hover over a dot for each country's survey year and source.</figcaption>
+                </figure>
                 <p class="pure-u-1 section-transition">From the international picture, we turn to how pet ownership in Australia has changed over time.</p>
             </section>
 
@@ -182,7 +176,13 @@
                     <p id="source-ama">
                         <strong>Animal Medicines Australia, Pets in Australia 2025:</strong>
                         National online survey by SEC Newgate Research of 2,450 adults (25 February – 10 March
-                        2025), weighted to Australian Bureau of Statistics Census data. Used in Sections 2–5.
+                        2025), weighted to Australian Bureau of Statistics Census data. Used in Sections 1–5.
+                    </p>
+                    <p id="source-international">
+                        <strong>International household surveys:</strong> European Pet Food Industry Federation,
+                        Facts and Figures 2026 (40 European countries, mostly 2024 data); Companion Animals New Zealand,
+                        2024 report; United Kingdom Pet Food, pet population 2026; American Pet Products Association,
+                        2025 report (2024 data). Separate national surveys with different methods. Used in Section 1.
                     </p>
                     <p id="source-daco">
                         <strong>Government of South Australia, Dogs and Cats Online data 2024–2025:</strong>
@@ -199,6 +199,16 @@
                     <p>
                         <strong>Animal Medicines Australia:</strong>
                         <a href="https://animalmedicinesaustralia.org.au/">https://animalmedicinesaustralia.org.au/</a><br>
+                        <strong>European Pet Food Industry Federation statistics:</strong>
+                        <a href="https://europeanpetfood.org/about/statistics/">https://europeanpetfood.org/about/statistics/</a><br>
+                        <strong>Companion Animals New Zealand, 2024 report:</strong>
+                        <a href="https://www.companionanimals.nz/2024-nz-pet-data-report">https://www.companionanimals.nz/2024-nz-pet-data-report</a><br>
+                        <strong>United Kingdom Pet Food, pet population:</strong>
+                        <a href="https://www.ukpetfood.org/industry-hub/data-statistics-/uk-pet-population-.html">https://www.ukpetfood.org/industry-hub/data-statistics-/uk-pet-population-.html</a><br>
+                        <strong>American Pet Products Association, 2025 report:</strong>
+                        <a href="https://americanpetproducts.org/news/the-american-pet-products-association-appa-releases-2025-state-of-the-industry-report-archive">https://americanpetproducts.org/news/the-american-pet-products-association-appa-releases-2025-state-of-the-industry-report-archive</a><br>
+                        <strong>Natural Earth (public domain boundaries):</strong>
+                        <a href="https://www.naturalearthdata.com/">https://www.naturalearthdata.com/</a><br>
                         <strong>Dogs and Cats Online data:</strong>
                         <a href="https://data.sa.gov.au/data/dataset/dogs-and-cats-online-data-2024-2025">https://data.sa.gov.au/data/dataset/dogs-and-cats-online-data-2024-2025</a><br>
                         <strong>Australian Bureau of Statistics, Regional population:</strong>
@@ -213,7 +223,7 @@
                 <div class="pure-u-1 pure-u-md-1-2 source-column">
                     <h3>Notes</h3>
                     <p>
-                        Sections 2 to 5 use estimates from a household survey, not counts. For the full sample the
+                        Sections 1 to 5 use estimates from household surveys, not counts. In Section 1, each country's figure comes from its own national survey, with different methods and years. For its full sample, the Animal Medicines Australia
                         report gives a maximum error margin of plus or minus 2.0 percentage points at the 95%
                         confidence level; the margin is larger for smaller groups, such as small mammal and
                         reptile owners. Percentages may not add to 100 because households can keep several types
