@@ -13,169 +13,192 @@
         <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
         <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
-        <script src="js/vega_lite_vis.js" defer></script>
+        <!-- Enable js/vega_lite_vis.js when the first pet ownership chart is ready. -->
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-        <title>Pet Ownership in Australia</title>
+        <title>A nation of companions | Pet ownership in Australia</title>
     </head>
     <body>
-        <div class="header">
+        <header class="header">
             <div class="main-title">
-                <h1>Pet Ownership in Australia</h1>
-                <p class="subtitle">Exploring the trends, economic costs, and welfare realities behind one of the world's highest pet-owning nations.</p>
+                <h1>A nation of companions</h1>
+                <p class="subtitle">Why Australians welcome pets into their homes.</p>
+                <p>From a worldwide bond to the animals sharing Australian homes, explore the appeal of companionship and the circumstances that shape pet ownership.</p>
             </div>
-        </div>
-        
-        <div class="sections">
-            <!-- Section 1 -->
-            <div class="pure-g section-1">
-                <!-- Title of section using 100% of the row size -->
-                <div class="pure-u-1 section-title">
-                    <h2>Section 1</h2>
-                    <p class="section-body">
-                        This section uses an asymmetrical layout. The first chart takes up two-thirds of the screen, while the second takes up one-third.
-                    </p>
-                </div>
-                
-                <!-- Chart 1 using 2/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-2-3 chart-container">
-                    <div id="chart1_chart"></div>
-                </div>
-                
-                <!-- Chart 2 using 1/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-1-3 chart-container">
-                    <div id="chart2_chart"></div>
-                </div>
-            </div>
+        </header>
 
-            <!-- Section 2 -->
-            <div class="pure-g section-2">
-                <!-- Title of section using 100% of the row size -->
+        <main class="sections">
+            <!-- Chart choices are provisional until the supporting datasets are verified. -->
+            <section class="pure-g section-1" aria-labelledby="section-1-title">
                 <div class="pure-u-1 section-title">
-                    <h2>Section 2</h2>
-                    <p class="section-body">
-                        This section uses an asymmetrical layout. The first chart takes up two-thirds of the screen, while the second takes up one-third.
-                    </p>
+                    <h2 id="section-1-title">A worldwide bond</h2>
+                    <p class="section-question"><strong>How does Australia compare?</strong></p>
+                    <p class="section-body">Pet ownership connects households around the world. Begin by placing Australia alongside countries with comparable household ownership surveys.</p>
                 </div>
-                
-                <!-- Chart 3 using 2/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-1-3 chart-container">
-                    <div id="chart3_chart"></div>
+                <div class="pure-u-1 pure-u-md-2-3 chart-container">
+                    <div id="chart1_chart" class="chart-placeholder">
+                        <h3>World choropleth</h3>
+                        <p>Percentage of households owning pets in countries with comparable data.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-                
-                <!-- Chart 4 using 1/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-2-3 chart-container">
-                    <div id="chart4_chart"></div>
+                <div class="pure-u-1 pure-u-md-1-3 chart-container">
+                    <div id="chart2_chart" class="chart-placeholder">
+                        <h3>Ranked dot plot</h3>
+                        <p>Australia highlighted among the countries covered.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-            </div>
+                <p class="pure-u-1 section-transition">From the international picture, we turn to how pet ownership in Australia has changed over time.</p>
+            </section>
 
-            <!-- Section 3 -->
-            <div class="pure-g section-3">
-                <!-- Title of section using 100% of the row size -->
+            <section class="pure-g section-2" aria-labelledby="section-2-title">
                 <div class="pure-u-1 section-title">
-                    <h2>Section 3</h2>
-                    <p class="section-body">
-                        This section uses an asymmetrical layout. The first chart takes up two-thirds of the screen, while the second takes up one-third.
-                    </p>
+                    <h2 id="section-2-title">More homes, more companions</h2>
+                    <p class="section-question"><strong>How has pet ownership changed over time?</strong></p>
+                    <p class="section-body">Explore both the proportion of Australian households with pets and the number of pet-owning households. Together, these measures help distinguish changing ownership rates from growth in the household population.</p>
                 </div>
-                
-                <!-- Chart 5 using 2/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-2-3 chart-container">
-                    <div id="chart5_chart"></div>
+                <div class="pure-u-1 pure-u-md-2-3 chart-container">
+                    <div id="chart3_chart" class="chart-placeholder">
+                        <h3>Line chart</h3>
+                        <p>Household pet ownership rates across available survey years.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-                
-                <!-- Chart 6 using 1/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-1-3 chart-container">
-                    <div id="chart6_chart"></div>
+                <div class="pure-u-1 pure-u-md-1-3 chart-container">
+                    <div id="chart4_chart" class="chart-placeholder">
+                        <h3>Slopegraph</h3>
+                        <p>Number of pet-owning households in 2016 and 2025, subject to source verification.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-            </div>
+                <p class="pure-u-1 section-transition">But owning a pet can mean very different kinds of companionship.</p>
+            </section>
 
-            <!-- Section 4 -->
-            <div class="pure-g section-4">
-                <!-- Title of section using 100% of the row size -->
+            <section class="pure-g section-3" aria-labelledby="section-3-title">
                 <div class="pure-u-1 section-title">
-                    <h2>Section 4</h2>
-                    <p class="section-body">
-                        This section uses an asymmetrical layout. The first chart takes up two-thirds of the screen, while the second takes up one-third.
-                    </p>
+                    <h2 id="section-3-title">Who shares our homes?</h2>
+                    <p class="section-question"><strong>Which animals do Australians keep?</strong></p>
+                    <p class="section-body">Compare dogs, cats, fish, birds and smaller companion animals through household ownership and the number of animals kept. Households may own several species, so their ownership percentages can overlap.</p>
                 </div>
-                
-                <!-- Chart 7 using 2/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-1-3 chart-container">
-                    <div id="chart7_chart"></div>
+                <div class="pure-u-1 pure-u-md-2-3 chart-container">
+                    <div id="chart5_chart" class="chart-placeholder">
+                        <h3>Ranked bar chart</h3>
+                        <p>Percentage of households owning each pet type.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-                
-                <!-- Chart 8 using 1/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-2-3 chart-container">
-                    <div id="chart8_chart"></div>
+                <div class="pure-u-1 pure-u-md-1-3 chart-container">
+                    <div id="chart6_chart" class="chart-placeholder">
+                        <h3>Dot plot</h3>
+                        <p>Average number of animals per household owning that pet type.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-            </div>
+                <p class="pure-u-1 section-transition">The next question is what people seek in a companion, and how that fits their circumstances.</p>
+            </section>
 
-            <!-- Section 5 -->
-            <div class="pure-g section-5">
-                <!-- Title of section using 100% of the row size -->
+            <section class="pure-g section-4" aria-labelledby="section-4-title">
                 <div class="pure-u-1 section-title">
-                    <h2>Section 5</h2>
-                    <p class="section-body">
-                        This section uses an asymmetrical layout. The first chart takes up two-thirds of the screen, while the second takes up one-third.
-                    </p>
+                    <h2 id="section-4-title">A companion that fits</h2>
+                    <p class="section-question"><strong>Why do Australians get pets, and what influences their choice?</strong></p>
+                    <p class="section-body">Explore reported motivations, including companionship and wellbeing, alongside differences between household groups. These comparisons describe associations; they do not establish what causes people to choose a particular pet.</p>
                 </div>
-                
-                <!-- Chart 9 using 2/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-2-3 chart-container">
-                    <div id="chart9_chart"></div>
+                <div class="pure-u-1 pure-u-md-2-3 chart-container">
+                    <div id="chart7_chart" class="chart-placeholder">
+                        <h3>Heatmap</h3>
+                        <p>Reported ownership motivations across pet species.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-                
-                <!-- Chart 10 using 1/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-1-3 chart-container">
-                    <div id="chart10_chart"></div>
+                <div class="pure-u-1 pure-u-md-1-3 chart-container">
+                    <div id="chart8_chart" class="chart-placeholder">
+                        <h3>Small-multiple dot plots</h3>
+                        <p>Ownership across age, household or housing groups supported by the data.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-            </div>
+                <p class="pure-u-1 section-transition">Finding a suitable companion also means being able to afford its care.</p>
+            </section>
 
-            <!-- Section 6 -->
-            <div class="pure-g section-6">
-                <!-- Title of section using 100% of the row size -->
+            <section class="pure-g section-5" aria-labelledby="section-5-title">
                 <div class="pure-u-1 section-title">
-                    <h2>Section 6</h2>
-                    <p class="section-body">
-                        This section uses an asymmetrical layout. The first chart takes up two-thirds of the screen, while the second takes up one-third.
-                    </p>
+                    <h2 id="section-5-title">The price of companionship</h2>
+                    <p class="section-question"><strong>What financial commitment accompanies different pets?</strong></p>
+                    <p class="section-body">Consider the household costs of caring for dogs and cats, alongside reported barriers to obtaining a pet. These measures bring the practical commitment of ownership into focus.</p>
                 </div>
-                
-                <!-- Chart 11 using 2/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-1-3 chart-container">
-                    <div id="chart11_chart"></div>
+                <div class="pure-u-1 pure-u-md-2-3 chart-container">
+                    <div id="chart9_chart" class="chart-placeholder">
+                        <h3>Dumbbell plot</h3>
+                        <p>Dog and cat household spending by expense category.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-                
-                <!-- Chart 12 using 1/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-2-3 chart-container">
-                    <div id="chart12_chart"></div>
+                <div class="pure-u-1 pure-u-md-1-3 chart-container">
+                    <div id="chart10_chart" class="chart-placeholder">
+                        <h3>Ranked bar chart</h3>
+                        <p>Documented barriers to obtaining a pet.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-            </div>
+                <p class="pure-u-1 section-transition">Those decisions take place in different local environments across Australia.</p>
+            </section>
 
-            <!-- Section 7 -->
-            <div class="pure-g section-7">
-                <!-- Title of section using 100% of the row size -->
+            <section class="pure-g section-6" aria-labelledby="section-6-title">
                 <div class="pure-u-1 section-title">
-                    <h2>Section 7</h2>
-                    <p class="section-body">
-                        This section uses an asymmetrical layout. The first chart takes up two-thirds of the screen, while the second takes up one-third.
-                    </p>
+                    <h2 id="section-6-title">One country, different local circumstances</h2>
+                    <p class="section-question"><strong>How does the picture change when we zoom into particular regions?</strong></p>
+                    <p class="section-body">Move from the national picture to council areas within a selected state. The state will depend on the availability of consistent registration data. Registrations measure recorded animals, and differences in compliance limit comparisons of ownership.</p>
                 </div>
-                
-                <!-- Chart 13 using 2/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-2-3 chart-container">
-                    <div id="chart13_chart"></div>
+                <div class="pure-u-1 pure-u-md-2-3 chart-container">
+                    <div id="chart11_chart" class="chart-placeholder">
+                        <h3>Paired choropleths</h3>
+                        <p>Registered dogs and cats per 1,000 households across council areas, pending suitable data.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-                
-                <!-- Chart 14 using 1/3rds of the row size on medium or larger screens -->
-                <div class="pure-u-md-1-3 chart-container">
-                    <div id="chart14_chart"></div>
+                <div class="pure-u-1 pure-u-md-1-3 chart-container">
+                    <div id="chart12_chart" class="chart-placeholder">
+                        <h3>Scatterplot</h3>
+                        <p>Registration rates and a local characteristic such as housing density, pending suitable data.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
                 </div>
-            </div>
-        </div>
+                <p class="pure-u-1 section-transition">Local differences sit within a shared national story of companionship and long-term care.</p>
+            </section>
+
+            <section class="pure-g section-7" aria-labelledby="section-7-title">
+                <div class="pure-u-1 section-title">
+                    <h2 id="section-7-title">A pet-loving nation</h2>
+                    <p class="section-question"><strong>What does Australia's enthusiasm for pets require of us?</strong></p>
+                    <p class="section-body">Bring together the evidence on ownership, motivations, costs and local circumstances to consider what makes lasting companionship possible.</p>
+                </div>
+                <div class="pure-u-1 pure-u-md-2-3 chart-container">
+                    <div id="chart13_chart" class="chart-placeholder">
+                        <h3>Closing comparison</h3>
+                        <p>A compact comparison of reported motivations and ownership barriers.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
+                </div>
+                <div class="pure-u-1 pure-u-md-1-3 chart-container">
+                    <div id="chart14_chart" class="chart-placeholder">
+                        <h3>Optional welfare indicator</h3>
+                        <p>One clearly sourced measure of welfare, if it strengthens the conclusion.</p>
+                        <p><em>Planned visualisation — data to be verified.</em></p>
+                    </div>
+                </div>
+                <p class="pure-u-1 section-transition">Australia's pet ownership story is about the value people place on companionship—and the conditions that make lasting companionship possible.</p>
+            </section>
+
+        </main>
+
+        <footer>
+            <h2>Sources and attribution</h2>
+            <p>This data story is in development. Source links, survey years, definitions and limitations will accompany each chart as its data is verified.</p>
+            <p>Created for FIT3179 Data Visualisation 2, Monash University. Author attribution and final data credits to be added.</p>
+        </footer>
     </body>
 </html>
