@@ -3,7 +3,7 @@
 
 /* 1. SETTINGS edit these to adjust the overall layout. */
 :root {
-    --page-width: 75rem;
+    --page-width: 95%;
     --page-gutter: clamp(1rem, 4vw, 3rem);
     --text-width: 70ch;
     --section-space: clamp(2.5rem, 6vw, 5rem);
