@@ -3,13 +3,16 @@
    Future Vega chart colours are configured separately in chart specifications.
    Sections: 1. Colours | 2. Type settings | 3. Base | 4. Story | 5. Charts */
 :root {
-    --color-page: #faf8f4;           /* Warm page background */
+    --color-page: #efe7da;           /* Page background */
     --color-surface: #ffffff;       /* Chart placeholder background */
-    --color-text: #303633;          /* Main body text */
-    --color-heading: #243c35;       /* Page and section headings */
+    --color-text: #000000;          /* Main body text */
+    --color-heading: #002626;       /* Page and section headings */
     --color-muted: #626963;         /* Supporting text and captions */
-    --color-accent: #356452;        /* Questions, links and keyboard focus */
+    --color-accent: #0e4749;        /* Questions, links and keyboard focus */
     --color-border: #d5dcd5;        /* Dividers and placeholder outlines */
+    --color-aus-orange: #e55812;    /* Orange like the Australian colors */
+    --color-dark: #4E1A0A;
+    --color-light: #F5DFD8;
 }
 
 /* 2. TYPOGRAPHY SETTINGS fonts are loaded in index.html. */
@@ -44,7 +47,13 @@ body {
     font-family: var(--font-body);
 }
 
-h1,
+h1 {
+    color: var(--color-aus-orange);
+    font-family: var(--font-heading);
+    font-weight: 400;
+    line-height: var(--line-height-heading);
+}
+
 h2 {
     color: var(--color-heading);
     font-family: var(--font-heading);
