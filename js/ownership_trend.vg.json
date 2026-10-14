@@ -1,0 +1,221 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Connected scatter plot of the share of Australian households with pets against the number of pet-owning households, Animal Medicines Australia surveys from 2016 to 2025. Based on the Vega connected scatter plot example.",
+  "height": 380,
+  "padding": 5,
+  "autosize": {"type": "fit-x", "contains": "padding"},
+
+  "title": {
+    "text": {"signal": "narrow ? ['More households own pets,', 'and a larger share of them do'] : 'More households own pets, and a larger share of them do'"},
+    "subtitle": {"signal": "narrow ? ['Each point is an Animal Medicines Australia', 'survey; follow the path from 2016 to 2025'] : 'Each point is an Animal Medicines Australia survey; follow the path from 2016 to 2025'"},
+    "anchor": "start",
+    "offset": 16,
+    "font": {"signal": "fontHeading"},
+    "fontSize": {"signal": "narrow ? 19 : 24"},
+    "fontWeight": 400,
+    "color": {"signal": "colorHeading"},
+    "subtitleFont": {"signal": "fontBody"},
+    "subtitleFontSize": 13,
+    "subtitleColor": {"signal": "colorMuted"},
+    "subtitlePadding": 6
+  },
+
+  "config": {
+    "axis": {
+      "domain": false,
+      "tickSize": 0,
+      "labelFontSize": 12,
+      "labelPadding": 6,
+      "titleFontSize": 13,
+      "titleFontWeight": 500
+    }
+  },
+
+  "signals": [
+    {"name": "colorNeutral", "value": "#512D22", "description": "Theme: replaced by --color-neutral from css/style.css."},
+    {"name": "colorAccent", "value": "#005a9c", "description": "Theme: replaced by --color-accent."},
+    {"name": "colorHeading", "value": "#0b2540", "description": "Theme: replaced by --color-heading."},
+    {"name": "colorMuted", "value": "#252725", "description": "Theme: replaced by --color-muted."},
+    {"name": "colorPage", "value": "#efe7da", "description": "Theme: replaced by --color-page."},
+    {"name": "colorSurface", "value": "#ffffff", "description": "Theme: replaced by --color-surface."},
+    {"name": "colorBorder", "value": "#d5dcd5", "description": "Theme: replaced by --color-border."},
+    {"name": "fontHeading", "value": "DM Serif Display", "description": "Theme: replaced by --font-heading."},
+    {"name": "fontBody", "value": "Fira Sans", "description": "Theme: replaced by --font-body."},
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "on": [{"events": "window:resize", "update": "containerSize()[0]"}]
+    },
+    {"name": "narrow", "update": "width < 560"}
+  ],
+
+  "data": [
+    {
+      "name": "trend",
+      "url": "data/selected/au_ownership_trend.csv",
+      "format": {"type": "csv", "parse": {"year": "number", "household_ownership_pct": "number", "pet_households_millions_rounded": "number", "sample_n": "number"}},
+      "transform": [
+        {"type": "formula", "as": "side", "expr": "datum.year === 2016 ? 'right' : datum.year === 2019 ? 'left' : datum.year === 2022 ? 'aboveleft' : 'above'"},
+        {"type": "formula", "as": "detail", "expr": "datum.household_ownership_pct + '% · ' + format(datum.pet_households_millions_rounded, '.1f') + ' million'"},
+        {"type": "formula", "as": "highlight", "expr": "datum.year === 2025"}
+      ]
+    },
+    {
+      "name": "note",
+      "values": [
+        {
+          "lines": [
+            "2016 to 2019: the rate dipped slightly,",
+            "but more homes meant more pet owners.",
+            "Since 2019, both have risen together."
+          ],
+          "short": [
+            "2016 to 2019: the rate dipped,",
+            "but more homes had pets."
+          ]
+        }
+      ]
+    }
+  ],
+
+  "scales": [
+    {"name": "x", "type": "linear", "domain": [58, 76], "range": "width", "zero": false},
+    {"name": "y", "type": "linear", "domain": {"signal": "narrow ? [4.9, 8.0] : [5.4, 8.0]"}, "range": "height", "zero": false},
+    {"name": "align", "type": "ordinal", "domain": ["left", "right", "above", "aboveleft"], "range": ["right", "left", "center", "right"]},
+    {"name": "baseline", "type": "ordinal", "domain": ["left", "right", "above", "aboveleft"], "range": ["middle", "middle", "bottom", "bottom"]},
+    {"name": "dx", "type": "ordinal", "domain": ["left", "right", "above", "aboveleft"], "range": [-10, 10, 0, 0]},
+    {"name": "dy", "type": "ordinal", "domain": ["left", "right", "above", "aboveleft"], "range": [-8, -8, -28, -28]}
+  ],
+
+  "axes": [
+    {
+      "orient": "bottom",
+      "scale": "x",
+      "tickCount": {"signal": "narrow ? 4 : 6"},
+      "grid": true,
+      "gridColor": {"signal": "colorBorder"},
+      "labelColor": {"signal": "colorMuted"},
+      "labelFont": {"signal": "fontBody"},
+      "title": "Households with at least one pet",
+      "titleColor": {"signal": "colorMuted"},
+      "titleFont": {"signal": "fontBody"},
+      "titlePadding": 10,
+      "encode": {"labels": {"update": {"text": {"signal": "datum.value + '%'"}}}}
+    },
+    {
+      "orient": "left",
+      "scale": "y",
+      "tickCount": 6,
+      "grid": true,
+      "gridColor": {"signal": "colorBorder"},
+      "labelColor": {"signal": "colorMuted"},
+      "labelFont": {"signal": "fontBody"},
+      "title": "Pet-owning households (millions)",
+      "titleColor": {"signal": "colorMuted"},
+      "titleFont": {"signal": "fontBody"},
+      "titlePadding": 10,
+      "encode": {"labels": {"update": {"text": {"signal": "format(datum.value, '.1f')"}}}}
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "line",
+      "from": {"data": "trend"},
+      "encode": {
+        "enter": {
+          "interpolate": {"value": "linear"},
+          "stroke": {"signal": "colorNeutral"},
+          "strokeWidth": {"value": 3},
+          "strokeCap": {"value": "round"}
+        },
+        "update": {
+          "x": {"scale": "x", "field": "household_ownership_pct"},
+          "y": {"scale": "y", "field": "pet_households_millions_rounded"}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "trend"},
+      "encode": {
+        "enter": {
+          "strokeWidth": {"value": 2.5},
+          "stroke": {"signal": "datum.highlight ? colorAccent : colorNeutral"},
+          "fill": {"signal": "datum.highlight ? colorAccent : colorSurface"},
+          "tooltip": {
+            "signal": "{'Survey year': datum.year, 'Households with pets': datum.household_ownership_pct + '%', 'Pet-owning households': format(datum.pet_households_millions_rounded, '.1f') + ' million (rounded)', 'Survey respondents': format(datum.sample_n, ',')}"
+          }
+        },
+        "hover": {"size": {"value": 200}},
+        "update": {
+          "size": {"value": 110},
+          "x": {"scale": "x", "field": "household_ownership_pct"},
+          "y": {"scale": "y", "field": "pet_households_millions_rounded"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "trend"},
+      "encode": {
+        "enter": {
+          "lineHeight": {"value": 16},
+          "fontSize": {"value": 12},
+          "font": {"signal": "fontBody"},
+          "fontWeight": {"signal": "datum.highlight ? 600 : 400"},
+          "fill": {"signal": "datum.highlight ? colorAccent : colorMuted"}
+        },
+        "update": {
+          "x": {"scale": "x", "field": "household_ownership_pct"},
+          "y": {"scale": "y", "field": "pet_households_millions_rounded"},
+          "dx": {"signal": "scale('dx', datum.side)"},
+          "dy": {"signal": "(narrow && !datum.highlight) ? (datum.side === 'aboveleft' ? -10 : 0) : scale('dy', datum.side)"},
+          "align": {"scale": "align", "field": "side"},
+          "baseline": {"signal": "(narrow && !datum.highlight) ? (datum.side === 'aboveleft' ? 'bottom' : 'middle') : scale('baseline', datum.side)"},
+          "text": {"signal": "(narrow && !datum.highlight) ? '' + datum.year : [datum.year, datum.detail]"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "name": "noteText",
+      "from": {"data": "note"},
+      "zindex": 2,
+      "encode": {
+        "enter": {
+          "baseline": {"value": "top"},
+          "align": {"value": "right"},
+          "lineHeight": {"value": 17},
+          "fontSize": {"value": 12},
+          "font": {"signal": "fontBody"},
+          "fontStyle": {"value": "italic"},
+          "fill": {"signal": "colorMuted"}
+        },
+        "update": {
+          "text": {"signal": "narrow ? datum.short : datum.lines"},
+          "x": {"signal": "scale('x', 75.7) - 10"},
+          "y": {"signal": "scale('y', narrow ? 5.4 : 6.0)"}
+        }
+      }
+    },
+    {
+      "description": "Plain background sized to the note text; no outline or shadow.",
+      "type": "rect",
+      "from": {"data": "noteText"},
+      "zindex": 1,
+      "encode": {
+        "enter": {
+          "fill": {"signal": "colorPage"},
+          "cornerRadius": {"value": 4}
+        },
+        "update": {
+          "x": {"signal": "datum.bounds.x1 - 8"},
+          "x2": {"signal": "datum.bounds.x2 + 8"},
+          "y": {"signal": "datum.bounds.y1 - 6"},
+          "y2": {"signal": "datum.bounds.y2 + 6"}
+        }
+      }
+    }
+  ]
+}

@@ -97,6 +97,17 @@ footer p {
     min-width: 0;
 }
 
+/* Embedded charts stack the chart above its source caption. */
+.chart-figure {
+    flex-direction: column;
+    margin: 0;
+    padding: var(--placeholder-padding);
+}
+
+.chart-source {
+    margin-top: 0.75rem;
+}
+
 /* Remove chart-placeholder when its real chart is embedded. */
 .chart-placeholder {
     min-height: var(--placeholder-height);

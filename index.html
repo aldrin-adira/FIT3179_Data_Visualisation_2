@@ -13,7 +13,7 @@
         <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
         <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
-        <!-- Enable js/vega_lite_vis.js when the first pet ownership chart is ready. -->
+        <script src="js/vega_lite_vis.js" defer></script>
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,20 +61,10 @@
                     <p class="section-question"><strong>How has pet ownership changed over time?</strong></p>
                     <p class="section-body">Explore both the proportion of Australian households with pets and the number of pet-owning households. Together, these measures help distinguish changing ownership rates from growth in the household population.</p>
                 </div>
-                <div class="pure-u-1 pure-u-md-2-3 chart-container">
-                    <div id="chart3_chart" class="chart-placeholder">
-                        <h3>Line chart</h3>
-                        <p>Household pet ownership rates across available survey years.</p>
-                        <p><em>Planned visualisation — data to be verified.</em></p>
-                    </div>
-                </div>
-                <div class="pure-u-1 pure-u-md-1-3 chart-container">
-                    <div id="chart4_chart" class="chart-placeholder">
-                        <h3>Slopegraph</h3>
-                        <p>Number of pet-owning households in 2016 and 2025, subject to source verification.</p>
-                        <p><em>Planned visualisation — data to be verified.</em></p>
-                    </div>
-                </div>
+                <figure class="pure-u-1 chart-container chart-figure">
+                    <div id="chart3_chart"></div>
+                    <figcaption class="chart-source">Source: Animal Medicines Australia, <em>Pets in Australia: A national survey of pets and people</em> (2025), page 6. Household counts are rounded estimates.</figcaption>
+                </figure>
                 <p class="pure-u-1 section-transition">But owning a pet can mean very different kinds of companionship.</p>
             </section>
 

@@ -1,43 +1,49 @@
-var chart_1 = "js/chart1_chart.vg.json";
-var chart_2 = "js/chart2_chart.vg.json";
-var chart_3 = "js/chart1_chart.vg.json";
-var chart_4 = "js/chart2_chart.vg.json";
-var chart_5 = "js/chart1_chart.vg.json";
-var chart_6 = "js/chart2_chart.vg.json";
-var chart_7 = "js/chart1_chart.vg.json";
-var chart_8 = "js/chart2_chart.vg.json";
-var chart_9 = "js/chart1_chart.vg.json";
-var chart_10 = "js/chart2_chart.vg.json";
-var chart_11 = "js/chart1_chart.vg.json";
-var chart_12 = "js/chart2_chart.vg.json";
-var chart_13 = "js/chart1_chart.vg.json";
-var chart_14 = "js/chart2_chart.vg.json";
+// Embed each finished chart into its container in index.html.
+// Add one embedChart line per chart as sections are completed.
+// SVG text picks up the web fonts once they finish loading.
+var embedOptions = {actions: false, renderer: "svg"};
 
-vegaEmbed("#chart1_chart", chart_1).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart2_chart", chart_2).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart3_chart", chart_3).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart4_chart", chart_4).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart5_chart", chart_5).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart6_chart", chart_6).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart7_chart", chart_7).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart8_chart", chart_8).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart9_chart", chart_9).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart10_chart", chart_10).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart11_chart", chart_11).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart12_chart", chart_12).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart13_chart", chart_13).then(function(result){
-}).catch(console.error);
-vegaEmbed("#chart14_chart", chart_14).then(function(result){
-}).catch(console.error);
+// Chart signals named here take their values from the CSS variables in
+// css/style.css, so the palette and fonts are only defined in one place.
+var themeSignals = {
+    colorNeutral: "--color-neutral",
+    colorAccent: "--color-accent",
+    colorHeading: "--color-heading",
+    colorMuted: "--color-muted",
+    colorDark: "--color-dark",
+    colorLight: "--color-light",
+    colorPage: "--color-page",
+    colorSurface: "--color-surface",
+    colorBorder: "--color-border",
+    fontHeading: "--font-heading",
+    fontBody: "--font-body"
+};
+
+function applyTheme(spec) {
+    var styles = getComputedStyle(document.documentElement);
+    (spec.signals || []).forEach(function (signal) {
+        var property = themeSignals[signal.name];
+        var value = property ? styles.getPropertyValue(property).trim() : "";
+        if (value) {
+            signal.value = value;
+        }
+    });
+    return spec;
+}
+
+// Re-measure labels after the web fonts load so charts are not clipped.
+function refitAfterFonts(result) {
+    document.fonts.ready.then(function () {
+        result.view.resize().runAsync();
+    });
+}
+
+function embedChart(container, specUrl) {
+    fetch(specUrl)
+        .then(function (response) { return response.json(); })
+        .then(function (spec) { return vegaEmbed(container, applyTheme(spec), embedOptions); })
+        .then(refitAfterFonts)
+        .catch(console.error);
+}
+
+embedChart("#chart3_chart", "js/ownership_trend.vg.json");
