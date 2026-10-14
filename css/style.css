@@ -117,17 +117,10 @@ footer {
 
 /* Decorative section number; hidden from screen readers in index.html. */
 .section-number {
-    color: var(--color-accent);
+    color: var(--color-muted);
     font-family: var(--font-heading);
     font-size: var(--text-subheading);
     line-height: 1;
-}
-
-@media (min-width: 48em) {
-    .section-number {
-        color: var(--color-border);
-        font-size: var(--text-section-number);
-    }
 }
 
 .section-transition {

@@ -130,7 +130,8 @@ footer p {
    Padding keeps the existing 2/3 + 1/3 widths within their row.
    CSS variables cannot be used in media-query conditions. */
 @media (min-width: 48em) {
-    .chart-container + .chart-container {
+    /* Gap only between charts sharing a row, not full-width charts stacked below. */
+    .chart-container[class*="pure-u-md-"] + .chart-container[class*="pure-u-md-"] {
         padding-left: var(--chart-gap);
     }
 

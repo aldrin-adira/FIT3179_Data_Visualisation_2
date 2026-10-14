@@ -1,0 +1,745 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Heatmap of the reasons Australian owners gave for getting each type of pet, Animal Medicines Australia survey 2025. Only each pet's top five reasons were published; other cells are hatched as not published.",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "title": {
+    "text": {
+      "signal": "narrow ? ['Companionship leads for', 'most pets, but not for', 'fish or reptiles'] : 'Companionship leads for most pets, but not for fish or reptiles'"
+    },
+    "subtitle": {
+      "signal": "narrow ? ['Share of owners giving each reason for', 'getting their pet, 2025'] : 'Share of owners giving each reason for getting their pet, 2025'"
+    },
+    "anchor": "start",
+    "offset": 16,
+    "font": {
+      "signal": "fontHeading"
+    },
+    "fontSize": {
+      "signal": "narrow ? 19 : 24"
+    },
+    "fontWeight": 400,
+    "color": {
+      "signal": "colorHeading"
+    },
+    "subtitleFont": {
+      "signal": "fontBody"
+    },
+    "subtitleFontSize": 13,
+    "subtitleColor": {
+      "signal": "colorMuted"
+    },
+    "subtitlePadding": 6
+  },
+  "config": {
+    "axis": {
+      "domain": false,
+      "ticks": false,
+      "grid": false,
+      "labelPadding": 8
+    }
+  },
+  "signals": [
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Theme: replaced by --color-muted from css/style.css."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Theme: replaced by --color-heading."
+    },
+    {
+      "name": "colorLight",
+      "value": "#F5DFD8",
+      "description": "Theme: replaced by --color-light (low values)."
+    },
+    {
+      "name": "colorDark",
+      "value": "#4E1A0A",
+      "description": "Theme: replaced by --color-dark (high values)."
+    },
+    {
+      "name": "colorBorder",
+      "value": "#a4adb8",
+      "description": "Theme: replaced by --color-border."
+    },
+    {
+      "name": "colorSurface",
+      "value": "#ffffff",
+      "description": "Theme: replaced by --color-surface."
+    },
+    {
+      "name": "colorPetDogs",
+      "value": "#9c6500",
+      "description": "Theme: replaced by --color-pet-dogs."
+    },
+    {
+      "name": "colorPetCats",
+      "value": "#7a376b",
+      "description": "Theme: replaced by --color-pet-cats."
+    },
+    {
+      "name": "colorPetFish",
+      "value": "#007f80",
+      "description": "Theme: replaced by --color-pet-fish."
+    },
+    {
+      "name": "colorPetBirds",
+      "value": "#1e6b2a",
+      "description": "Theme: replaced by --color-pet-birds."
+    },
+    {
+      "name": "colorPetSmallMammals",
+      "value": "#7759d1",
+      "description": "Theme: replaced by --color-pet-small-mammals."
+    },
+    {
+      "name": "colorPetReptiles",
+      "value": "#d6336c",
+      "description": "Theme: replaced by --color-pet-reptiles."
+    },
+    {
+      "name": "colorPetOther",
+      "value": "#555555",
+      "description": "Theme: replaced by --color-pet-other."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Theme: replaced by --font-heading."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Theme: replaced by --font-body."
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "on": [
+        {
+          "events": "window:resize",
+          "update": "containerSize()[0]"
+        }
+      ]
+    },
+    {
+      "name": "narrow",
+      "update": "width < 640"
+    },
+    {
+      "name": "labelWidth",
+      "update": "narrow ? 104 : 210"
+    },
+    {
+      "name": "rowHeight",
+      "update": "narrow ? 36 : 34"
+    },
+    {
+      "name": "gridHeight",
+      "update": "11 * rowHeight"
+    },
+    {
+      "name": "height",
+      "update": "gridHeight + (narrow ? 96 : 56)"
+    },
+    {
+      "name": "legendY",
+      "update": "gridHeight + 22"
+    }
+  ],
+  "data": [
+    {
+      "name": "published",
+      "url": "data/selected/au_motivations_top5_2025.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "percent": "number",
+          "sample_n": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "key",
+          "expr": "datum.species + '|' + datum.reason"
+        }
+      ]
+    },
+    {
+      "name": "owners",
+      "source": "published",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": [
+            "species"
+          ],
+          "fields": [
+            "sample_n"
+          ],
+          "ops": [
+            "max"
+          ],
+          "as": [
+            "sample_n"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "reasons",
+      "source": "published",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": [
+            "reason"
+          ],
+          "fields": [
+            "percent"
+          ],
+          "ops": [
+            "sum"
+          ],
+          "as": [
+            "total"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "label",
+          "expr": "{'Mental health': 'For mental health', 'Given/left to me': 'Given or left to me', 'Breed temperament': 'Breed has a good temperament', 'Rescue/give a home': 'Rescue or give a home', 'Breed size': 'Breed is a suitable size', 'Eggs': 'For their eggs'}[datum.reason] || datum.reason"
+        },
+        {
+          "type": "formula",
+          "as": "short_lines",
+          "expr": "{'Companionship': ['Companionship'], 'Mental health': ['For mental', 'health'], 'Relaxation': ['Relaxation'], 'Hobby': ['Hobby'], 'Lower maintenance': ['Lower', 'maintenance'], 'Given/left to me': ['Given or', 'left to me'], 'Breed temperament': ['Good breed', 'temperament'], 'Rescue/give a home': ['Rescue or', 'give a home'], 'Breed size': ['Breed is a', 'suitable size'], 'Eggs': ['For their eggs'], 'Companion for other pets': ['Companion for', 'other pets']}[datum.reason] || [datum.reason]"
+        },
+        {
+          "type": "formula",
+          "as": "pets",
+          "expr": "['Dogs', 'Cats', 'Fish', 'Birds', 'Small mammals', 'Reptiles']"
+        }
+      ]
+    },
+    {
+      "name": "cells",
+      "source": "reasons",
+      "transform": [
+        {
+          "type": "flatten",
+          "fields": [
+            "pets"
+          ],
+          "as": [
+            "species"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "key",
+          "expr": "datum.species + '|' + datum.reason"
+        },
+        {
+          "type": "lookup",
+          "from": "published",
+          "key": "key",
+          "fields": [
+            "key"
+          ],
+          "values": [
+            "percent"
+          ],
+          "as": [
+            "percent"
+          ],
+          "default": null
+        },
+        {
+          "type": "lookup",
+          "from": "owners",
+          "key": "species",
+          "fields": [
+            "species"
+          ],
+          "values": [
+            "sample_n"
+          ],
+          "as": [
+            "sample_n"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "published_cell",
+          "expr": "isValid(datum.percent)"
+        },
+        {
+          "type": "formula",
+          "as": "tooltip",
+          "expr": "datum.published_cell ? {'Type of pet': datum.species, 'Reason': datum.label, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',')} : {'Type of pet': datum.species, 'Reason': datum.label, 'Owners giving this reason': 'Not published: outside this pet\\'s top five reasons'}"
+        }
+      ]
+    },
+    {
+      "name": "hatchLines",
+      "source": "cells",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "!datum.published_cell"
+        },
+        {
+          "type": "formula",
+          "as": "offsets",
+          "expr": "sequence(4, 320, 8)"
+        },
+        {
+          "type": "flatten",
+          "fields": [
+            "offsets"
+          ],
+          "as": [
+            "offset"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "legendHatch",
+      "values": [
+        {}
+      ],
+      "transform": [
+        {
+          "type": "formula",
+          "as": "offsets",
+          "expr": "sequence(4, 60, 8)"
+        },
+        {
+          "type": "flatten",
+          "fields": [
+            "offsets"
+          ],
+          "as": [
+            "offset"
+          ]
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "band",
+      "domain": [
+        "Dogs",
+        "Cats",
+        "Fish",
+        "Birds",
+        "Small mammals",
+        "Reptiles"
+      ],
+      "range": [
+        {
+          "signal": "labelWidth"
+        },
+        {
+          "signal": "width"
+        }
+      ],
+      "paddingInner": 0.06
+    },
+    {
+      "name": "y",
+      "type": "band",
+      "domain": {
+        "data": "reasons",
+        "field": "reason",
+        "sort": {
+          "field": "total",
+          "op": "max",
+          "order": "descending"
+        }
+      },
+      "range": [
+        0,
+        {
+          "signal": "gridHeight"
+        }
+      ],
+      "paddingInner": 0.1
+    },
+    {
+      "name": "colour",
+      "type": "linear",
+      "domain": [
+        0,
+        60
+      ],
+      "range": {
+        "signal": "[colorLight, colorDark]"
+      },
+      "interpolate": "lab"
+    },
+    {
+      "name": "petColour",
+      "type": "ordinal",
+      "domain": [
+        "Dogs",
+        "Cats",
+        "Fish",
+        "Birds",
+        "Small mammals",
+        "Reptiles",
+        "Other pets"
+      ],
+      "range": {
+        "signal": "[colorPetDogs, colorPetCats, colorPetFish, colorPetBirds, colorPetSmallMammals, colorPetReptiles, colorPetOther]"
+      }
+    }
+  ],
+  "axes": [
+    {
+      "orient": "top",
+      "scale": "x",
+      "labelFont": {
+        "signal": "fontBody"
+      },
+      "labelFontSize": 13,
+      "labelFontWeight": 600,
+      "encode": {
+        "labels": {
+          "update": {
+            "fill": {
+              "scale": "petColour",
+              "field": "value"
+            },
+            "text": {
+              "signal": "datum.value"
+            },
+            "fontSize": {
+              "signal": "narrow ? 11 : 13"
+            },
+            "angle": {
+              "signal": "narrow ? -90 : 0"
+            },
+            "align": {
+              "signal": "narrow ? 'left' : 'center'"
+            },
+            "baseline": {
+              "signal": "narrow ? 'middle' : 'bottom'"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "description": "Reason labels for each row.",
+      "from": {
+        "data": "reasons"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "align": {
+            "value": "right"
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "labelWidth - 10"
+          },
+          "y": {
+            "scale": "y",
+            "field": "reason",
+            "band": 0.5
+          },
+          "text": {
+            "signal": "narrow ? datum.short_lines : datum.label"
+          },
+          "dy": {
+            "signal": "narrow && length(datum.short_lines) > 1 ? -6 : 0"
+          },
+          "lineHeight": {
+            "value": 13
+          },
+          "fontSize": {
+            "signal": "narrow ? 11 : 13"
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "description": "Published cells coloured by share of owners.",
+      "from": {
+        "data": "cells"
+      },
+      "encode": {
+        "enter": {
+          "tooltip": {
+            "signal": "datum.tooltip"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "x",
+            "field": "species"
+          },
+          "width": {
+            "scale": "x",
+            "band": 1
+          },
+          "y": {
+            "scale": "y",
+            "field": "reason"
+          },
+          "height": {
+            "scale": "y",
+            "band": 1
+          },
+          "fill": {
+            "signal": "datum.published_cell ? scale('colour', datum.percent) : colorSurface"
+          }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "description": "Diagonal hatching for unpublished cells, clipped to each cell.",
+      "from": {
+        "data": "hatchLines"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "stroke": {
+            "signal": "colorBorder"
+          },
+          "strokeWidth": {
+            "value": 1
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "scale('x', datum.species) + max(0, min(datum.offset, bandwidth('x') + bandwidth('y')) - bandwidth('y'))"
+          },
+          "y": {
+            "signal": "scale('y', datum.reason) + min(min(datum.offset, bandwidth('x') + bandwidth('y')), bandwidth('y'))"
+          },
+          "x2": {
+            "signal": "scale('x', datum.species) + min(min(datum.offset, bandwidth('x') + bandwidth('y')), bandwidth('x'))"
+          },
+          "y2": {
+            "signal": "scale('y', datum.reason) + max(0, min(datum.offset, bandwidth('x') + bandwidth('y')) - bandwidth('x'))"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "description": "Percentage in each published cell.",
+      "from": {
+        "data": "cells"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "align": {
+            "value": "center"
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "font": {
+            "signal": "fontBody"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "x",
+            "field": "species",
+            "band": 0.5
+          },
+          "y": {
+            "scale": "y",
+            "field": "reason",
+            "band": 0.5
+          },
+          "text": {
+            "signal": "datum.published_cell ? (narrow ? '' + datum.percent : datum.percent + '%') : ''"
+          },
+          "fontSize": {
+            "signal": "narrow ? 11 : 13"
+          },
+          "fontWeight": {
+            "value": 500
+          },
+          "fill": {
+            "signal": "datum.percent >= 30 ? colorSurface : colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "description": "Legend: colour gradient for published shares.",
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "labelWidth"
+          },
+          "y": {
+            "signal": "legendY + 18"
+          },
+          "width": {
+            "value": 150
+          },
+          "height": {
+            "value": 10
+          },
+          "fill": {
+            "signal": "{gradient: 'linear', stops: [{offset: 0, color: colorLight}, {offset: 1, color: colorDark}]}"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "labelWidth"
+          },
+          "y": {
+            "signal": "legendY"
+          },
+          "text": {
+            "value": "Share of owners: 0% to 60%"
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "description": "Legend: hatched swatch for unpublished cells.",
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "narrow ? labelWidth : labelWidth + 190"
+          },
+          "y": {
+            "signal": "narrow ? legendY + 50 : legendY + 2"
+          },
+          "width": {
+            "value": 26
+          },
+          "height": {
+            "value": 26
+          },
+          "fill": {
+            "signal": "colorSurface"
+          }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "from": {
+        "data": "legendHatch"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "stroke": {
+            "signal": "colorBorder"
+          },
+          "strokeWidth": {
+            "value": 1
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "(narrow ? labelWidth : labelWidth + 190) + max(0, datum.offset - 26)"
+          },
+          "y": {
+            "signal": "(narrow ? legendY + 50 : legendY + 2) + min(datum.offset, 26)"
+          },
+          "x2": {
+            "signal": "(narrow ? labelWidth : labelWidth + 190) + min(datum.offset, 26)"
+          },
+          "y2": {
+            "signal": "(narrow ? legendY + 50 : legendY + 2) + max(0, datum.offset - 26)"
+          },
+          "strokeOpacity": {
+            "signal": "datum.offset < 52 ? 1 : 0"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "baseline": {
+            "value": "middle"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "(narrow ? labelWidth : labelWidth + 190) + 34"
+          },
+          "y": {
+            "signal": "(narrow ? legendY + 50 : legendY + 2) + 13"
+          },
+          "text": {
+            "signal": "narrow ? ['Not published: outside', 'this pet\\'s top five'] : 'Not published: outside this pet\\'s top five reasons'"
+          }
+        }
+      }
+    }
+  ]
+}
