@@ -41,6 +41,11 @@
       "description": "Theme: replaced by --color-neutral from css/style.css."
     },
     {
+      "name": "colorAccent",
+      "value": "#005a9c",
+      "description": "Theme: replaced by --color-accent (highlighted row)."
+    },
+    {
       "name": "colorMuted",
       "value": "#252725",
       "description": "Theme: replaced by --color-muted."
@@ -107,7 +112,22 @@
     },
     {
       "name": "height",
-      "update": "gridHeight + (narrow ? 150 : 110)"
+      "update": "gridHeight + (narrow ? 205 : 110)"
+    },
+    {
+      "name": "highlightRow",
+      "value": "Household",
+      "description": "Row emphasised to match the annotation."
+    },
+    {
+      "name": "noteTop",
+      "update": "gridHeight + 56",
+      "description": "Top edge of the note background (note text y minus 6)."
+    },
+    {
+      "name": "leaderX",
+      "value": 180,
+      "description": "Desktop leader runs up through clear space left of the row labels."
     }
   ],
   "data": [
@@ -184,6 +204,12 @@
           "type": "formula",
           "as": "order",
           "expr": "indexof(['Housing', 'Tenure', 'Household', 'Income'], datum.dimension)"
+        },
+        {
+          "type": "formula",
+          "as": "low_lines",
+          "expr": "length(datum.low_label) > 30 ? [substring(datum.low_label, 0, lastindexof(substring(datum.low_label, 0, 26), ' ')), substring(datum.low_label, lastindexof(substring(datum.low_label, 0, 26), ' ') + 1) + ' ' + datum.low_pct + '%'] : [datum.low_label + ' ' + datum.low_pct + '%']",
+          "description": "Narrow screens: wraps long lower-group labels onto two lines."
         }
       ]
     },
@@ -192,16 +218,19 @@
       "values": [
         {
           "lines": [
-            "These groups overlap: for example, families with children are also",
-            "more likely to have a mortgage and live in a house. The differences",
-            "show who owns pets, not what causes people to own them."
+            "Household make-up: a 20-point gap. Families with children under 18 are also around twice as likely",
+            "to be planning to get a pet (67%) as couples without children (39%) or people living alone (36%).",
+            "The report does not give a reason, so this shows who owns pets, not what causes it."
           ],
           "short": [
-            "These groups overlap: families with",
-            "children are also more likely to have",
-            "a mortgage and live in a house. The",
-            "differences show who owns pets, not",
-            "what causes people to own them."
+            "Household make-up: a 20-point gap.",
+            "Families with children under 18 are",
+            "also around twice as likely to be",
+            "planning to get a pet (67%) as couples",
+            "without children (39%) or people",
+            "living alone (36%). The report gives",
+            "no reason, so this shows who owns",
+            "pets, not what causes it."
           ]
         }
       ]
@@ -438,9 +467,6 @@
               "font": {
                 "signal": "fontBody"
               },
-              "fill": {
-                "signal": "colorMuted"
-              },
               "text": {
                 "field": "dimension_label"
               }
@@ -451,6 +477,9 @@
               },
               "y": {
                 "signal": "datum.order * rowHeight + 4"
+              },
+              "fill": {
+                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
               }
             }
           }
@@ -463,12 +492,6 @@
           },
           "encode": {
             "enter": {
-              "stroke": {
-                "signal": "colorNeutral"
-              },
-              "strokeOpacity": {
-                "value": 0.35
-              },
               "strokeWidth": {
                 "value": 4
               }
@@ -484,6 +507,12 @@
               },
               "y": {
                 "signal": "datum.order * rowHeight + dotY"
+              },
+              "stroke": {
+                "signal": "datum.dimension === highlightRow ? colorAccent : colorNeutral"
+              },
+              "strokeOpacity": {
+                "signal": "datum.dimension === highlightRow ? 0.5 : 0.35"
               }
             }
           }
@@ -507,9 +536,6 @@
               },
               "font": {
                 "signal": "fontBody"
-              },
-              "fill": {
-                "signal": "colorMuted"
               }
             },
             "update": {
@@ -521,6 +547,12 @@
               },
               "text": {
                 "signal": "datum.gap + ' points'"
+              },
+              "fill": {
+                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
+              },
+              "fontWeight": {
+                "signal": "datum.dimension === highlightRow ? 600 : 400"
               }
             }
           },
@@ -568,9 +600,6 @@
           },
           "encode": {
             "enter": {
-              "fill": {
-                "signal": "colorNeutral"
-              },
               "tooltip": {
                 "signal": "{'Group': datum.high_label, 'Households owning a pet': datum.high_pct + '%', 'National rate': nationalRate + '%'}"
               }
@@ -585,6 +614,9 @@
               },
               "size": {
                 "value": 150
+              },
+              "fill": {
+                "signal": "datum.dimension === highlightRow ? colorAccent : colorNeutral"
               }
             }
           }
@@ -599,9 +631,6 @@
             "enter": {
               "fill": {
                 "signal": "colorSurface"
-              },
-              "stroke": {
-                "signal": "colorNeutral"
               },
               "strokeWidth": {
                 "value": 2.5
@@ -620,6 +649,9 @@
               },
               "size": {
                 "value": 130
+              },
+              "stroke": {
+                "signal": "datum.dimension === highlightRow ? colorAccent : colorNeutral"
               }
             }
           }
@@ -643,9 +675,6 @@
               },
               "font": {
                 "signal": "fontBody"
-              },
-              "fill": {
-                "signal": "colorMuted"
               }
             },
             "update": {
@@ -659,6 +688,12 @@
               },
               "text": {
                 "signal": "narrow ? '' : datum.high_label + ' ' + datum.high_pct + '%'"
+              },
+              "fill": {
+                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
+              },
+              "fontWeight": {
+                "signal": "datum.dimension === highlightRow ? 600 : 400"
               }
             }
           }
@@ -682,9 +717,6 @@
               },
               "font": {
                 "signal": "fontBody"
-              },
-              "fill": {
-                "signal": "colorMuted"
               }
             },
             "update": {
@@ -698,9 +730,16 @@
               },
               "text": {
                 "signal": "narrow ? '' : datum.low_label + ' ' + datum.low_pct + '%'"
+              },
+              "fill": {
+                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
+              },
+              "fontWeight": {
+                "signal": "datum.dimension === highlightRow ? 600 : 400"
               }
             }
-          }
+          },
+          "name": "lowLabel"
         },
         {
           "description": "Narrow screens: plain band behind each label list so gridlines and the national line stop at it.",
@@ -721,7 +760,7 @@
                 "signal": "datum.order * rowHeight + dotY + 15"
               },
               "y2": {
-                "signal": "datum.order * rowHeight + dotY + 57"
+                "signal": "datum.order * rowHeight + dotY + 70"
               },
               "fill": {
                 "signal": "narrow ? colorSurface : 'transparent'"
@@ -737,9 +776,6 @@
           },
           "encode": {
             "enter": {
-              "fill": {
-                "signal": "colorNeutral"
-              },
               "size": {
                 "value": 60
               }
@@ -753,6 +789,9 @@
               },
               "opacity": {
                 "signal": "narrow ? 1 : 0"
+              },
+              "fill": {
+                "signal": "datum.dimension === highlightRow ? colorAccent : colorNeutral"
               }
             }
           }
@@ -766,9 +805,6 @@
             "enter": {
               "fill": {
                 "signal": "colorSurface"
-              },
-              "stroke": {
-                "signal": "colorNeutral"
               },
               "strokeWidth": {
                 "value": 2
@@ -786,6 +822,9 @@
               },
               "opacity": {
                 "signal": "narrow ? 1 : 0"
+              },
+              "stroke": {
+                "signal": "datum.dimension === highlightRow ? colorAccent : colorNeutral"
               }
             }
           }
@@ -808,9 +847,6 @@
               },
               "font": {
                 "signal": "fontBody"
-              },
-              "fill": {
-                "signal": "colorMuted"
               }
             },
             "update": {
@@ -822,6 +858,12 @@
               },
               "text": {
                 "signal": "narrow ? datum.high_label + ' ' + datum.high_pct + '%' : ''"
+              },
+              "fill": {
+                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
+              },
+              "fontWeight": {
+                "signal": "datum.dimension === highlightRow ? 600 : 400"
               }
             }
           }
@@ -845,8 +887,8 @@
               "font": {
                 "signal": "fontBody"
               },
-              "fill": {
-                "signal": "colorMuted"
+              "lineHeight": {
+                "value": 14
               }
             },
             "update": {
@@ -857,7 +899,153 @@
                 "signal": "datum.order * rowHeight + dotY + 46"
               },
               "text": {
-                "signal": "narrow ? datum.low_label + ' ' + datum.low_pct + '%' : ''"
+                "signal": "narrow ? datum.low_lines : ''"
+              },
+              "fill": {
+                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
+              },
+              "fontWeight": {
+                "signal": "datum.dimension === highlightRow ? 600 : 400"
+              }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "description": "Desktop leader: vertical segment from the note up to the highlighted row.",
+          "from": {
+            "data": "lowLabel"
+          },
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "stroke": {
+                "signal": "colorMuted"
+              },
+              "strokeWidth": {
+                "value": 1
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "leaderX"
+              },
+              "y": {
+                "signal": "noteTop"
+              },
+              "x2": {
+                "signal": "leaderX"
+              },
+              "y2": {
+                "signal": "datum.y"
+              },
+              "strokeOpacity": {
+                "signal": "datum.datum.dimension === highlightRow && !narrow ? 1 : 0"
+              }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "description": "Desktop leader: horizontal segment ending just before the row label.",
+          "from": {
+            "data": "lowLabel"
+          },
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "stroke": {
+                "signal": "colorMuted"
+              },
+              "strokeWidth": {
+                "value": 1
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "leaderX"
+              },
+              "y": {
+                "signal": "datum.y"
+              },
+              "x2": {
+                "signal": "datum.bounds.x1 - 8"
+              },
+              "y2": {
+                "signal": "datum.y"
+              },
+              "strokeOpacity": {
+                "signal": "datum.datum.dimension === highlightRow && !narrow ? 1 : 0"
+              }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "description": "Narrow leader: vertical segment beside the higher dot.",
+          "from": {
+            "data": "pairs"
+          },
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "stroke": {
+                "signal": "colorMuted"
+              },
+              "strokeWidth": {
+                "value": 1
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "scale('x', 92)"
+              },
+              "y": {
+                "signal": "noteTop"
+              },
+              "x2": {
+                "signal": "scale('x', 92)"
+              },
+              "y2": {
+                "signal": "datum.order * rowHeight + dotY"
+              },
+              "strokeOpacity": {
+                "signal": "datum.dimension === highlightRow && narrow ? 1 : 0"
+              }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "description": "Narrow leader: horizontal segment to the higher dot.",
+          "from": {
+            "data": "pairs"
+          },
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "stroke": {
+                "signal": "colorMuted"
+              },
+              "strokeWidth": {
+                "value": 1
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "scale('x', 92)"
+              },
+              "x2": {
+                "signal": "scale('x', datum.high_pct) + 9"
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY"
+              },
+              "y2": {
+                "signal": "datum.order * rowHeight + dotY"
+              },
+              "strokeOpacity": {
+                "signal": "datum.dimension === highlightRow && narrow ? 1 : 0"
               }
             }
           }
@@ -926,10 +1114,10 @@
         },
         "update": {
           "x": {
-            "signal": "datum.bounds.x1 - 8"
+            "signal": "narrow ? 0 : datum.bounds.x1 - 8"
           },
           "x2": {
-            "signal": "datum.bounds.x2 + 8"
+            "signal": "narrow ? width : datum.bounds.x2 + 8"
           },
           "y": {
             "signal": "datum.bounds.y1 - 6"
