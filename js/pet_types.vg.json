@@ -1,0 +1,291 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Slopegraph comparing each pet type's share of Australian households with its share of all pet animals, Animal Medicines Australia survey 2025.",
+  "padding": 5,
+  "autosize": {"type": "fit-x", "contains": "padding"},
+
+  "title": {
+    "text": {"signal": "narrow ? ['Dogs live in the most homes,', 'but fish are the most numerous'] : 'Dogs live in the most homes, but fish are the most numerous'"},
+    "subtitle": {"signal": "narrow ? ['Each pet type as a share of Australian', 'households and as a share of all pet', 'animals, 2025'] : 'Each pet type as a share of Australian households and as a share of all pet animals, 2025'"},
+    "anchor": "start",
+    "offset": 36,
+    "font": {"signal": "fontHeading"},
+    "fontSize": {"signal": "narrow ? 19 : 24"},
+    "fontWeight": 400,
+    "color": {"signal": "colorHeading"},
+    "subtitleFont": {"signal": "fontBody"},
+    "subtitleFontSize": 13,
+    "subtitleColor": {"signal": "colorMuted"},
+    "subtitlePadding": 6
+  },
+
+  "signals": [
+    {"name": "colorMuted", "value": "#252725", "description": "Theme: replaced by --color-muted from css/style.css."},
+    {"name": "colorHeading", "value": "#0b2540", "description": "Theme: replaced by --color-heading."},
+    {"name": "colorPage", "value": "#dadfef", "description": "Theme: replaced by --color-page."},
+    {"name": "colorBorder", "value": "#a4adb8", "description": "Theme: replaced by --color-border."},
+    {"name": "colorSurface", "value": "#ffffff", "description": "Theme: replaced by --color-surface."},
+    {"name": "colorPetDogs", "value": "#9c6500", "description": "Theme: replaced by --color-pet-dogs."},
+    {"name": "colorPetCats", "value": "#7a376b", "description": "Theme: replaced by --color-pet-cats."},
+    {"name": "colorPetFish", "value": "#007f80", "description": "Theme: replaced by --color-pet-fish."},
+    {"name": "colorPetBirds", "value": "#1e6b2a", "description": "Theme: replaced by --color-pet-birds."},
+    {"name": "colorPetSmallMammals", "value": "#7759d1", "description": "Theme: replaced by --color-pet-small-mammals."},
+    {"name": "colorPetReptiles", "value": "#d6336c", "description": "Theme: replaced by --color-pet-reptiles."},
+    {"name": "colorPetOther", "value": "#555555", "description": "Theme: replaced by --color-pet-other."},
+    {"name": "fontHeading", "value": "DM Serif Display", "description": "Theme: replaced by --font-heading."},
+    {"name": "fontBody", "value": "Fira Sans", "description": "Theme: replaced by --font-body."},
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "on": [{"events": "window:resize", "update": "containerSize()[0]"}]
+    },
+    {"name": "narrow", "update": "width < 600"},
+    {"name": "plotHeight", "value": 400},
+    {"name": "height", "update": "narrow ? plotHeight + 90 : plotHeight"},
+    {"name": "leftX", "update": "narrow ? 48 : 150", "description": "Room for the household-side labels; on narrow screens these show values only."},
+    {"name": "rightX", "update": "width - (narrow ? 112 : 150)"}
+  ],
+
+  "data": [
+    {
+      "name": "pets",
+      "url": "data/selected/au_pet_types_2025.csv",
+      "format": {"type": "csv", "parse": {"household_ownership_pct": "number", "owning_households_thousands": "number", "animals_per_owning_household": "number", "animals_thousands": "number"}},
+      "transform": [
+        {"type": "joinaggregate", "fields": ["animals_thousands"], "ops": ["sum"], "as": ["all_animals_thousands"]},
+        {"type": "formula", "as": "animal_share_pct", "expr": "100 * datum.animals_thousands / datum.all_animals_thousands"},
+        {"type": "formula", "as": "emphasis", "expr": "datum.species === 'Fish'"},
+        {
+          "type": "formula",
+          "as": "left_label_pct",
+          "expr": "datum.species === 'Small mammals' ? 4.6 : datum.species === 'Reptiles' ? 2.4 : datum.species === 'Other pets' ? 0.2 : datum.household_ownership_pct",
+          "description": "Label positions only: spreads the three closely spaced small values so their labels do not overlap. Points and lines use the exact values."
+        },
+        {
+          "type": "formula",
+          "as": "right_label_pct",
+          "expr": "datum.species === 'Small mammals' ? 4.4 : datum.species === 'Other pets' ? 2.2 : datum.species === 'Reptiles' ? 0.0 : datum.animal_share_pct"
+        },
+        {
+          "type": "formula",
+          "as": "tooltip",
+          "expr": "{'Type of pet': datum.species, 'Share of households owning': format(datum.household_ownership_pct, '.1f') + '%', 'Share of all pet animals': format(datum.animal_share_pct, '.1f') + '%', 'Animals kept': format(datum.animals_thousands / 1000, '.2f') + ' million', 'Average animals per owning household': format(datum.animals_per_owning_household, '.1f')}"
+        }
+      ]
+    },
+    {
+      "name": "note",
+      "values": [
+        {
+          "lines": [
+            "Fish live in only 11.5% of homes,",
+            "but those homes keep about 10 each,",
+            "so fish are 38% of all pets."
+          ]
+        }
+      ]
+    }
+  ],
+
+  "scales": [
+    {"name": "y", "type": "linear", "domain": [0, 52], "range": [{"signal": "plotHeight"}, 0], "zero": true},
+    {
+      "name": "petColour",
+      "type": "ordinal",
+      "domain": ["Dogs", "Cats", "Fish", "Birds", "Small mammals", "Reptiles", "Other pets"],
+      "range": {"signal": "[colorPetDogs, colorPetCats, colorPetFish, colorPetBirds, colorPetSmallMammals, colorPetReptiles, colorPetOther]"}
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "rule",
+      "description": "Vertical rails for the two measures.",
+      "encode": {
+        "enter": {"stroke": {"signal": "colorBorder"}, "strokeWidth": {"value": 1}},
+        "update": {"x": {"signal": "leftX"}, "y": {"value": 0}, "y2": {"signal": "plotHeight"}}
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {"stroke": {"signal": "colorBorder"}, "strokeWidth": {"value": 1}},
+        "update": {"x": {"signal": "rightX"}, "y": {"value": 0}, "y2": {"signal": "plotHeight"}}
+      }
+    },
+    {
+      "type": "text",
+      "description": "Column headers.",
+      "encode": {
+        "enter": {
+          "align": {"value": "center"},
+          "baseline": {"value": "bottom"},
+          "fontSize": {"value": 13},
+          "fontWeight": {"value": 500},
+          "lineHeight": {"value": 16},
+          "font": {"signal": "fontBody"},
+          "fill": {"signal": "colorMuted"}
+        },
+        "update": {
+          "x": {"signal": "leftX"},
+          "y": {"signal": "narrow ? -26 : -10"},
+          "text": {"signal": "narrow ? ['Share of', 'households'] : 'Share of households'"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "align": {"value": "center"},
+          "baseline": {"value": "bottom"},
+          "fontSize": {"value": 13},
+          "fontWeight": {"value": 500},
+          "lineHeight": {"value": 16},
+          "font": {"signal": "fontBody"},
+          "fill": {"signal": "colorMuted"}
+        },
+        "update": {
+          "x": {"signal": "rightX"},
+          "y": {"signal": "narrow ? -26 : -10"},
+          "text": {"signal": "narrow ? ['Share of all', 'pet animals'] : 'Share of all pet animals'"}
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "description": "One slope line per pet type.",
+      "from": {"data": "pets"},
+      "encode": {
+        "enter": {
+          "stroke": {"scale": "petColour", "field": "species"},
+          "strokeWidth": {"signal": "datum.emphasis ? 4.5 : 2.5"},
+          "strokeCap": {"value": "round"},
+          "tooltip": {"signal": "datum.tooltip"}
+        },
+        "update": {
+          "x": {"signal": "leftX"},
+          "y": {"scale": "y", "field": "household_ownership_pct"},
+          "x2": {"signal": "rightX"},
+          "y2": {"scale": "y", "field": "animal_share_pct"}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "description": "End points on the household side.",
+      "from": {"data": "pets"},
+      "encode": {
+        "enter": {
+          "fill": {"scale": "petColour", "field": "species"},
+          "stroke": {"signal": "colorSurface"},
+          "strokeWidth": {"value": 1.5},
+          "tooltip": {"signal": "datum.tooltip"}
+        },
+        "update": {
+          "x": {"signal": "leftX"},
+          "y": {"scale": "y", "field": "household_ownership_pct"},
+          "size": {"signal": "datum.emphasis ? 120 : 70"}
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "description": "End points on the animal side.",
+      "from": {"data": "pets"},
+      "encode": {
+        "enter": {
+          "fill": {"scale": "petColour", "field": "species"},
+          "stroke": {"signal": "colorSurface"},
+          "strokeWidth": {"value": 1.5},
+          "tooltip": {"signal": "datum.tooltip"}
+        },
+        "update": {
+          "x": {"signal": "rightX"},
+          "y": {"scale": "y", "field": "animal_share_pct"},
+          "size": {"signal": "datum.emphasis ? 120 : 70"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "description": "Labels on the household side.",
+      "from": {"data": "pets"},
+      "encode": {
+        "enter": {
+          "align": {"value": "right"},
+          "baseline": {"value": "middle"},
+          "font": {"signal": "fontBody"},
+          "fontWeight": {"signal": "datum.emphasis ? 600 : 400"},
+          "fill": {"scale": "petColour", "field": "species"}
+        },
+        "update": {
+          "x": {"signal": "leftX - 10"},
+          "y": {"scale": "y", "field": "left_label_pct"},
+          "fontSize": {"signal": "narrow ? 11 : 13"},
+          "text": {"signal": "narrow ? format(datum.household_ownership_pct, '.1f') + '%' : datum.species + ' ' + format(datum.household_ownership_pct, '.1f') + '%'"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "description": "Labels on the animal side.",
+      "from": {"data": "pets"},
+      "encode": {
+        "enter": {
+          "align": {"value": "left"},
+          "baseline": {"value": "middle"},
+          "font": {"signal": "fontBody"},
+          "fontWeight": {"signal": "datum.emphasis ? 600 : 400"},
+          "fill": {"scale": "petColour", "field": "species"}
+        },
+        "update": {
+          "x": {"signal": "rightX + 10"},
+          "y": {"scale": "y", "field": "right_label_pct"},
+          "fontSize": {"signal": "narrow ? 11 : 13"},
+          "text": {"signal": "format(datum.animal_share_pct, '.1f') + '% ' + datum.species"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "name": "noteText",
+      "from": {"data": "note"},
+      "zindex": 2,
+      "encode": {
+        "enter": {
+          "baseline": {"value": "top"},
+          "lineHeight": {"value": 17},
+          "fontSize": {"value": 12},
+          "font": {"signal": "fontBody"},
+          "fontStyle": {"value": "italic"},
+          "fill": {"signal": "colorMuted"},
+          "text": {"field": "lines"}
+        },
+        "update": {
+          "x": {"signal": "narrow ? width / 2 : rightX - 22"},
+          "y": {"signal": "narrow ? plotHeight + 24 : scale('y', 49)"},
+          "align": {"signal": "narrow ? 'center' : 'right'"}
+        }
+      }
+    },
+    {
+      "description": "Plain background sized to the note text; no outline or shadow.",
+      "type": "rect",
+      "from": {"data": "noteText"},
+      "zindex": 1,
+      "encode": {
+        "enter": {
+          "fill": {"signal": "colorPage"},
+          "cornerRadius": {"value": 4}
+        },
+        "update": {
+          "x": {"signal": "datum.bounds.x1 - 8"},
+          "x2": {"signal": "datum.bounds.x2 + 8"},
+          "y": {"signal": "datum.bounds.y1 - 6"},
+          "y2": {"signal": "datum.bounds.y2 + 6"}
+        }
+      }
+    }
+  ]
+}

@@ -15,6 +15,13 @@ var themeSignals = {
     colorPage: "--color-page",
     colorSurface: "--color-surface",
     colorBorder: "--color-border",
+    colorPetDogs: "--color-pet-dogs",
+    colorPetCats: "--color-pet-cats",
+    colorPetFish: "--color-pet-fish",
+    colorPetBirds: "--color-pet-birds",
+    colorPetSmallMammals: "--color-pet-small-mammals",
+    colorPetReptiles: "--color-pet-reptiles",
+    colorPetOther: "--color-pet-other",
     fontHeading: "--font-heading",
     fontBody: "--font-body"
 };
@@ -47,3 +54,4 @@ function embedChart(container, specUrl) {
 }
 
 embedChart("#chart3_chart", "js/ownership_trend.vg.json");
+embedChart("#chart5_chart", "js/pet_types.vg.json");

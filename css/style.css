@@ -11,11 +11,23 @@
     --color-heading: #0b2540;       /* Page, section and chart headings */
     --color-muted: #252725;         /* Supporting text, captions and chart labels */
     --color-accent: #005a9c;        /* Questions, links, keyboard focus and chart highlights */
-    --color-border: #0b2540;        /* Dividers, placeholder outlines and chart gridlines */
+    --color-border: #a4adb8;        /* Dividers, placeholder outlines and chart gridlines */
     --color-aus-orange: #e55812;    /* Orange like the Australian colors */
     --color-dark: #4E1A0A;          /* Chart sequential scale: high values */
     --color-light: #F5DFD8;         /* Chart sequential scale: low values */
     --color-neutral: #512D22;       /* Chart marks without a colour encoding */
+
+    /* Pet type colours: one fixed hue per pet in every chart that colours by pet type.
+       Chosen to avoid the blue and red-brown groups above, with at least 4.5:1
+       contrast on white so they also work as label text. Always label pet types
+       directly as well, because no seven-colour set is fully colour-blind safe. */
+    --color-pet-dogs: #9c6500;          /* Amber */
+    --color-pet-cats: #7a376b;          /* Plum */
+    --color-pet-fish: #007f80;          /* Teal */
+    --color-pet-birds: #1e6b2a;         /* Green */
+    --color-pet-small-mammals: #7759d1; /* Violet */
+    --color-pet-reptiles: #d6336c;      /* Raspberry */
+    --color-pet-other: #555555;         /* Grey */
 }
 
 /* 2. TYPOGRAPHY SETTINGS fonts are loaded in index.html. */
