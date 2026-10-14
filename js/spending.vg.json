@@ -14,7 +14,7 @@
       "signal": "narrow ? ['Average spending per pet-owning household', 'per year, Australian dollars, 2025'] : 'Average spending per pet-owning household per year, by category, Australian dollars, 2025'"
     },
     "anchor": "start",
-    "offset": 34,
+    "offset": 16,
     "font": {
       "signal": "fontHeading"
     },
@@ -126,12 +126,22 @@
     },
     {
       "name": "height",
-      "update": "plotHeight + (narrow ? 118 : 50)"
+      "update": "plotHeight + (narrow ? 150 : 82)"
     },
     {
       "name": "colorSurface",
       "value": "#ffffff",
       "description": "Theme: replaced by --color-surface."
+    },
+    {
+      "name": "legendY",
+      "update": "plotHeight + 62",
+      "description": "Legend sits below the x-axis title."
+    },
+    {
+      "name": "legendX",
+      "update": "(scale('x', 0) + width - (narrow ? 50 : 56)) / 2 - 40",
+      "description": "Left edge of the legend, centred under the axis."
     }
   ],
   "data": [
@@ -375,7 +385,7 @@
       "marks": [
         {
           "type": "text",
-          "description": "Legend above the plot, coloured by pet.",
+          "description": "Legend below the x-axis title, coloured by pet.",
           "from": {
             "data": "legend"
           },
@@ -403,10 +413,10 @@
             },
             "update": {
               "x": {
-                "signal": "scale('x', 0) - 8 + 14 + datum.order * 70"
+                "signal": "legendX + 14 + datum.order * 70"
               },
               "y": {
-                "value": -16
+                "signal": "legendY"
               }
             }
           }
@@ -428,10 +438,10 @@
             },
             "update": {
               "x": {
-                "signal": "scale('x', 0) - 8 + 4 + datum.order * 70"
+                "signal": "legendX + 4 + datum.order * 70"
               },
               "y": {
-                "value": -16
+                "signal": "legendY"
               }
             }
           }
@@ -640,7 +650,7 @@
             "signal": "includeFood && !narrow ? (scale('x', 884) + scale('x', 1090)) / 2 : narrow ? 8 : width - 8"
           },
           "y": {
-            "signal": "includeFood && !narrow ? scale('y', 'Food') + bandwidth('y') + 10 : narrow ? plotHeight + 100 : plotHeight - 30"
+            "signal": "includeFood && !narrow ? scale('y', 'Food') + bandwidth('y') + 10 : narrow ? plotHeight + 132 : plotHeight - 30"
           },
           "align": {
             "signal": "includeFood && !narrow ? 'center' : narrow ? 'left' : 'right'"
