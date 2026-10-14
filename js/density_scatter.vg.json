@@ -1,0 +1,696 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Scatterplot of dogs and cats recorded at home per 1,000 residents against population density for 68 South Australian councils, 2025, with a logarithmic trend line for each species.",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "title": {
+    "text": {
+      "signal": "narrow ? ['The denser the council, the fewer', 'dogs per resident; cats barely', 'change'] : 'The denser the council, the fewer dogs per resident; cats barely change'"
+    },
+    "subtitle": {
+      "signal": "narrow ? ['Animals recorded at home per 1,000 residents', 'against population density, 68 South', 'Australian councils, 2025'] : 'Animals recorded at home per 1,000 residents against population density, 68 South Australian councils, 2025'"
+    },
+    "anchor": "start",
+    "offset": 16,
+    "font": {
+      "signal": "fontHeading"
+    },
+    "fontSize": {
+      "signal": "narrow ? 19 : 24"
+    },
+    "fontWeight": 400,
+    "color": {
+      "signal": "colorHeading"
+    },
+    "subtitleFont": {
+      "signal": "fontBody"
+    },
+    "subtitleFontSize": 13,
+    "subtitleColor": {
+      "signal": "colorMuted"
+    },
+    "subtitlePadding": 6
+  },
+  "signals": [
+    {
+      "name": "colorPetDogs",
+      "value": "#9c6500",
+      "description": "Theme: replaced by --color-pet-dogs."
+    },
+    {
+      "name": "colorPetCats",
+      "value": "#7a376b",
+      "description": "Theme: replaced by --color-pet-cats."
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Theme: replaced by --color-muted."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Theme: replaced by --color-heading."
+    },
+    {
+      "name": "colorBorder",
+      "value": "#a4adb8",
+      "description": "Theme: replaced by --color-border."
+    },
+    {
+      "name": "colorSurface",
+      "value": "#ffffff",
+      "description": "Theme: replaced by --color-surface."
+    },
+    {
+      "name": "colorPage",
+      "value": "#dadfef",
+      "description": "Theme: replaced by --color-page."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Theme: replaced by --font-heading."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Theme: replaced by --font-body."
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "on": [
+        {
+          "events": "window:resize",
+          "update": "containerSize()[0]"
+        }
+      ]
+    },
+    {
+      "name": "narrow",
+      "update": "width < 700"
+    },
+    {
+      "name": "plotHeight",
+      "update": "narrow ? 330 : 400"
+    },
+    {
+      "name": "height",
+      "update": "plotHeight + (narrow ? 190 : 60)"
+    },
+    {
+      "name": "plotRight",
+      "update": "width - (narrow ? 44 : 56)",
+      "description": "Room on the right for the species labels at the end of each trend line."
+    },
+    {
+      "name": "hoverCode",
+      "value": null,
+      "on": [
+        {
+          "events": "symbol:mouseover",
+          "update": "datum.code"
+        },
+        {
+          "events": "symbol:mouseout",
+          "update": "null"
+        }
+      ],
+      "description": "Council under the pointer: both its dog and cat points are enlarged."
+    }
+  ],
+  "data": [
+    {
+      "name": "points",
+      "url": "data/selected/sa_council_animals_per_1000_residents_2025.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "recorded_animals_per_1000_residents": "number",
+          "population_density_per_km2": "number",
+          "recorded_at_home_animals": "number",
+          "residents_2025": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "code",
+          "expr": "'' + datum.lga_code_2025"
+        },
+        {
+          "type": "formula",
+          "as": "pet",
+          "expr": "datum.species === 'Dog' ? 'Dogs' : 'Cats'"
+        },
+        {
+          "type": "formula",
+          "as": "rate",
+          "expr": "datum.recorded_animals_per_1000_residents"
+        },
+        {
+          "type": "formula",
+          "as": "density",
+          "expr": "datum.population_density_per_km2"
+        },
+        {
+          "type": "formula",
+          "as": "name",
+          "expr": "replace(datum.lga_name_2025, ' (SA)', '')"
+        },
+        {
+          "type": "formula",
+          "as": "tooltip",
+          "expr": "{'title': datum.name, 'Pet': datum.pet, 'Recorded at home': format(datum.recorded_at_home_animals, ',') + ' (' + format(datum.rate, '.0f') + ' per 1,000 residents)', 'Population density': format(datum.density, datum.density < 10 ? '.1f' : ',.0f') + ' people per square kilometre'}"
+        }
+      ]
+    },
+    {
+      "name": "trend",
+      "source": "points",
+      "transform": [
+        {
+          "type": "regression",
+          "groupby": [
+            "pet"
+          ],
+          "method": "log",
+          "x": "density",
+          "y": "rate",
+          "extent": [
+            0.15,
+            3100
+          ],
+          "as": [
+            "density",
+            "rate"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "trendEnds",
+      "source": "trend",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": [
+            "pet"
+          ],
+          "fields": [
+            "density",
+            "rate"
+          ],
+          "ops": [
+            "argmax",
+            "argmax"
+          ],
+          "as": [
+            "end",
+            "unused"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "density",
+          "expr": "datum.end.density"
+        },
+        {
+          "type": "formula",
+          "as": "rate",
+          "expr": "datum.end.rate"
+        }
+      ]
+    },
+    {
+      "name": "callouts",
+      "source": "points",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.species === 'Dog' && (datum.name === 'Adelaide' || datum.name === 'Adelaide Plains')"
+        },
+        {
+          "type": "formula",
+          "as": "text",
+          "expr": "datum.name === 'Adelaide' ? 'City of Adelaide: ' + format(datum.rate, '.0f') + ' dogs' : 'Adelaide Plains: ' + format(datum.rate, '.0f') + ' dogs'"
+        }
+      ]
+    },
+    {
+      "name": "note",
+      "values": [
+        {
+          "lines": [
+            "Each tenfold rise in density goes with about 47 fewer dogs",
+            "per 1,000 residents, but only about 3 fewer cats. This is an",
+            "association: denser areas also have more apartments, and",
+            "records depend on how many owners register their pets."
+          ],
+          "short": [
+            "Each tenfold rise in density goes with",
+            "about 47 fewer dogs per 1,000 residents,",
+            "but only about 3 fewer cats. This is an",
+            "association: denser areas also have more",
+            "apartments, and records depend on how",
+            "many owners register their pets."
+          ]
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "log",
+      "domain": [
+        0.1,
+        5000
+      ],
+      "range": [
+        0,
+        {
+          "signal": "plotRight"
+        }
+      ],
+      "nice": false
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": [
+        0,
+        520
+      ],
+      "range": [
+        {
+          "signal": "plotHeight"
+        },
+        0
+      ],
+      "nice": false
+    },
+    {
+      "name": "petColour",
+      "type": "ordinal",
+      "domain": [
+        "Dogs",
+        "Cats"
+      ],
+      "range": {
+        "signal": "[colorPetDogs, colorPetCats]"
+      }
+    }
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "description": "Plot area with axes.",
+      "encode": {
+        "update": {
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "value": 0
+          },
+          "width": {
+            "signal": "width"
+          },
+          "height": {
+            "signal": "plotHeight"
+          }
+        }
+      },
+      "axes": [
+        {
+          "orient": "bottom",
+          "scale": "x",
+          "values": [
+            0.1,
+            1,
+            10,
+            100,
+            1000
+          ],
+          "grid": true,
+          "gridColor": {
+            "signal": "colorBorder"
+          },
+          "gridOpacity": 0.45,
+          "domain": false,
+          "ticks": false,
+          "labelPadding": 8,
+          "labelColor": {
+            "signal": "colorMuted"
+          },
+          "labelFont": {
+            "signal": "fontBody"
+          },
+          "labelFontSize": 12,
+          "title": {
+            "signal": "narrow ? 'People per square kilometre (log scale)' : 'Population density: people per square kilometre (each step is ten times denser)'"
+          },
+          "titleColor": {
+            "signal": "colorMuted"
+          },
+          "titleFont": {
+            "signal": "fontBody"
+          },
+          "titleFontSize": 13,
+          "titleFontWeight": 500,
+          "titlePadding": 8,
+          "encode": {
+            "labels": {
+              "update": {
+                "text": {
+                  "signal": "format(datum.value, ',')"
+                }
+              }
+            }
+          }
+        },
+        {
+          "orient": "left",
+          "scale": "y",
+          "values": [
+            0,
+            100,
+            200,
+            300,
+            400,
+            500
+          ],
+          "grid": true,
+          "gridColor": {
+            "signal": "colorBorder"
+          },
+          "gridOpacity": 0.45,
+          "domain": false,
+          "ticks": false,
+          "labelPadding": 6,
+          "labelColor": {
+            "signal": "colorMuted"
+          },
+          "labelFont": {
+            "signal": "fontBody"
+          },
+          "labelFontSize": 12,
+          "title": "Recorded per 1,000 residents",
+          "titleColor": {
+            "signal": "colorMuted"
+          },
+          "titleFont": {
+            "signal": "fontBody"
+          },
+          "titleFontSize": 13,
+          "titleFontWeight": 500,
+          "titlePadding": 8
+        }
+      ],
+      "marks": [
+        {
+          "type": "symbol",
+          "description": "One point per council and pet.",
+          "from": {
+            "data": "points"
+          },
+          "encode": {
+            "enter": {
+              "tooltip": {
+                "signal": "datum.tooltip"
+              },
+              "stroke": {
+                "signal": "colorSurface"
+              },
+              "strokeWidth": {
+                "value": 0.8
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "density"
+              },
+              "y": {
+                "scale": "y",
+                "field": "rate"
+              },
+              "fill": {
+                "scale": "petColour",
+                "field": "pet"
+              },
+              "size": {
+                "signal": "hoverCode === datum.code ? 160 : (narrow ? 34 : 48)"
+              },
+              "fillOpacity": {
+                "signal": "hoverCode === null || hoverCode === datum.code ? 0.8 : 0.3"
+              },
+              "zindex": {
+                "signal": "hoverCode === datum.code ? 1 : 0"
+              }
+            }
+          }
+        },
+        {
+          "type": "group",
+          "from": {
+            "facet": {
+              "name": "trendLine",
+              "data": "trend",
+              "groupby": "pet"
+            }
+          },
+          "marks": [
+            {
+              "type": "line",
+              "description": "Logarithmic trend line for each pet (straight on the log scale).",
+              "from": {
+                "data": "trendLine"
+              },
+              "interactive": false,
+              "encode": {
+                "update": {
+                  "x": {
+                    "scale": "x",
+                    "field": "density"
+                  },
+                  "y": {
+                    "scale": "y",
+                    "field": "rate"
+                  },
+                  "stroke": {
+                    "scale": "petColour",
+                    "field": "pet"
+                  },
+                  "strokeWidth": {
+                    "value": 3
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "description": "Species labels at the right end of each trend line, in place of a legend.",
+          "from": {
+            "data": "trendEnds"
+          },
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "baseline": {
+                "value": "middle"
+              },
+              "fontSize": {
+                "value": 14
+              },
+              "fontWeight": {
+                "value": 600
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "density",
+                "offset": 8
+              },
+              "y": {
+                "scale": "y",
+                "field": "rate"
+              },
+              "text": {
+                "field": "pet"
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "scale": "petColour",
+                "field": "pet"
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "description": "Callouts for the highest and lowest dog rates; the City of Adelaide label sits in clear space with a leader.",
+          "from": {
+            "data": "callouts"
+          },
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "fontSize": {
+                "value": 12
+              },
+              "baseline": {
+                "value": "middle"
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "datum.name === 'Adelaide' ? scale('x', 60) : scale('x', datum.density) + 10"
+              },
+              "y": {
+                "signal": "datum.name === 'Adelaide' ? scale('y', 14) : scale('y', datum.rate)"
+              },
+              "align": {
+                "value": "left"
+              },
+              "text": {
+                "field": "text"
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              },
+              "opacity": {
+                "signal": "narrow && datum.name === 'Adelaide' ? 0 : 1"
+              }
+            }
+          },
+          "name": "calloutText"
+        },
+        {
+          "type": "rule",
+          "description": "Leader from the City of Adelaide label to its point.",
+          "from": {
+            "data": "calloutText"
+          },
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "stroke": {
+                "signal": "colorMuted"
+              },
+              "strokeWidth": {
+                "value": 1
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "datum.bounds.x2 + 4"
+              },
+              "y": {
+                "signal": "datum.y"
+              },
+              "x2": {
+                "signal": "scale('x', datum.datum.density) - 4"
+              },
+              "y2": {
+                "signal": "scale('y', datum.datum.rate) + 3"
+              },
+              "strokeOpacity": {
+                "signal": "datum.datum.name === 'Adelaide' && !narrow ? 1 : 0"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "noteText",
+      "from": {
+        "data": "note"
+      },
+      "zindex": 2,
+      "encode": {
+        "enter": {
+          "baseline": {
+            "value": "top"
+          },
+          "lineHeight": {
+            "value": 17
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fontStyle": {
+            "value": "italic"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "narrow ? 8 : plotRight - 8"
+          },
+          "y": {
+            "signal": "narrow ? plotHeight + 76 : 10"
+          },
+          "align": {
+            "signal": "narrow ? 'left' : 'right'"
+          },
+          "text": {
+            "signal": "narrow ? datum.short : datum.lines"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "description": "Plain background sized to the note text; no outline or shadow.",
+      "type": "rect",
+      "from": {
+        "data": "noteText"
+      },
+      "zindex": 1,
+      "encode": {
+        "enter": {
+          "cornerRadius": {
+            "value": 4
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "datum.bounds.x1 - 8"
+          },
+          "x2": {
+            "signal": "datum.bounds.x2 + 8"
+          },
+          "y": {
+            "signal": "datum.bounds.y1 - 6"
+          },
+          "y2": {
+            "signal": "datum.bounds.y2 + 6"
+          },
+          "fill": {
+            "signal": "colorPage"
+          }
+        }
+      }
+    }
+  ]
+}
