@@ -168,6 +168,28 @@ footer a {
     font-size: var(--text-small);
 }
 
+/* Chart controls created by Vega signal bindings (for example "Include food"). */
+.vega-bindings {
+    color: var(--color-muted);
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    margin-top: 0.75rem;
+}
+
+.vega-bind label {
+    align-items: center;
+    cursor: pointer;
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: 0.5rem;
+}
+
+.vega-bind input[type="checkbox"] {
+    accent-color: var(--color-accent);
+    height: 1.1rem;
+    width: 1.1rem;
+}
+
 /* CHART PLACEHOLDERS */
 .chart-placeholder {
     background-color: var(--color-surface);

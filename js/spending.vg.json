@@ -1,0 +1,690 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Dumbbell chart comparing average yearly household spending on dogs and cats by category (dog walking left out because there is no cat figure), Animal Medicines Australia survey 2025. A checkbox removes food so the smaller categories can be compared.",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "title": {
+    "text": {
+      "signal": "narrow ? ['Dogs cost more than cats in', 'almost every category'] : 'Dogs cost more than cats in almost every category'"
+    },
+    "subtitle": {
+      "signal": "narrow ? ['Average spending per pet-owning household', 'per year, Australian dollars, 2025'] : 'Average spending per pet-owning household per year, by category, Australian dollars, 2025'"
+    },
+    "anchor": "start",
+    "offset": 34,
+    "font": {
+      "signal": "fontHeading"
+    },
+    "fontSize": {
+      "signal": "narrow ? 19 : 24"
+    },
+    "fontWeight": 400,
+    "color": {
+      "signal": "colorHeading"
+    },
+    "subtitleFont": {
+      "signal": "fontBody"
+    },
+    "subtitleFontSize": 13,
+    "subtitleColor": {
+      "signal": "colorMuted"
+    },
+    "subtitlePadding": 6
+  },
+  "signals": [
+    {
+      "name": "colorNeutral",
+      "value": "#512D22",
+      "description": "Theme: replaced by --color-neutral from css/style.css."
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Theme: replaced by --color-muted."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Theme: replaced by --color-heading."
+    },
+    {
+      "name": "colorBorder",
+      "value": "#a4adb8",
+      "description": "Theme: replaced by --color-border."
+    },
+    {
+      "name": "colorPage",
+      "value": "#dadfef",
+      "description": "Theme: replaced by --color-page."
+    },
+    {
+      "name": "colorPetDogs",
+      "value": "#9c6500",
+      "description": "Theme: replaced by --color-pet-dogs."
+    },
+    {
+      "name": "colorPetCats",
+      "value": "#7a376b",
+      "description": "Theme: replaced by --color-pet-cats."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Theme: replaced by --font-heading."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Theme: replaced by --font-body."
+    },
+    {
+      "name": "includeFood",
+      "value": true,
+      "bind": {
+        "input": "checkbox",
+        "name": "Include food (untick to compare the smaller costs)"
+      }
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "on": [
+        {
+          "events": "window:resize",
+          "update": "containerSize()[0]"
+        }
+      ]
+    },
+    {
+      "name": "narrow",
+      "update": "width < 700"
+    },
+    {
+      "name": "labelWidth",
+      "update": "narrow ? 0 : 250",
+      "description": "Desktop: column for category names; narrow screens put names above each row."
+    },
+    {
+      "name": "rowHeight",
+      "update": "narrow ? 44 : 28"
+    },
+    {
+      "name": "dotBand",
+      "update": "narrow ? 0.72 : 0.5",
+      "description": "Vertical position of the dumbbell within its row."
+    },
+    {
+      "name": "rowCount",
+      "update": "includeFood ? 14 : 13"
+    },
+    {
+      "name": "plotHeight",
+      "update": "rowCount * rowHeight"
+    },
+    {
+      "name": "height",
+      "update": "plotHeight + (narrow ? 118 : 50)"
+    },
+    {
+      "name": "colorSurface",
+      "value": "#ffffff",
+      "description": "Theme: replaced by --color-surface."
+    }
+  ],
+  "data": [
+    {
+      "name": "spending",
+      "url": "data/selected/au_household_spending_2025.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "annual_aud": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "pivot",
+          "field": "species",
+          "value": "annual_aud",
+          "groupby": [
+            "category"
+          ],
+          "op": "max"
+        },
+        {
+          "type": "formula",
+          "as": "label",
+          "expr": "{'Veterinary_services': 'Veterinary services', 'Products_or_accessories': 'Products or accessories', 'Pet_insurance': 'Pet insurance', 'Flea_worming_tick_treatments': 'Flea, worming and tick treatments', 'Dietary_supplements': 'Dietary supplements', 'Clipping_grooming': 'Clipping and grooming', 'Training_behaviour_therapy': 'Training, behaviour and therapy', 'Competitions_memberships': 'Competitions and memberships', 'Veterinary_medicines': 'Veterinary medicines', 'Alternative_healthcare_treatments': 'Alternative healthcare treatments', 'Boarding_minding': 'Boarding and minding', 'Anything_else': 'Anything else'}[datum.category] || datum.category"
+        },
+        {
+          "type": "formula",
+          "as": "lines",
+          "expr": "length(datum.label) > 20 ? [substring(datum.label, 0, lastindexof(substring(datum.label, 0, 21), ' ')), substring(datum.label, lastindexof(substring(datum.label, 0, 21), ' ') + 1)] : [datum.label]",
+          "description": "Narrow screens: long category names wrap onto two lines."
+        },
+        {
+          "type": "formula",
+          "as": "cat_reported",
+          "expr": "isValid(datum.Cats)"
+        },
+        {
+          "type": "formula",
+          "as": "high",
+          "expr": "datum.cat_reported ? max(datum.Dogs, datum.Cats) : datum.Dogs"
+        },
+        {
+          "type": "formula",
+          "as": "low",
+          "expr": "datum.cat_reported ? min(datum.Dogs, datum.Cats) : datum.Dogs"
+        },
+        {
+          "type": "formula",
+          "as": "tooltip",
+          "expr": "{'Category': datum.label, 'Dog-owning households': '$' + format(datum.Dogs, ',') + ' a year', 'Cat-owning households': datum.cat_reported ? '$' + format(datum.Cats, ',') + ' a year' : 'Not reported'}"
+        },
+        {
+          "type": "filter",
+          "expr": "includeFood || datum.category !== 'Food'"
+        },
+        {
+          "type": "filter",
+          "expr": "datum.category !== 'Walking'",
+          "description": "Dog walking has no cat figure, so it is left out of the comparison (mentioned in the caption)."
+        }
+      ]
+    },
+    {
+      "name": "dots",
+      "source": "spending",
+      "transform": [
+        {
+          "type": "fold",
+          "fields": [
+            "Dogs",
+            "Cats"
+          ],
+          "as": [
+            "species",
+            "amount"
+          ]
+        },
+        {
+          "type": "filter",
+          "expr": "isValid(datum.amount)"
+        },
+        {
+          "type": "formula",
+          "as": "is_high",
+          "expr": "datum.amount === datum.high && (datum.species === 'Dogs' || datum.amount !== datum.low)"
+        }
+      ]
+    },
+    {
+      "name": "legend",
+      "values": [
+        {
+          "species": "Dogs",
+          "order": 0
+        },
+        {
+          "species": "Cats",
+          "order": 1
+        }
+      ]
+    },
+    {
+      "name": "note",
+      "values": [
+        {
+          "food": [
+            "Food is the largest cost: 43% of dog",
+            "spending and 53% of cat spending."
+          ],
+          "noFood": [
+            "Without food, dogs still cost more in every",
+            "category except \"anything else\" ($1 versus $2)."
+          ],
+          "foodShort": [
+            "Food is the largest cost: 43% of dog spending",
+            "and 53% of cat spending."
+          ],
+          "noFoodShort": [
+            "Without food, dogs still cost more in every",
+            "category except \"anything else\" ($1 versus $2)."
+          ]
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "y",
+      "type": "band",
+      "domain": {
+        "data": "spending",
+        "field": "category",
+        "sort": {
+          "field": "Dogs",
+          "op": "max",
+          "order": "descending"
+        }
+      },
+      "range": [
+        0,
+        {
+          "signal": "plotHeight"
+        }
+      ],
+      "paddingInner": 0.12,
+      "paddingOuter": 0.1
+    },
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": {
+        "signal": "includeFood ? [0, 1150] : [0, 180]"
+      },
+      "range": [
+        {
+          "signal": "labelWidth + (narrow ? 36 : 44)"
+        },
+        {
+          "signal": "width - (narrow ? 50 : 56)"
+        }
+      ],
+      "zero": true
+    },
+    {
+      "name": "petColour",
+      "type": "ordinal",
+      "domain": [
+        "Dogs",
+        "Cats"
+      ],
+      "range": {
+        "signal": "[colorPetDogs, colorPetCats]"
+      }
+    }
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "description": "Plot area: rows, dots and axis.",
+      "encode": {
+        "update": {
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "value": 0
+          },
+          "width": {
+            "signal": "width"
+          },
+          "height": {
+            "signal": "plotHeight"
+          }
+        }
+      },
+      "axes": [
+        {
+          "orient": "bottom",
+          "scale": "x",
+          "tickCount": {
+            "signal": "narrow ? 3 : 6"
+          },
+          "grid": true,
+          "gridColor": {
+            "signal": "colorBorder"
+          },
+          "gridOpacity": 0.45,
+          "domain": false,
+          "ticks": false,
+          "labelPadding": 8,
+          "labelColor": {
+            "signal": "colorMuted"
+          },
+          "labelFont": {
+            "signal": "fontBody"
+          },
+          "labelFontSize": 12,
+          "title": "Average spending per household per year",
+          "titleColor": {
+            "signal": "colorMuted"
+          },
+          "titleFont": {
+            "signal": "fontBody"
+          },
+          "titleFontSize": 13,
+          "titleFontWeight": 500,
+          "titlePadding": 8,
+          "encode": {
+            "labels": {
+              "update": {
+                "text": {
+                  "signal": "'$' + format(datum.value, ',')"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "marks": [
+        {
+          "type": "text",
+          "description": "Legend above the plot, coloured by pet.",
+          "from": {
+            "data": "legend"
+          },
+          "encode": {
+            "enter": {
+              "baseline": {
+                "value": "middle"
+              },
+              "fontSize": {
+                "value": 13
+              },
+              "fontWeight": {
+                "value": 600
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "text": {
+                "field": "species"
+              },
+              "fill": {
+                "scale": "petColour",
+                "field": "species"
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "scale('x', 0) - 8 + 14 + datum.order * 70"
+              },
+              "y": {
+                "value": -16
+              }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "from": {
+            "data": "legend"
+          },
+          "encode": {
+            "enter": {
+              "size": {
+                "value": 90
+              },
+              "fill": {
+                "scale": "petColour",
+                "field": "species"
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "scale('x', 0) - 8 + 4 + datum.order * 70"
+              },
+              "y": {
+                "value": -16
+              }
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "description": "Narrow screens: plain band behind each category name so gridlines stop at it.",
+          "from": {
+            "data": "spending"
+          },
+          "interactive": false,
+          "encode": {
+            "update": {
+              "x": {
+                "value": 0
+              },
+              "x2": {
+                "signal": "width"
+              },
+              "y": {
+                "signal": "scale('y', datum.category)"
+              },
+              "y2": {
+                "signal": "scale('y', datum.category) + 17"
+              },
+              "fill": {
+                "signal": "narrow ? colorSurface : 'transparent'"
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "description": "Category names.",
+          "from": {
+            "data": "spending"
+          },
+          "encode": {
+            "enter": {
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              },
+              "lineHeight": {
+                "value": 13
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "narrow ? 0 : labelWidth - 14"
+              },
+              "y": {
+                "signal": "narrow ? scale('y', datum.category) + 2 : scale('y', datum.category) + bandwidth('y') / 2"
+              },
+              "text": {
+                "signal": "datum.label"
+              },
+              "fontSize": {
+                "signal": "narrow ? 12 : 13"
+              },
+              "align": {
+                "signal": "narrow ? 'left' : 'right'"
+              },
+              "baseline": {
+                "signal": "narrow ? 'top' : 'middle'"
+              }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "description": "Connector showing the gap between dogs and cats.",
+          "from": {
+            "data": "spending"
+          },
+          "encode": {
+            "enter": {
+              "stroke": {
+                "signal": "colorNeutral"
+              },
+              "strokeOpacity": {
+                "value": 0.3
+              },
+              "strokeWidth": {
+                "value": 4
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "low"
+              },
+              "x2": {
+                "scale": "x",
+                "field": "high"
+              },
+              "y": {
+                "signal": "scale('y', datum.category) + bandwidth('y') * dotBand"
+              }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "description": "One dot per pet, coloured with the fixed pet colours.",
+          "from": {
+            "data": "dots"
+          },
+          "encode": {
+            "enter": {
+              "tooltip": {
+                "signal": "datum.tooltip"
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "amount"
+              },
+              "y": {
+                "signal": "scale('y', datum.category) + bandwidth('y') * dotBand"
+              },
+              "size": {
+                "value": 120
+              },
+              "fill": {
+                "scale": "petColour",
+                "field": "species"
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "description": "Values: the higher amount to the right of its dot, the lower amount to the left.",
+          "from": {
+            "data": "dots"
+          },
+          "encode": {
+            "enter": {
+              "baseline": {
+                "value": "middle"
+              },
+              "font": {
+                "signal": "fontBody"
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "amount",
+                "offset": {
+                  "signal": "datum.is_high ? 10 : -10"
+                }
+              },
+              "y": {
+                "signal": "scale('y', datum.category) + bandwidth('y') * dotBand"
+              },
+              "align": {
+                "signal": "datum.is_high ? 'left' : 'right'"
+              },
+              "text": {
+                "signal": "'$' + format(datum.amount, ',')"
+              },
+              "fontSize": {
+                "signal": "narrow ? 11 : 12"
+              },
+              "fill": {
+                "scale": "petColour",
+                "field": "species"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "noteText",
+      "from": {
+        "data": "note"
+      },
+      "zindex": 2,
+      "encode": {
+        "enter": {
+          "baseline": {
+            "value": "bottom"
+          },
+          "lineHeight": {
+            "value": 17
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontStyle": {
+            "value": "italic"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "narrow ? 8 : width - 8"
+          },
+          "y": {
+            "signal": "narrow ? plotHeight + 100 : plotHeight - 30"
+          },
+          "align": {
+            "signal": "narrow ? 'left' : 'right'"
+          },
+          "text": {
+            "signal": "narrow ? (includeFood ? datum.foodShort : datum.noFoodShort) : (includeFood ? datum.food : datum.noFood)"
+          }
+        }
+      }
+    },
+    {
+      "description": "Plain background sized to the note text; no outline or shadow.",
+      "type": "rect",
+      "from": {
+        "data": "noteText"
+      },
+      "zindex": 1,
+      "encode": {
+        "enter": {
+          "fill": {
+            "signal": "colorPage"
+          },
+          "cornerRadius": {
+            "value": 4
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "datum.bounds.x1 - 8"
+          },
+          "x2": {
+            "signal": "datum.bounds.x2 + 8"
+          },
+          "y": {
+            "signal": "datum.bounds.y1 - 6"
+          },
+          "y2": {
+            "signal": "datum.bounds.y2 + 6"
+          }
+        }
+      }
+    }
+  ]
+}
