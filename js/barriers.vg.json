@@ -1,0 +1,682 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Butterfly chart of the reasons people who would like a pet do not have one, comparing current owners with people who have no pet, Animal Medicines Australia survey 2025. Based on the Vega population pyramid example.",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "title": {
+    "text": {
+      "signal": "narrow ? ['Cost holds back owners; an', 'unsuitable home holds back', 'people without a pet'] : 'Cost holds back owners; an unsuitable home holds back people without a pet'"
+    },
+    "subtitle": {
+      "signal": "narrow ? ['Reasons people who would like a pet do not', 'have one, by whether they already own a pet,', '2025 (several reasons could be given)'] : 'Reasons people who would like a pet do not have one, by whether they already own a pet, 2025 (several reasons could be given)'"
+    },
+    "anchor": "start",
+    "offset": {
+      "signal": "narrow ? 46 : 32"
+    },
+    "font": {
+      "signal": "fontHeading"
+    },
+    "fontSize": {
+      "signal": "narrow ? 19 : 24"
+    },
+    "fontWeight": 400,
+    "color": {
+      "signal": "colorHeading"
+    },
+    "subtitleFont": {
+      "signal": "fontBody"
+    },
+    "subtitleFontSize": 13,
+    "subtitleColor": {
+      "signal": "colorMuted"
+    },
+    "subtitlePadding": 6
+  },
+  "signals": [
+    {
+      "name": "colorNeutral",
+      "value": "#512D22",
+      "description": "Theme: replaced by --color-neutral from css/style.css."
+    },
+    {
+      "name": "colorAccent",
+      "value": "#005a9c",
+      "description": "Theme: replaced by --color-accent (highlighted barrier)."
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Theme: replaced by --color-muted."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Theme: replaced by --color-heading."
+    },
+    {
+      "name": "colorBorder",
+      "value": "#a4adb8",
+      "description": "Theme: replaced by --color-border."
+    },
+    {
+      "name": "colorPage",
+      "value": "#dadfef",
+      "description": "Theme: replaced by --color-page."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Theme: replaced by --font-heading."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Theme: replaced by --font-body."
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "on": [
+        {
+          "events": "window:resize",
+          "update": "containerSize()[0]"
+        }
+      ]
+    },
+    {
+      "name": "narrow",
+      "update": "width < 760"
+    },
+    {
+      "name": "centreWidth",
+      "update": "narrow ? 16 : 320",
+      "description": "Desktop: centre column for reason names; narrow screens put names above each row."
+    },
+    {
+      "name": "leftEnd",
+      "update": "(width - centreWidth) / 2"
+    },
+    {
+      "name": "rightStart",
+      "update": "leftEnd + centreWidth"
+    },
+    {
+      "name": "rowHeight",
+      "update": "narrow ? 42 : 25"
+    },
+    {
+      "name": "plotHeight",
+      "update": "17 * rowHeight"
+    },
+    {
+      "name": "barTop",
+      "update": "narrow ? 0.52 : 0.14",
+      "description": "Bar position within its row (fraction of the row)."
+    },
+    {
+      "name": "barHeight",
+      "update": "narrow ? 13 : 0.72 * bandwidth('y')"
+    },
+    {
+      "name": "noteTop",
+      "update": "plotHeight + 18"
+    },
+    {
+      "name": "height",
+      "update": "plotHeight + (narrow ? 104 : 62)"
+    },
+    {
+      "name": "leaderX",
+      "update": "width - 4",
+      "description": "Leader rises along the right edge, beyond every bar except the highlighted one."
+    }
+  ],
+  "data": [
+    {
+      "name": "barriers",
+      "url": "data/selected/au_barriers_2025.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "percent": "number",
+          "sample_n": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "pivot",
+          "field": "cohort",
+          "value": "percent",
+          "groupby": [
+            "reason"
+          ],
+          "op": "max"
+        },
+        {
+          "type": "formula",
+          "as": "owners",
+          "expr": "datum['Prospective current owners']"
+        },
+        {
+          "type": "formula",
+          "as": "non_owners",
+          "expr": "datum['Prospective non-owners']"
+        },
+        {
+          "type": "formula",
+          "as": "label",
+          "expr": "{'Ongoing costs': 'Ongoing costs of keeping a pet', 'Already enough pets/do not want more': 'Already have enough pets', 'Initial costs': 'Initial cost of getting a pet', 'Responsibility': 'Responsibility of looking after a pet', 'Unsuitable home/lifestyle': 'Home or lifestyle is not suitable', 'Uncertain employment/living situation': 'Work or living situation is uncertain', 'Other household members': 'Others in the household do not want one', 'Cannot work from home enough': 'Cannot work from home often enough', 'Previous pet died/not ready': 'Previous pet died, not ready for another', 'Landlord restriction': 'Landlord does not allow pets', 'Buying/adoption process too difficult': 'Buying or adopting is too difficult', 'Wait times too long': 'Wait times are too long', 'Allergies': 'Allergies in the household', 'Body corporate/strata restriction': 'Body corporate or strata does not allow pets', 'Gave away previous pet/not ready': 'Had to give away a previous pet'}[datum.reason] || datum.reason"
+        },
+        {
+          "type": "formula",
+          "as": "emphasis",
+          "expr": "datum.reason === 'Unsuitable home/lifestyle'",
+          "description": "Highlighted row, matching the annotation."
+        },
+        {
+          "type": "formula",
+          "as": "sort_key",
+          "expr": "datum.reason === 'Other reasons' ? 1000 : datum.reason === 'No particular reason' ? 1001 : -(datum.owners + datum.non_owners)",
+          "description": "Most common barriers first; the two catch-all answers last."
+        },
+        {
+          "type": "formula",
+          "as": "tooltip",
+          "expr": "{'Reason': datum.label, 'Current owners wanting another pet': datum.owners + '% of 1,502', 'People without a pet who want one': datum.non_owners + '% of 425'}"
+        }
+      ]
+    },
+    {
+      "name": "note",
+      "values": [
+        {
+          "lines": [
+            "For people without a pet, an unsuitable home or lifestyle (31%) is an even bigger barrier",
+            "than cost, and 16% say their landlord does not allow pets."
+          ],
+          "short": [
+            "For people without a pet, an unsuitable",
+            "home or lifestyle (31%) is an even bigger",
+            "barrier than cost, and 16% say their",
+            "landlord does not allow pets."
+          ]
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "y",
+      "type": "band",
+      "domain": {
+        "data": "barriers",
+        "field": "reason",
+        "sort": {
+          "field": "sort_key",
+          "op": "min",
+          "order": "ascending"
+        }
+      },
+      "range": [
+        0,
+        {
+          "signal": "plotHeight"
+        }
+      ],
+      "paddingInner": 0,
+      "paddingOuter": 0
+    },
+    {
+      "name": "xLeft",
+      "type": "linear",
+      "domain": {
+        "signal": "narrow ? [0, 46] : [0, 36]"
+      },
+      "range": [
+        {
+          "signal": "leftEnd"
+        },
+        0
+      ],
+      "zero": true
+    },
+    {
+      "name": "xRight",
+      "type": "linear",
+      "domain": {
+        "signal": "narrow ? [0, 46] : [0, 36]"
+      },
+      "range": [
+        {
+          "signal": "rightStart"
+        },
+        {
+          "signal": "width"
+        }
+      ],
+      "zero": true
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "description": "Column headers above each side.",
+      "encode": {
+        "enter": {
+          "baseline": {
+            "value": "bottom"
+          },
+          "fontSize": {
+            "value": 13
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "lineHeight": {
+            "value": 16
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          },
+          "align": {
+            "value": "right"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "leftEnd"
+          },
+          "y": {
+            "signal": "narrow ? -24 : -8"
+          },
+          "text": {
+            "signal": "narrow ? ['Current owners', 'wanting another'] : 'Current owners wanting another pet'"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "baseline": {
+            "value": "bottom"
+          },
+          "fontSize": {
+            "value": 13
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "lineHeight": {
+            "value": 16
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          },
+          "align": {
+            "value": "left"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "rightStart"
+          },
+          "y": {
+            "signal": "narrow ? -24 : -8"
+          },
+          "text": {
+            "signal": "narrow ? ['Without a pet,', 'wanting one'] : 'People without a pet who want one'"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "description": "Reason names: centre column on desktop, above each row on narrow screens.",
+      "from": {
+        "data": "barriers"
+      },
+      "encode": {
+        "enter": {
+          "align": {
+            "value": "center"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "text": {
+            "field": "label"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "leftEnd + centreWidth / 2"
+          },
+          "y": {
+            "signal": "scale('y', datum.reason) + (narrow ? 3 : bandwidth('y') / 2)"
+          },
+          "baseline": {
+            "signal": "narrow ? 'top' : 'middle'"
+          },
+          "fontSize": {
+            "signal": "narrow ? 12 : 13"
+          },
+          "fontWeight": {
+            "signal": "datum.emphasis ? 600 : 400"
+          },
+          "fill": {
+            "signal": "datum.emphasis ? colorAccent : colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "description": "Current owners: bars grow left from the centre.",
+      "from": {
+        "data": "barriers"
+      },
+      "encode": {
+        "enter": {
+          "tooltip": {
+            "signal": "datum.tooltip"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "xLeft",
+            "field": "owners"
+          },
+          "x2": {
+            "scale": "xLeft",
+            "value": 0
+          },
+          "y": {
+            "signal": "scale('y', datum.reason) + bandwidth('y') * barTop"
+          },
+          "height": {
+            "signal": "barHeight"
+          },
+          "fill": {
+            "signal": "datum.emphasis ? colorAccent : colorNeutral"
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "description": "People without a pet: bars grow right from the centre.",
+      "from": {
+        "data": "barriers"
+      },
+      "encode": {
+        "enter": {
+          "tooltip": {
+            "signal": "datum.tooltip"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "xRight",
+            "value": 0
+          },
+          "x2": {
+            "scale": "xRight",
+            "field": "non_owners"
+          },
+          "y": {
+            "signal": "scale('y', datum.reason) + bandwidth('y') * barTop"
+          },
+          "height": {
+            "signal": "barHeight"
+          },
+          "fill": {
+            "signal": "datum.emphasis ? colorAccent : colorNeutral"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "description": "Current owner values beyond each bar.",
+      "from": {
+        "data": "barriers"
+      },
+      "encode": {
+        "enter": {
+          "align": {
+            "value": "right"
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "font": {
+            "signal": "fontBody"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "xLeft",
+            "field": "owners",
+            "offset": -5
+          },
+          "y": {
+            "signal": "scale('y', datum.reason) + bandwidth('y') * barTop + barHeight / 2"
+          },
+          "text": {
+            "signal": "datum.owners + '%'"
+          },
+          "fontSize": {
+            "signal": "narrow ? 11 : 12"
+          },
+          "fontWeight": {
+            "signal": "datum.emphasis ? 600 : 400"
+          },
+          "fill": {
+            "signal": "datum.emphasis ? colorAccent : colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "description": "Values for people without a pet beyond each bar.",
+      "from": {
+        "data": "barriers"
+      },
+      "encode": {
+        "enter": {
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "font": {
+            "signal": "fontBody"
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "xRight",
+            "field": "non_owners",
+            "offset": 5
+          },
+          "y": {
+            "signal": "scale('y', datum.reason) + bandwidth('y') * barTop + barHeight / 2"
+          },
+          "text": {
+            "signal": "datum.non_owners + '%'"
+          },
+          "fontSize": {
+            "signal": "narrow ? 11 : 12"
+          },
+          "fontWeight": {
+            "signal": "datum.emphasis ? 600 : 400"
+          },
+          "fill": {
+            "signal": "datum.emphasis ? colorAccent : colorMuted"
+          }
+        }
+      },
+      "name": "rightValue"
+    },
+    {
+      "type": "text",
+      "name": "noteText",
+      "from": {
+        "data": "note"
+      },
+      "zindex": 2,
+      "encode": {
+        "enter": {
+          "baseline": {
+            "value": "top"
+          },
+          "lineHeight": {
+            "value": 17
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontStyle": {
+            "value": "italic"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "narrow ? 8 : width - 8"
+          },
+          "y": {
+            "signal": "noteTop + 6"
+          },
+          "text": {
+            "signal": "narrow ? datum.short : datum.lines"
+          },
+          "align": {
+            "signal": "narrow ? 'left' : 'right'"
+          }
+        }
+      }
+    },
+    {
+      "description": "Plain background sized to the note text; no outline or shadow.",
+      "type": "rect",
+      "from": {
+        "data": "noteText"
+      },
+      "zindex": 1,
+      "encode": {
+        "enter": {
+          "fill": {
+            "signal": "colorPage"
+          },
+          "cornerRadius": {
+            "value": 4
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "datum.bounds.x1 - 8"
+          },
+          "x2": {
+            "signal": "max(datum.bounds.x2 + 8, width)"
+          },
+          "y": {
+            "signal": "noteTop"
+          },
+          "y2": {
+            "signal": "datum.bounds.y2 + 6"
+          }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "description": "Leader from the note up the right edge to the highlighted row.",
+      "from": {
+        "data": "rightValue"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "stroke": {
+            "signal": "colorMuted"
+          },
+          "strokeWidth": {
+            "value": 1
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "leaderX"
+          },
+          "x2": {
+            "signal": "leaderX"
+          },
+          "y": {
+            "signal": "noteTop"
+          },
+          "y2": {
+            "signal": "datum.y"
+          },
+          "strokeOpacity": {
+            "signal": "datum.datum.emphasis ? 1 : 0"
+          }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "description": "Leader: short segment ending just after the highlighted value.",
+      "from": {
+        "data": "rightValue"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "stroke": {
+            "signal": "colorMuted"
+          },
+          "strokeWidth": {
+            "value": 1
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "leaderX"
+          },
+          "x2": {
+            "signal": "datum.bounds.x2 + 5"
+          },
+          "y": {
+            "signal": "datum.y"
+          },
+          "y2": {
+            "signal": "datum.y"
+          },
+          "strokeOpacity": {
+            "signal": "datum.datum.emphasis ? 1 : 0"
+          }
+        }
+      }
+    }
+  ]
+}
