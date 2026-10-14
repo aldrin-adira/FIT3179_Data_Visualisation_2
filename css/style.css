@@ -138,6 +138,24 @@ footer h2 {
     font-size: var(--text-subheading);
 }
 
+footer h3 {
+    color: var(--color-heading);
+    font-size: var(--text-small);
+}
+
+.footer-eyebrow {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+footer a {
+    overflow-wrap: anywhere; /* Long source links wrap on small screens. */
+}
+
+.colophon {
+    border-top: 1px solid var(--color-border);
+}
+
 /* 5. CHARTS */
 .chart-figure {
     background-color: var(--color-surface);
