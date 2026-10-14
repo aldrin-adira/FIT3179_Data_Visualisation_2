@@ -1,0 +1,944 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Dumbbell plot comparing pet ownership between pairs of Australian household groups, Animal Medicines Australia survey 2025.",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "title": {
+    "text": {
+      "signal": "narrow ? ['Families, mortgage holders', 'and houses are the most', 'likely to have pets'] : 'Families, mortgage holders and houses are the most likely to have pets'"
+    },
+    "subtitle": {
+      "signal": "narrow ? ['Share of households owning at least one pet,', 'compared between pairs of groups, 2025'] : 'Share of households owning at least one pet, compared between pairs of groups, 2025'"
+    },
+    "anchor": "start",
+    "offset": 30,
+    "font": {
+      "signal": "fontHeading"
+    },
+    "fontSize": {
+      "signal": "narrow ? 19 : 24"
+    },
+    "fontWeight": 400,
+    "color": {
+      "signal": "colorHeading"
+    },
+    "subtitleFont": {
+      "signal": "fontBody"
+    },
+    "subtitleFontSize": 13,
+    "subtitleColor": {
+      "signal": "colorMuted"
+    },
+    "subtitlePadding": 6
+  },
+  "signals": [
+    {
+      "name": "colorNeutral",
+      "value": "#512D22",
+      "description": "Theme: replaced by --color-neutral from css/style.css."
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Theme: replaced by --color-muted."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Theme: replaced by --color-heading."
+    },
+    {
+      "name": "colorBorder",
+      "value": "#a4adb8",
+      "description": "Theme: replaced by --color-border."
+    },
+    {
+      "name": "colorSurface",
+      "value": "#ffffff",
+      "description": "Theme: replaced by --color-surface."
+    },
+    {
+      "name": "colorPage",
+      "value": "#dadfef",
+      "description": "Theme: replaced by --color-page."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Theme: replaced by --font-heading."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Theme: replaced by --font-body."
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "on": [
+        {
+          "events": "window:resize",
+          "update": "containerSize()[0]"
+        }
+      ]
+    },
+    {
+      "name": "narrow",
+      "update": "width < 900"
+    },
+    {
+      "name": "nationalRate",
+      "value": 73
+    },
+    {
+      "name": "rowHeight",
+      "update": "narrow ? 108 : 72"
+    },
+    {
+      "name": "dotY",
+      "update": "narrow ? 36 : 42"
+    },
+    {
+      "name": "gridHeight",
+      "update": "4 * rowHeight"
+    },
+    {
+      "name": "height",
+      "update": "gridHeight + (narrow ? 150 : 110)"
+    }
+  ],
+  "data": [
+    {
+      "name": "groups",
+      "url": "data/selected/au_selected_demographics_2025.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "any_pet_ownership_pct": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "label",
+          "expr": "{'Apartment/unit': 'Apartments or units', 'Own outright': 'Own their home outright', 'Families with kids at home': 'Families with children at home', 'Living alone/couples without kids': 'Living alone or couples without children', 'At least AUD 100000 annually': '$100,000 or more a year', 'Below AUD 50000 annually': 'Under $50,000 a year'}[datum.group] || datum.group"
+        }
+      ]
+    },
+    {
+      "name": "pairs",
+      "source": "groups",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": [
+            "dimension"
+          ],
+          "fields": [
+            "any_pet_ownership_pct",
+            "any_pet_ownership_pct"
+          ],
+          "ops": [
+            "argmax",
+            "argmin"
+          ],
+          "as": [
+            "high",
+            "low"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "dimension_label",
+          "expr": "{'Housing': 'Type of home', 'Tenure': 'Home ownership', 'Household': 'Household make-up', 'Income': 'Household income'}[datum.dimension]"
+        },
+        {
+          "type": "formula",
+          "as": "high_pct",
+          "expr": "datum.high.any_pet_ownership_pct"
+        },
+        {
+          "type": "formula",
+          "as": "low_pct",
+          "expr": "datum.low.any_pet_ownership_pct"
+        },
+        {
+          "type": "formula",
+          "as": "high_label",
+          "expr": "datum.high.label"
+        },
+        {
+          "type": "formula",
+          "as": "low_label",
+          "expr": "datum.low.label"
+        },
+        {
+          "type": "formula",
+          "as": "gap",
+          "expr": "datum.high_pct - datum.low_pct"
+        },
+        {
+          "type": "formula",
+          "as": "order",
+          "expr": "indexof(['Housing', 'Tenure', 'Household', 'Income'], datum.dimension)"
+        }
+      ]
+    },
+    {
+      "name": "note",
+      "values": [
+        {
+          "lines": [
+            "These groups overlap: for example, families with children are also",
+            "more likely to have a mortgage and live in a house. The differences",
+            "show who owns pets, not what causes people to own them."
+          ],
+          "short": [
+            "These groups overlap: families with",
+            "children are also more likely to have",
+            "a mortgage and live in a house. The",
+            "differences show who owns pets, not",
+            "what causes people to own them."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gridValues",
+      "values": [
+        {
+          "v": 30
+        },
+        {
+          "v": 40
+        },
+        {
+          "v": 50
+        },
+        {
+          "v": 60
+        },
+        {
+          "v": 70
+        },
+        {
+          "v": 80
+        },
+        {
+          "v": 90
+        },
+        {
+          "v": 100
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": [
+        30,
+        100
+      ],
+      "range": [
+        0,
+        {
+          "signal": "width"
+        }
+      ],
+      "zero": false
+    }
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "description": "Plot area: rows, reference line and axis.",
+      "encode": {
+        "update": {
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "value": 0
+          },
+          "width": {
+            "signal": "width"
+          },
+          "height": {
+            "signal": "gridHeight"
+          }
+        }
+      },
+      "axes": [
+        {
+          "orient": "bottom",
+          "scale": "x",
+          "tickCount": {
+            "signal": "narrow ? 4 : 8"
+          },
+          "grid": false,
+          "domain": false,
+          "ticks": false,
+          "labelPadding": 6,
+          "labelColor": {
+            "signal": "colorMuted"
+          },
+          "labelFont": {
+            "signal": "fontBody"
+          },
+          "labelFontSize": 12,
+          "title": "Households owning at least one pet",
+          "titleColor": {
+            "signal": "colorMuted"
+          },
+          "titleFont": {
+            "signal": "fontBody"
+          },
+          "titleFontSize": 13,
+          "titleFontWeight": 500,
+          "titlePadding": 8,
+          "encode": {
+            "labels": {
+              "update": {
+                "text": {
+                  "signal": "datum.value + '%'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "marks": [
+        {
+          "type": "rule",
+          "description": "Light vertical gridlines limited to the rows.",
+          "from": {
+            "data": "gridValues"
+          },
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "stroke": {
+                "signal": "colorBorder"
+              },
+              "strokeOpacity": {
+                "value": 0.45
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "v"
+              },
+              "y": {
+                "value": 0
+              },
+              "y2": {
+                "signal": "gridHeight"
+              },
+              "strokeOpacity": {
+                "signal": "narrow && datum.v % 20 !== 0 ? 0 : 0.45"
+              }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "description": "National ownership rate reference line.",
+          "encode": {
+            "enter": {
+              "stroke": {
+                "signal": "colorMuted"
+              },
+              "strokeWidth": {
+                "value": 1.5
+              },
+              "strokeDash": {
+                "value": [
+                  4,
+                  4
+                ]
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "signal": "nationalRate"
+              },
+              "y": {
+                "value": 0
+              },
+              "y2": {
+                "signal": "gridHeight"
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "encode": {
+            "enter": {
+              "align": {
+                "value": "center"
+              },
+              "baseline": {
+                "value": "bottom"
+              },
+              "fontSize": {
+                "value": 12
+              },
+              "fontWeight": {
+                "value": 500
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "signal": "nationalRate"
+              },
+              "y": {
+                "value": -6
+              },
+              "text": {
+                "signal": "'National rate ' + nationalRate + '%'"
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "description": "Comparison name above each row.",
+          "from": {
+            "data": "pairs"
+          },
+          "encode": {
+            "enter": {
+              "align": {
+                "value": "left"
+              },
+              "baseline": {
+                "value": "top"
+              },
+              "fontSize": {
+                "value": 13
+              },
+              "fontWeight": {
+                "value": 600
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              },
+              "text": {
+                "field": "dimension_label"
+              }
+            },
+            "update": {
+              "x": {
+                "value": 0
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + 4"
+              }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "description": "Connector between the two groups.",
+          "from": {
+            "data": "pairs"
+          },
+          "encode": {
+            "enter": {
+              "stroke": {
+                "signal": "colorNeutral"
+              },
+              "strokeOpacity": {
+                "value": 0.35
+              },
+              "strokeWidth": {
+                "value": 4
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "low_pct"
+              },
+              "x2": {
+                "scale": "x",
+                "field": "high_pct"
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY"
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "description": "Gap in percentage points above each connector.",
+          "from": {
+            "data": "pairs"
+          },
+          "encode": {
+            "enter": {
+              "align": {
+                "value": "center"
+              },
+              "baseline": {
+                "value": "bottom"
+              },
+              "fontSize": {
+                "value": 11
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "scale('x', (datum.low_pct + datum.high_pct) / 2)"
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY - 8"
+              },
+              "text": {
+                "signal": "datum.gap + ' points'"
+              }
+            }
+          },
+          "name": "gapText",
+          "zindex": 2
+        },
+        {
+          "description": "Plain background behind each gap label; no outline or shadow.",
+          "type": "rect",
+          "from": {
+            "data": "gapText"
+          },
+          "zindex": 1,
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "fill": {
+                "signal": "colorSurface"
+              },
+              "cornerRadius": {
+                "value": 3
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "datum.bounds.x1 - 4"
+              },
+              "x2": {
+                "signal": "datum.bounds.x2 + 4"
+              },
+              "y": {
+                "signal": "datum.bounds.y1 - 1"
+              },
+              "y2": {
+                "signal": "datum.bounds.y2 + 1"
+              }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "description": "Higher group: filled dot.",
+          "from": {
+            "data": "pairs"
+          },
+          "encode": {
+            "enter": {
+              "fill": {
+                "signal": "colorNeutral"
+              },
+              "tooltip": {
+                "signal": "{'Group': datum.high_label, 'Households owning a pet': datum.high_pct + '%', 'National rate': nationalRate + '%'}"
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "high_pct"
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY"
+              },
+              "size": {
+                "value": 150
+              }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "description": "Lower group: hollow dot.",
+          "from": {
+            "data": "pairs"
+          },
+          "encode": {
+            "enter": {
+              "fill": {
+                "signal": "colorSurface"
+              },
+              "stroke": {
+                "signal": "colorNeutral"
+              },
+              "strokeWidth": {
+                "value": 2.5
+              },
+              "tooltip": {
+                "signal": "{'Group': datum.low_label, 'Households owning a pet': datum.low_pct + '%', 'National rate': nationalRate + '%', 'Note': 'Calculated as 100% minus the published share of non-owners'}"
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "low_pct"
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY"
+              },
+              "size": {
+                "value": 130
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "description": "Desktop: higher group label to the right of its dot.",
+          "from": {
+            "data": "pairs"
+          },
+          "encode": {
+            "enter": {
+              "align": {
+                "value": "left"
+              },
+              "baseline": {
+                "value": "middle"
+              },
+              "fontSize": {
+                "value": 13
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "high_pct",
+                "offset": 12
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY"
+              },
+              "text": {
+                "signal": "narrow ? '' : datum.high_label + ' ' + datum.high_pct + '%'"
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "description": "Desktop: lower group label to the left of its dot.",
+          "from": {
+            "data": "pairs"
+          },
+          "encode": {
+            "enter": {
+              "align": {
+                "value": "right"
+              },
+              "baseline": {
+                "value": "middle"
+              },
+              "fontSize": {
+                "value": 13
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "low_pct",
+                "offset": -12
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY"
+              },
+              "text": {
+                "signal": "narrow ? '' : datum.low_label + ' ' + datum.low_pct + '%'"
+              }
+            }
+          }
+        },
+        {
+          "description": "Narrow screens: plain band behind each label list so gridlines and the national line stop at it.",
+          "type": "rect",
+          "from": {
+            "data": "pairs"
+          },
+          "interactive": false,
+          "encode": {
+            "update": {
+              "x": {
+                "value": 0
+              },
+              "x2": {
+                "signal": "width"
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY + 15"
+              },
+              "y2": {
+                "signal": "datum.order * rowHeight + dotY + 57"
+              },
+              "fill": {
+                "signal": "narrow ? colorSurface : 'transparent'"
+              }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "description": "Narrow screens: key symbols for the label list under each row.",
+          "from": {
+            "data": "pairs"
+          },
+          "encode": {
+            "enter": {
+              "fill": {
+                "signal": "colorNeutral"
+              },
+              "size": {
+                "value": 60
+              }
+            },
+            "update": {
+              "x": {
+                "value": 5
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY + 26"
+              },
+              "opacity": {
+                "signal": "narrow ? 1 : 0"
+              }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "from": {
+            "data": "pairs"
+          },
+          "encode": {
+            "enter": {
+              "fill": {
+                "signal": "colorSurface"
+              },
+              "stroke": {
+                "signal": "colorNeutral"
+              },
+              "strokeWidth": {
+                "value": 2
+              },
+              "size": {
+                "value": 55
+              }
+            },
+            "update": {
+              "x": {
+                "value": 5
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY + 46"
+              },
+              "opacity": {
+                "signal": "narrow ? 1 : 0"
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "from": {
+            "data": "pairs"
+          },
+          "encode": {
+            "enter": {
+              "align": {
+                "value": "left"
+              },
+              "baseline": {
+                "value": "middle"
+              },
+              "fontSize": {
+                "value": 12
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              }
+            },
+            "update": {
+              "x": {
+                "value": 16
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY + 26"
+              },
+              "text": {
+                "signal": "narrow ? datum.high_label + ' ' + datum.high_pct + '%' : ''"
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "from": {
+            "data": "pairs"
+          },
+          "encode": {
+            "enter": {
+              "align": {
+                "value": "left"
+              },
+              "baseline": {
+                "value": "middle"
+              },
+              "fontSize": {
+                "value": 12
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              }
+            },
+            "update": {
+              "x": {
+                "value": 16
+              },
+              "y": {
+                "signal": "datum.order * rowHeight + dotY + 46"
+              },
+              "text": {
+                "signal": "narrow ? datum.low_label + ' ' + datum.low_pct + '%' : ''"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "noteText",
+      "from": {
+        "data": "note"
+      },
+      "zindex": 2,
+      "encode": {
+        "enter": {
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "lineHeight": {
+            "value": 17
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontStyle": {
+            "value": "italic"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        },
+        "update": {
+          "x": {
+            "value": 8
+          },
+          "y": {
+            "signal": "gridHeight + 62"
+          },
+          "text": {
+            "signal": "narrow ? datum.short : datum.lines"
+          }
+        }
+      }
+    },
+    {
+      "description": "Plain background sized to the note text; no outline or shadow.",
+      "type": "rect",
+      "from": {
+        "data": "noteText"
+      },
+      "zindex": 1,
+      "encode": {
+        "enter": {
+          "fill": {
+            "signal": "colorPage"
+          },
+          "cornerRadius": {
+            "value": 4
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "datum.bounds.x1 - 8"
+          },
+          "x2": {
+            "signal": "datum.bounds.x2 + 8"
+          },
+          "y": {
+            "signal": "datum.bounds.y1 - 6"
+          },
+          "y2": {
+            "signal": "datum.bounds.y2 + 6"
+          }
+        }
+      }
+    }
+  ]
+}

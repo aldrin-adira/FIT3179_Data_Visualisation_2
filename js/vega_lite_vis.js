@@ -56,3 +56,4 @@ function embedChart(container, specUrl) {
 embedChart("#chart3_chart", "js/ownership_trend.vg.json");
 embedChart("#chart5_chart", "js/pet_types.vg.json");
 embedChart("#chart7_chart", "js/motivations.vg.json");
+embedChart("#chart8_chart", "js/household_groups.vg.json");
