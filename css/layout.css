@@ -70,6 +70,14 @@ footer p {
 
 .section-title {
     min-width: 0;
+    position: relative;
+}
+
+/* Section numbers sit above the heading on small screens and move into the
+   empty space to the right of the header text on desktop (section 5). */
+.section-number {
+    display: block;
+    margin-bottom: 0.25rem;
 }
 
 .section-question {
@@ -124,5 +132,17 @@ footer p {
 @media (min-width: 48em) {
     .chart-container + .chart-container {
         padding-left: var(--chart-gap);
+    }
+
+    /* Reserve the right edge so long headings never run under the number. */
+    .section-title {
+        padding-right: 9rem;
+    }
+
+    .section-number {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin-bottom: 0;
     }
 }

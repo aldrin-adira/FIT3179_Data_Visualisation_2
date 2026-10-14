@@ -39,6 +39,7 @@
     --text-title: clamp(2.5rem, 6vw, 4.5rem);
     --text-section: clamp(1.75rem, 3vw, 2.5rem);
     --text-subheading: 1.125rem;
+    --text-section-number: clamp(4rem, 8vw, 7rem);
     --line-height-body: 1.65;
     --line-height-heading: 1.15;
 }
@@ -112,6 +113,21 @@ footer {
 
 .section-question {
     color: var(--color-accent);
+}
+
+/* Decorative section number; hidden from screen readers in index.html. */
+.section-number {
+    color: var(--color-accent);
+    font-family: var(--font-heading);
+    font-size: var(--text-subheading);
+    line-height: 1;
+}
+
+@media (min-width: 48em) {
+    .section-number {
+        color: var(--color-border);
+        font-size: var(--text-section-number);
+    }
 }
 
 .section-transition {
