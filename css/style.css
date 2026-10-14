@@ -11,7 +11,7 @@
     --color-heading: #0b2540;       /* Page, section and chart headings */
     --color-muted: #252725;         /* Supporting text, captions and chart labels */
     --color-accent: #005a9c;        /* Questions, links, keyboard focus and chart highlights */
-    --color-border: #d5dcd5;        /* Dividers, placeholder outlines and chart gridlines */
+    --color-border: #0b2540;        /* Dividers, placeholder outlines and chart gridlines */
     --color-aus-orange: #e55812;    /* Orange like the Australian colors */
     --color-dark: #4E1A0A;          /* Chart sequential scale: high values */
     --color-light: #F5DFD8;         /* Chart sequential scale: low values */
