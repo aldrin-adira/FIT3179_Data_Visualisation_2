@@ -1,21 +1,124 @@
-/* Base Styling & Background */
-html {
-    background-color: #ffffff;
+/* 1. COLOUR PALETTE change these values to recolour the website.
+   Names describe purpose, so they still make sense after edits.
+   Future Vega chart colours are configured separately in chart specifications.
+   Sections: 1. Colours | 2. Type settings | 3. Base | 4. Story | 5. Charts */
+:root {
+    --color-page: #faf8f4;           /* Warm page background */
+    --color-surface: #ffffff;       /* Chart placeholder background */
+    --color-text: #303633;          /* Main body text */
+    --color-heading: #243c35;       /* Page and section headings */
+    --color-muted: #626963;         /* Supporting text and captions */
+    --color-accent: #356452;        /* Questions, links and keyboard focus */
+    --color-border: #d5dcd5;        /* Dividers and placeholder outlines */
 }
+
+/* 2. TYPOGRAPHY SETTINGS fonts are loaded in index.html. */
+:root {
+    --font-body: "Fira Sans", sans-serif;
+    --font-heading: "DM Serif Display", Georgia, serif;
+    --text-base: 1rem;
+    --text-small: 0.875rem;
+    --text-title: clamp(2.5rem, 6vw, 4.5rem);
+    --text-section: clamp(1.75rem, 3vw, 2.5rem);
+    --text-subheading: 1.125rem;
+    --line-height-body: 1.65;
+    --line-height-heading: 1.15;
+}
+
+/* 3. BASE */
+html {
+    background-color: var(--color-page);
+    color: var(--color-text);
+}
+
 body {
-    font-family: "Fira Sans", sans-serif;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--line-height-body);
+    overflow-wrap: break-word;
+}
+
+/* Override Pure CSS's grid fonts so story text stays consistent. */
+.pure-g,
+.pure-g [class*="pure-u"] {
+    font-family: var(--font-body);
+}
+
+h1,
+h2 {
+    color: var(--color-heading);
+    font-family: var(--font-heading);
     font-weight: 400;
-    font-style: normal;
+    line-height: var(--line-height-heading);
 }
 
 h1 {
-    font-family: "DM Serif Display", serif;
-    font-weight: 800;
-    font-style: bold;
+    font-size: var(--text-title);
 }
 
 h2 {
-    font-family: "DM Serif Display", serif;
+    font-size: var(--text-section);
+}
+
+h3 {
+    color: var(--color-heading);
+    font-size: var(--text-subheading);
     font-weight: 600;
-    font-style: bold;
+    line-height: 1.4;
+}
+
+a {
+    color: var(--color-accent);
+    text-underline-offset: 0.2em;
+}
+
+a:hover {
+    text-decoration-thickness: 0.15em;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+/* 4. STORY */
+.subtitle {
+    color: var(--color-heading);
+    font-size: var(--text-subheading);
+}
+
+.sections > section,
+footer {
+    border-top: 1px solid var(--color-border);
+}
+
+.section-question {
+    color: var(--color-accent);
+}
+
+.section-transition {
+    border-left: 3px solid var(--color-border);
+    color: var(--color-muted);
+    font-style: italic;
+}
+
+footer {
+    color: var(--color-muted);
+    font-size: var(--text-small);
+}
+
+footer h2 {
+    font-size: var(--text-subheading);
+}
+
+/* 5. CHART PLACEHOLDERS */
+.chart-placeholder {
+    background-color: var(--color-surface);
+    border: 1px dashed var(--color-border);
+    border-radius: 0.375rem;
+}
+
+.chart-placeholder p:last-child {
+    color: var(--color-muted);
+    font-size: var(--text-small);
 }
