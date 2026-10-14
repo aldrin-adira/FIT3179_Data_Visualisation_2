@@ -1,217 +1,79 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Dumbbell plot comparing pet ownership between pairs of Australian household groups, Animal Medicines Australia survey 2025.",
+  "description": "Grouped lollipop chart of pet ownership for eight Australian household groups, each drawn from the national rate of 73%, Animal Medicines Australia survey 2025.",
   "padding": 5,
-  "autosize": {
-    "type": "fit-x",
-    "contains": "padding"
-  },
+  "autosize": {"type": "fit-x", "contains": "padding"},
+
   "title": {
-    "text": {
-      "signal": "narrow ? ['Families, mortgage holders', 'and houses are the most', 'likely to have pets'] : 'Families, mortgage holders and houses are the most likely to have pets'"
-    },
-    "subtitle": {
-      "signal": "narrow ? ['Share of households owning at least one pet,', 'compared between pairs of groups, 2025'] : 'Share of households owning at least one pet, compared between pairs of groups, 2025'"
-    },
+    "text": {"signal": "narrow ? ['In every comparison, one group', 'sits above the national rate', 'and one below'] : 'In every comparison, one group sits above the national rate and one below'"},
+    "subtitle": {"signal": "narrow ? ['Share of households owning at least one pet,', 'by household group, 2025'] : 'Share of households owning at least one pet, by household group, 2025'"},
     "anchor": "start",
     "offset": 30,
-    "font": {
-      "signal": "fontHeading"
-    },
-    "fontSize": {
-      "signal": "narrow ? 19 : 24"
-    },
+    "font": {"signal": "fontHeading"},
+    "fontSize": {"signal": "narrow ? 19 : 24"},
     "fontWeight": 400,
-    "color": {
-      "signal": "colorHeading"
-    },
-    "subtitleFont": {
-      "signal": "fontBody"
-    },
+    "color": {"signal": "colorHeading"},
+    "subtitleFont": {"signal": "fontBody"},
     "subtitleFontSize": 13,
-    "subtitleColor": {
-      "signal": "colorMuted"
-    },
+    "subtitleColor": {"signal": "colorMuted"},
     "subtitlePadding": 6
   },
+
   "signals": [
-    {
-      "name": "colorNeutral",
-      "value": "#512D22",
-      "description": "Theme: replaced by --color-neutral from css/style.css."
-    },
-    {
-      "name": "colorAccent",
-      "value": "#005a9c",
-      "description": "Theme: replaced by --color-accent (highlighted row)."
-    },
-    {
-      "name": "colorMuted",
-      "value": "#252725",
-      "description": "Theme: replaced by --color-muted."
-    },
-    {
-      "name": "colorHeading",
-      "value": "#0b2540",
-      "description": "Theme: replaced by --color-heading."
-    },
-    {
-      "name": "colorBorder",
-      "value": "#a4adb8",
-      "description": "Theme: replaced by --color-border."
-    },
-    {
-      "name": "colorSurface",
-      "value": "#ffffff",
-      "description": "Theme: replaced by --color-surface."
-    },
-    {
-      "name": "colorPage",
-      "value": "#dadfef",
-      "description": "Theme: replaced by --color-page."
-    },
-    {
-      "name": "fontHeading",
-      "value": "DM Serif Display",
-      "description": "Theme: replaced by --font-heading."
-    },
-    {
-      "name": "fontBody",
-      "value": "Fira Sans",
-      "description": "Theme: replaced by --font-body."
-    },
+    {"name": "colorNeutral", "value": "#512D22", "description": "Theme: replaced by --color-neutral from css/style.css."},
+    {"name": "colorAccent", "value": "#005a9c", "description": "Theme: replaced by --color-accent (highlighted comparison)."},
+    {"name": "colorMuted", "value": "#252725", "description": "Theme: replaced by --color-muted."},
+    {"name": "colorHeading", "value": "#0b2540", "description": "Theme: replaced by --color-heading."},
+    {"name": "colorPage", "value": "#dadfef", "description": "Theme: replaced by --color-page."},
+    {"name": "fontHeading", "value": "DM Serif Display", "description": "Theme: replaced by --font-heading."},
+    {"name": "fontBody", "value": "Fira Sans", "description": "Theme: replaced by --font-body."},
     {
       "name": "width",
       "init": "containerSize()[0]",
-      "on": [
-        {
-          "events": "window:resize",
-          "update": "containerSize()[0]"
-        }
-      ]
+      "on": [{"events": "window:resize", "update": "containerSize()[0]"}]
     },
-    {
-      "name": "narrow",
-      "update": "width < 900"
-    },
-    {
-      "name": "nationalRate",
-      "value": 73
-    },
-    {
-      "name": "rowHeight",
-      "update": "narrow ? 108 : 72"
-    },
-    {
-      "name": "dotY",
-      "update": "narrow ? 36 : 42"
-    },
-    {
-      "name": "gridHeight",
-      "update": "4 * rowHeight"
-    },
-    {
-      "name": "height",
-      "update": "gridHeight + (narrow ? 205 : 110)"
-    },
-    {
-      "name": "highlightRow",
-      "value": "Household",
-      "description": "Row emphasised to match the annotation."
-    },
-    {
-      "name": "noteTop",
-      "update": "gridHeight + 56",
-      "description": "Top edge of the note background (note text y minus 6)."
-    },
-    {
-      "name": "leaderX",
-      "value": 180,
-      "description": "Desktop leader runs up through clear space left of the row labels."
-    }
+    {"name": "narrow", "update": "width < 760"},
+    {"name": "nationalRate", "value": 73},
+    {"name": "leaderAt", "update": "narrow ? 95.5 : 91.5", "description": "Axis position of the leader line, right of every value label."},
+    {"name": "highlight", "value": "Household", "description": "Comparison emphasised to match the annotation."},
+    {"name": "labelWidth", "update": "narrow ? 0 : 300", "description": "Desktop: column for group names; narrow screens put names above each lollipop."},
+    {"name": "headerHeight", "update": "narrow ? 24 : 26"},
+    {"name": "rowHeight", "update": "narrow ? 44 : 30"},
+    {"name": "blockGap", "update": "narrow ? 12 : 16"},
+    {"name": "blockHeight", "update": "headerHeight + 2 * rowHeight + blockGap"},
+    {"name": "plotHeight", "update": "4 * blockHeight - blockGap"},
+    {"name": "noteTop", "update": "plotHeight + 56", "description": "Top edge of the note background."},
+    {"name": "height", "update": "plotHeight + (narrow ? 205 : 112)"}
   ],
+
   "data": [
     {
       "name": "groups",
       "url": "data/selected/au_selected_demographics_2025.csv",
-      "format": {
-        "type": "csv",
-        "parse": {
-          "any_pet_ownership_pct": "number"
-        }
-      },
+      "format": {"type": "csv", "parse": {"any_pet_ownership_pct": "number"}},
       "transform": [
+        {"type": "formula", "as": "pct", "expr": "datum.any_pet_ownership_pct"},
         {
           "type": "formula",
           "as": "label",
           "expr": "{'Apartment/unit': 'Apartments or units', 'Own outright': 'Own their home outright', 'Families with kids at home': 'Families with children at home', 'Living alone/couples without kids': 'Living alone or couples without children', 'At least AUD 100000 annually': '$100,000 or more a year', 'Below AUD 50000 annually': 'Under $50,000 a year'}[datum.group] || datum.group"
+        },
+        {"type": "formula", "as": "dimension_label", "expr": "{'Housing': 'Type of home', 'Tenure': 'Home ownership', 'Household': 'Household make-up', 'Income': 'Household income'}[datum.dimension]"},
+        {"type": "formula", "as": "block", "expr": "indexof(['Housing', 'Tenure', 'Household', 'Income'], datum.dimension)"},
+        {"type": "window", "groupby": ["dimension"], "sort": {"field": "pct", "order": "descending"}, "ops": ["row_number"], "as": ["rank"]},
+        {"type": "formula", "as": "difference", "expr": "datum.pct - nationalRate"},
+        {"type": "formula", "as": "emphasis", "expr": "datum.dimension === highlight"},
+        {
+          "type": "formula",
+          "as": "tooltip",
+          "expr": "{'Group': datum.label, 'Households owning a pet': datum.pct + '%', 'Compared with the national rate': (datum.difference > 0 ? datum.difference + ' points above' : -datum.difference + ' points below') + ' (' + nationalRate + '%)', 'Source of value': datum.derivation === 'reported' ? 'Published in the report' : 'Calculated as 100% minus the published share of non-owners'}"
         }
       ]
     },
     {
-      "name": "pairs",
+      "name": "blocks",
       "source": "groups",
-      "transform": [
-        {
-          "type": "aggregate",
-          "groupby": [
-            "dimension"
-          ],
-          "fields": [
-            "any_pet_ownership_pct",
-            "any_pet_ownership_pct"
-          ],
-          "ops": [
-            "argmax",
-            "argmin"
-          ],
-          "as": [
-            "high",
-            "low"
-          ]
-        },
-        {
-          "type": "formula",
-          "as": "dimension_label",
-          "expr": "{'Housing': 'Type of home', 'Tenure': 'Home ownership', 'Household': 'Household make-up', 'Income': 'Household income'}[datum.dimension]"
-        },
-        {
-          "type": "formula",
-          "as": "high_pct",
-          "expr": "datum.high.any_pet_ownership_pct"
-        },
-        {
-          "type": "formula",
-          "as": "low_pct",
-          "expr": "datum.low.any_pet_ownership_pct"
-        },
-        {
-          "type": "formula",
-          "as": "high_label",
-          "expr": "datum.high.label"
-        },
-        {
-          "type": "formula",
-          "as": "low_label",
-          "expr": "datum.low.label"
-        },
-        {
-          "type": "formula",
-          "as": "gap",
-          "expr": "datum.high_pct - datum.low_pct"
-        },
-        {
-          "type": "formula",
-          "as": "order",
-          "expr": "indexof(['Housing', 'Tenure', 'Household', 'Income'], datum.dimension)"
-        },
-        {
-          "type": "formula",
-          "as": "low_lines",
-          "expr": "length(datum.low_label) > 30 ? [substring(datum.low_label, 0, lastindexof(substring(datum.low_label, 0, 26), ' ')), substring(datum.low_label, lastindexof(substring(datum.low_label, 0, 26), ' ') + 1) + ' ' + datum.low_pct + '%'] : [datum.low_label + ' ' + datum.low_pct + '%']",
-          "description": "Narrow screens: wraps long lower-group labels onto two lines."
-        }
-      ]
+      "transform": [{"type": "aggregate", "groupby": ["dimension", "dimension_label", "block", "emphasis"]}]
     },
     {
       "name": "note",
@@ -234,819 +96,172 @@
           ]
         }
       ]
-    },
-    {
-      "name": "gridValues",
-      "values": [
-        {
-          "v": 30
-        },
-        {
-          "v": 40
-        },
-        {
-          "v": 50
-        },
-        {
-          "v": 60
-        },
-        {
-          "v": 70
-        },
-        {
-          "v": 80
-        },
-        {
-          "v": 90
-        },
-        {
-          "v": 100
-        }
-      ]
     }
   ],
+
   "scales": [
-    {
-      "name": "x",
-      "type": "linear",
-      "domain": [
-        30,
-        100
-      ],
-      "range": [
-        0,
-        {
-          "signal": "width"
-        }
-      ],
-      "zero": false
-    }
+    {"name": "x", "type": "linear", "domain": {"signal": "narrow ? [50, 97] : [50, 92]"}, "range": [{"signal": "labelWidth"}, {"signal": "width"}], "zero": false}
   ],
+
   "marks": [
     {
       "type": "group",
-      "description": "Plot area: rows, reference line and axis.",
-      "encode": {
-        "update": {
-          "x": {
-            "value": 0
-          },
-          "y": {
-            "value": 0
-          },
-          "width": {
-            "signal": "width"
-          },
-          "height": {
-            "signal": "gridHeight"
-          }
-        }
-      },
+      "description": "Plot area: comparison blocks, lollipops, national rate and axis.",
+      "encode": {"update": {"x": {"value": 0}, "y": {"value": 0}, "width": {"signal": "width"}, "height": {"signal": "plotHeight"}}},
       "axes": [
         {
           "orient": "bottom",
           "scale": "x",
-          "tickCount": {
-            "signal": "narrow ? 4 : 8"
-          },
-          "grid": false,
+          "values": {"signal": "narrow ? [50, 60, 70, 80] : [50, 60, 70, 80, 90]"},
           "domain": false,
           "ticks": false,
-          "labelPadding": 6,
-          "labelColor": {
-            "signal": "colorMuted"
-          },
-          "labelFont": {
-            "signal": "fontBody"
-          },
+          "grid": false,
+          "labelPadding": 8,
+          "labelColor": {"signal": "colorMuted"},
+          "labelFont": {"signal": "fontBody"},
           "labelFontSize": 12,
           "title": "Households owning at least one pet",
-          "titleColor": {
-            "signal": "colorMuted"
-          },
-          "titleFont": {
-            "signal": "fontBody"
-          },
+          "titleColor": {"signal": "colorMuted"},
+          "titleFont": {"signal": "fontBody"},
           "titleFontSize": 13,
           "titleFontWeight": 500,
           "titlePadding": 8,
-          "encode": {
-            "labels": {
-              "update": {
-                "text": {
-                  "signal": "datum.value + '%'"
-                }
-              }
-            }
-          }
+          "encode": {"labels": {"update": {"text": {"signal": "datum.value + '%'"}}}}
         }
       ],
       "marks": [
         {
           "type": "rule",
-          "description": "Light vertical gridlines limited to the rows.",
-          "from": {
-            "data": "gridValues"
-          },
-          "interactive": false,
+          "description": "Desktop: national rate as one continuous dashed line.",
           "encode": {
-            "enter": {
-              "stroke": {
-                "signal": "colorBorder"
-              },
-              "strokeOpacity": {
-                "value": 0.45
-              }
-            },
+            "enter": {"stroke": {"signal": "colorMuted"}, "strokeWidth": {"value": 1.5}, "strokeDash": {"value": [4, 4]}},
+            "update": {"x": {"scale": "x", "signal": "nationalRate"}, "y": {"value": 0}, "y2": {"signal": "plotHeight"}, "strokeOpacity": {"signal": "narrow ? 0 : 1"}}
+          }
+        },
+        {
+          "type": "rule",
+          "description": "Narrow screens: national rate drawn only beside each lollipop so it never crosses the group names above them.",
+          "from": {"data": "groups"},
+          "encode": {
+            "enter": {"stroke": {"signal": "colorMuted"}, "strokeWidth": {"value": 1.5}, "strokeDash": {"value": [4, 4]}},
             "update": {
-              "x": {
-                "scale": "x",
-                "field": "v"
-              },
-              "y": {
-                "value": 0
-              },
-              "y2": {
-                "signal": "gridHeight"
-              },
-              "strokeOpacity": {
-                "signal": "narrow && datum.v % 20 !== 0 ? 0 : 0.45"
-              }
+              "x": {"scale": "x", "signal": "nationalRate"},
+              "y": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + 30 - 12"},
+              "y2": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + 30 + 12"},
+              "strokeOpacity": {"signal": "narrow ? 1 : 0"}
+            }
+          }
+        },
+        {
+          "type": "text",
+          "encode": {
+            "enter": {"align": {"value": "center"}, "baseline": {"value": "bottom"}, "fontSize": {"value": 12}, "fontWeight": {"value": 500}, "font": {"signal": "fontBody"}, "fill": {"signal": "colorMuted"}},
+            "update": {"x": {"scale": "x", "signal": "nationalRate"}, "y": {"value": -6}, "text": {"signal": "'National rate ' + nationalRate + '%'"}}
+          }
+        },
+        {
+          "type": "text",
+          "description": "Comparison headings.",
+          "from": {"data": "blocks"},
+          "encode": {
+            "enter": {"align": {"value": "left"}, "baseline": {"value": "top"}, "fontSize": {"value": 13}, "fontWeight": {"value": 600}, "font": {"signal": "fontBody"}, "text": {"field": "dimension_label"}},
+            "update": {
+              "x": {"value": 0},
+              "y": {"signal": "datum.block * blockHeight + 4"},
+              "fill": {"signal": "datum.emphasis ? colorAccent : colorMuted"}
+            }
+          }
+        },
+        {
+          "type": "text",
+          "description": "Group names: left column on desktop, above each lollipop on narrow screens.",
+          "from": {"data": "groups"},
+          "encode": {
+            "enter": {"baseline": {"value": "middle"}, "font": {"signal": "fontBody"}, "text": {"field": "label"}},
+            "update": {
+              "x": {"signal": "narrow ? 0 : labelWidth - 16"},
+              "y": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 10 : rowHeight / 2)"},
+              "align": {"signal": "narrow ? 'left' : 'right'"},
+              "fontSize": {"signal": "narrow ? 12 : 13"},
+              "fontWeight": {"signal": "datum.emphasis ? 600 : 400"},
+              "fill": {"signal": "datum.emphasis ? colorAccent : colorMuted"}
             }
           }
         },
         {
           "type": "rule",
-          "description": "National ownership rate reference line.",
+          "description": "Lollipop stick from the national rate to the group's value.",
+          "from": {"data": "groups"},
           "encode": {
-            "enter": {
-              "stroke": {
-                "signal": "colorMuted"
-              },
-              "strokeWidth": {
-                "value": 1.5
-              },
-              "strokeDash": {
-                "value": [
-                  4,
-                  4
-                ]
-              }
-            },
+            "enter": {"strokeWidth": {"value": 3}, "strokeCap": {"value": "butt"}},
             "update": {
-              "x": {
-                "scale": "x",
-                "signal": "nationalRate"
-              },
-              "y": {
-                "value": 0
-              },
-              "y2": {
-                "signal": "gridHeight"
-              }
-            }
-          }
-        },
-        {
-          "type": "text",
-          "encode": {
-            "enter": {
-              "align": {
-                "value": "center"
-              },
-              "baseline": {
-                "value": "bottom"
-              },
-              "fontSize": {
-                "value": 12
-              },
-              "fontWeight": {
-                "value": 500
-              },
-              "font": {
-                "signal": "fontBody"
-              },
-              "fill": {
-                "signal": "colorMuted"
-              }
-            },
-            "update": {
-              "x": {
-                "scale": "x",
-                "signal": "nationalRate"
-              },
-              "y": {
-                "value": -6
-              },
-              "text": {
-                "signal": "'National rate ' + nationalRate + '%'"
-              }
-            }
-          }
-        },
-        {
-          "type": "text",
-          "description": "Comparison name above each row.",
-          "from": {
-            "data": "pairs"
-          },
-          "encode": {
-            "enter": {
-              "align": {
-                "value": "left"
-              },
-              "baseline": {
-                "value": "top"
-              },
-              "fontSize": {
-                "value": 13
-              },
-              "fontWeight": {
-                "value": 600
-              },
-              "font": {
-                "signal": "fontBody"
-              },
-              "text": {
-                "field": "dimension_label"
-              }
-            },
-            "update": {
-              "x": {
-                "value": 0
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + 4"
-              },
-              "fill": {
-                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
-              }
-            }
-          }
-        },
-        {
-          "type": "rule",
-          "description": "Connector between the two groups.",
-          "from": {
-            "data": "pairs"
-          },
-          "encode": {
-            "enter": {
-              "strokeWidth": {
-                "value": 4
-              }
-            },
-            "update": {
-              "x": {
-                "scale": "x",
-                "field": "low_pct"
-              },
-              "x2": {
-                "scale": "x",
-                "field": "high_pct"
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY"
-              },
-              "stroke": {
-                "signal": "datum.dimension === highlightRow ? colorAccent : colorNeutral"
-              },
-              "strokeOpacity": {
-                "signal": "datum.dimension === highlightRow ? 0.5 : 0.35"
-              }
-            }
-          }
-        },
-        {
-          "type": "text",
-          "description": "Gap in percentage points above each connector.",
-          "from": {
-            "data": "pairs"
-          },
-          "encode": {
-            "enter": {
-              "align": {
-                "value": "center"
-              },
-              "baseline": {
-                "value": "bottom"
-              },
-              "fontSize": {
-                "value": 11
-              },
-              "font": {
-                "signal": "fontBody"
-              }
-            },
-            "update": {
-              "x": {
-                "signal": "scale('x', (datum.low_pct + datum.high_pct) / 2)"
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY - 8"
-              },
-              "text": {
-                "signal": "datum.gap + ' points'"
-              },
-              "fill": {
-                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
-              },
-              "fontWeight": {
-                "signal": "datum.dimension === highlightRow ? 600 : 400"
-              }
-            }
-          },
-          "name": "gapText",
-          "zindex": 2
-        },
-        {
-          "description": "Plain background behind each gap label; no outline or shadow.",
-          "type": "rect",
-          "from": {
-            "data": "gapText"
-          },
-          "zindex": 1,
-          "interactive": false,
-          "encode": {
-            "enter": {
-              "fill": {
-                "signal": "colorSurface"
-              },
-              "cornerRadius": {
-                "value": 3
-              }
-            },
-            "update": {
-              "x": {
-                "signal": "datum.bounds.x1 - 4"
-              },
-              "x2": {
-                "signal": "datum.bounds.x2 + 4"
-              },
-              "y": {
-                "signal": "datum.bounds.y1 - 1"
-              },
-              "y2": {
-                "signal": "datum.bounds.y2 + 1"
-              }
+              "x": {"scale": "x", "signal": "nationalRate"},
+              "x2": {"scale": "x", "field": "pct"},
+              "y": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 30 : rowHeight / 2)"},
+              "stroke": {"signal": "datum.emphasis ? colorAccent : colorNeutral"}
             }
           }
         },
         {
           "type": "symbol",
-          "description": "Higher group: filled dot.",
-          "from": {
-            "data": "pairs"
-          },
+          "description": "Lollipop head at the group's value.",
+          "from": {"data": "groups"},
           "encode": {
-            "enter": {
-              "tooltip": {
-                "signal": "{'Group': datum.high_label, 'Households owning a pet': datum.high_pct + '%', 'National rate': nationalRate + '%'}"
-              }
-            },
+            "enter": {"tooltip": {"signal": "datum.tooltip"}},
             "update": {
-              "x": {
-                "scale": "x",
-                "field": "high_pct"
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY"
-              },
-              "size": {
-                "value": 150
-              },
-              "fill": {
-                "signal": "datum.dimension === highlightRow ? colorAccent : colorNeutral"
-              }
-            }
-          }
-        },
-        {
-          "type": "symbol",
-          "description": "Lower group: hollow dot.",
-          "from": {
-            "data": "pairs"
-          },
-          "encode": {
-            "enter": {
-              "fill": {
-                "signal": "colorSurface"
-              },
-              "strokeWidth": {
-                "value": 2.5
-              },
-              "tooltip": {
-                "signal": "{'Group': datum.low_label, 'Households owning a pet': datum.low_pct + '%', 'National rate': nationalRate + '%', 'Note': 'Calculated as 100% minus the published share of non-owners'}"
-              }
-            },
-            "update": {
-              "x": {
-                "scale": "x",
-                "field": "low_pct"
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY"
-              },
-              "size": {
-                "value": 130
-              },
-              "stroke": {
-                "signal": "datum.dimension === highlightRow ? colorAccent : colorNeutral"
-              }
+              "x": {"scale": "x", "field": "pct"},
+              "y": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 30 : rowHeight / 2)"},
+              "size": {"value": 130},
+              "fill": {"signal": "datum.emphasis ? colorAccent : colorNeutral"}
             }
           }
         },
         {
           "type": "text",
-          "description": "Desktop: higher group label to the right of its dot.",
-          "from": {
-            "data": "pairs"
-          },
+          "name": "valueLabel",
+          "description": "Value beyond each lollipop head, on the side it points.",
+          "from": {"data": "groups"},
           "encode": {
-            "enter": {
-              "align": {
-                "value": "left"
-              },
-              "baseline": {
-                "value": "middle"
-              },
-              "fontSize": {
-                "value": 13
-              },
-              "font": {
-                "signal": "fontBody"
-              }
-            },
+            "enter": {"baseline": {"value": "middle"}, "fontSize": {"value": 13}, "font": {"signal": "fontBody"}},
             "update": {
-              "x": {
-                "scale": "x",
-                "field": "high_pct",
-                "offset": 12
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY"
-              },
-              "text": {
-                "signal": "narrow ? '' : datum.high_label + ' ' + datum.high_pct + '%'"
-              },
-              "fill": {
-                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
-              },
-              "fontWeight": {
-                "signal": "datum.dimension === highlightRow ? 600 : 400"
-              }
-            }
-          }
-        },
-        {
-          "type": "text",
-          "description": "Desktop: lower group label to the left of its dot.",
-          "from": {
-            "data": "pairs"
-          },
-          "encode": {
-            "enter": {
-              "align": {
-                "value": "right"
-              },
-              "baseline": {
-                "value": "middle"
-              },
-              "fontSize": {
-                "value": 13
-              },
-              "font": {
-                "signal": "fontBody"
-              }
-            },
-            "update": {
-              "x": {
-                "scale": "x",
-                "field": "low_pct",
-                "offset": -12
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY"
-              },
-              "text": {
-                "signal": "narrow ? '' : datum.low_label + ' ' + datum.low_pct + '%'"
-              },
-              "fill": {
-                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
-              },
-              "fontWeight": {
-                "signal": "datum.dimension === highlightRow ? 600 : 400"
-              }
-            }
-          },
-          "name": "lowLabel"
-        },
-        {
-          "description": "Narrow screens: plain band behind each label list so gridlines and the national line stop at it.",
-          "type": "rect",
-          "from": {
-            "data": "pairs"
-          },
-          "interactive": false,
-          "encode": {
-            "update": {
-              "x": {
-                "value": 0
-              },
-              "x2": {
-                "signal": "width"
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY + 15"
-              },
-              "y2": {
-                "signal": "datum.order * rowHeight + dotY + 70"
-              },
-              "fill": {
-                "signal": "narrow ? colorSurface : 'transparent'"
-              }
-            }
-          }
-        },
-        {
-          "type": "symbol",
-          "description": "Narrow screens: key symbols for the label list under each row.",
-          "from": {
-            "data": "pairs"
-          },
-          "encode": {
-            "enter": {
-              "size": {
-                "value": 60
-              }
-            },
-            "update": {
-              "x": {
-                "value": 5
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY + 26"
-              },
-              "opacity": {
-                "signal": "narrow ? 1 : 0"
-              },
-              "fill": {
-                "signal": "datum.dimension === highlightRow ? colorAccent : colorNeutral"
-              }
-            }
-          }
-        },
-        {
-          "type": "symbol",
-          "from": {
-            "data": "pairs"
-          },
-          "encode": {
-            "enter": {
-              "fill": {
-                "signal": "colorSurface"
-              },
-              "strokeWidth": {
-                "value": 2
-              },
-              "size": {
-                "value": 55
-              }
-            },
-            "update": {
-              "x": {
-                "value": 5
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY + 46"
-              },
-              "opacity": {
-                "signal": "narrow ? 1 : 0"
-              },
-              "stroke": {
-                "signal": "datum.dimension === highlightRow ? colorAccent : colorNeutral"
-              }
-            }
-          }
-        },
-        {
-          "type": "text",
-          "from": {
-            "data": "pairs"
-          },
-          "encode": {
-            "enter": {
-              "align": {
-                "value": "left"
-              },
-              "baseline": {
-                "value": "middle"
-              },
-              "fontSize": {
-                "value": 12
-              },
-              "font": {
-                "signal": "fontBody"
-              }
-            },
-            "update": {
-              "x": {
-                "value": 16
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY + 26"
-              },
-              "text": {
-                "signal": "narrow ? datum.high_label + ' ' + datum.high_pct + '%' : ''"
-              },
-              "fill": {
-                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
-              },
-              "fontWeight": {
-                "signal": "datum.dimension === highlightRow ? 600 : 400"
-              }
-            }
-          }
-        },
-        {
-          "type": "text",
-          "from": {
-            "data": "pairs"
-          },
-          "encode": {
-            "enter": {
-              "align": {
-                "value": "left"
-              },
-              "baseline": {
-                "value": "middle"
-              },
-              "fontSize": {
-                "value": 12
-              },
-              "font": {
-                "signal": "fontBody"
-              },
-              "lineHeight": {
-                "value": 14
-              }
-            },
-            "update": {
-              "x": {
-                "value": 16
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY + 46"
-              },
-              "text": {
-                "signal": "narrow ? datum.low_lines : ''"
-              },
-              "fill": {
-                "signal": "datum.dimension === highlightRow ? colorAccent : colorMuted"
-              },
-              "fontWeight": {
-                "signal": "datum.dimension === highlightRow ? 600 : 400"
-              }
+              "x": {"scale": "x", "field": "pct", "offset": {"signal": "datum.difference > 0 ? 11 : -11"}},
+              "y": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 30 : rowHeight / 2)"},
+              "align": {"signal": "datum.difference > 0 ? 'left' : 'right'"},
+              "text": {"signal": "datum.pct + '%'"},
+              "fontWeight": {"signal": "datum.emphasis ? 600 : 400"},
+              "fill": {"signal": "datum.emphasis ? colorAccent : colorMuted"}
             }
           }
         },
         {
           "type": "rule",
-          "description": "Desktop leader: vertical segment from the note up to the highlighted row.",
-          "from": {
-            "data": "lowLabel"
-          },
+          "description": "Leader from the note up the right edge to the highlighted comparison.",
+          "from": {"data": "valueLabel"},
           "interactive": false,
           "encode": {
-            "enter": {
-              "stroke": {
-                "signal": "colorMuted"
-              },
-              "strokeWidth": {
-                "value": 1
-              }
-            },
+            "enter": {"stroke": {"signal": "colorMuted"}, "strokeWidth": {"value": 1}},
             "update": {
-              "x": {
-                "signal": "leaderX"
-              },
-              "y": {
-                "signal": "noteTop"
-              },
-              "x2": {
-                "signal": "leaderX"
-              },
-              "y2": {
-                "signal": "datum.y"
-              },
-              "strokeOpacity": {
-                "signal": "datum.datum.dimension === highlightRow && !narrow ? 1 : 0"
-              }
+              "x": {"scale": "x", "signal": "leaderAt"},
+              "y": {"signal": "noteTop"},
+              "x2": {"scale": "x", "signal": "leaderAt"},
+              "y2": {"signal": "datum.y"},
+              "strokeOpacity": {"signal": "datum.datum.emphasis && datum.datum.rank === 1 ? 1 : 0"}
             }
           }
         },
         {
           "type": "rule",
-          "description": "Desktop leader: horizontal segment ending just before the row label.",
-          "from": {
-            "data": "lowLabel"
-          },
+          "description": "Leader: short horizontal segment ending just after the highlighted value label.",
+          "from": {"data": "valueLabel"},
           "interactive": false,
           "encode": {
-            "enter": {
-              "stroke": {
-                "signal": "colorMuted"
-              },
-              "strokeWidth": {
-                "value": 1
-              }
-            },
+            "enter": {"stroke": {"signal": "colorMuted"}, "strokeWidth": {"value": 1}},
             "update": {
-              "x": {
-                "signal": "leaderX"
-              },
-              "y": {
-                "signal": "datum.y"
-              },
-              "x2": {
-                "signal": "datum.bounds.x1 - 8"
-              },
-              "y2": {
-                "signal": "datum.y"
-              },
-              "strokeOpacity": {
-                "signal": "datum.datum.dimension === highlightRow && !narrow ? 1 : 0"
-              }
-            }
-          }
-        },
-        {
-          "type": "rule",
-          "description": "Narrow leader: vertical segment beside the higher dot.",
-          "from": {
-            "data": "pairs"
-          },
-          "interactive": false,
-          "encode": {
-            "enter": {
-              "stroke": {
-                "signal": "colorMuted"
-              },
-              "strokeWidth": {
-                "value": 1
-              }
-            },
-            "update": {
-              "x": {
-                "signal": "scale('x', 92)"
-              },
-              "y": {
-                "signal": "noteTop"
-              },
-              "x2": {
-                "signal": "scale('x', 92)"
-              },
-              "y2": {
-                "signal": "datum.order * rowHeight + dotY"
-              },
-              "strokeOpacity": {
-                "signal": "datum.dimension === highlightRow && narrow ? 1 : 0"
-              }
-            }
-          }
-        },
-        {
-          "type": "rule",
-          "description": "Narrow leader: horizontal segment to the higher dot.",
-          "from": {
-            "data": "pairs"
-          },
-          "interactive": false,
-          "encode": {
-            "enter": {
-              "stroke": {
-                "signal": "colorMuted"
-              },
-              "strokeWidth": {
-                "value": 1
-              }
-            },
-            "update": {
-              "x": {
-                "signal": "scale('x', 92)"
-              },
-              "x2": {
-                "signal": "scale('x', datum.high_pct) + 9"
-              },
-              "y": {
-                "signal": "datum.order * rowHeight + dotY"
-              },
-              "y2": {
-                "signal": "datum.order * rowHeight + dotY"
-              },
-              "strokeOpacity": {
-                "signal": "datum.dimension === highlightRow && narrow ? 1 : 0"
-              }
+              "x": {"scale": "x", "signal": "leaderAt"},
+              "x2": {"signal": "datum.bounds.x2 + 6"},
+              "y": {"signal": "datum.y"},
+              "y2": {"signal": "datum.y"},
+              "strokeOpacity": {"signal": "datum.datum.emphasis && datum.datum.rank === 1 ? 1 : 0"}
             }
           }
         }
@@ -1055,76 +270,29 @@
     {
       "type": "text",
       "name": "noteText",
-      "from": {
-        "data": "note"
-      },
+      "from": {"data": "note"},
       "zindex": 2,
       "encode": {
-        "enter": {
-          "align": {
-            "value": "left"
-          },
-          "baseline": {
-            "value": "top"
-          },
-          "lineHeight": {
-            "value": 17
-          },
-          "fontSize": {
-            "value": 12
-          },
-          "font": {
-            "signal": "fontBody"
-          },
-          "fontStyle": {
-            "value": "italic"
-          },
-          "fill": {
-            "signal": "colorMuted"
-          }
-        },
+        "enter": {"align": {"value": "left"}, "baseline": {"value": "top"}, "lineHeight": {"value": 17}, "fontSize": {"value": 12}, "font": {"signal": "fontBody"}, "fontStyle": {"value": "italic"}, "fill": {"signal": "colorMuted"}},
         "update": {
-          "x": {
-            "value": 8
-          },
-          "y": {
-            "signal": "gridHeight + 62"
-          },
-          "text": {
-            "signal": "narrow ? datum.short : datum.lines"
-          }
+          "x": {"value": 8},
+          "y": {"signal": "noteTop + 6"},
+          "text": {"signal": "narrow ? datum.short : datum.lines"}
         }
       }
     },
     {
       "description": "Plain background sized to the note text; no outline or shadow.",
       "type": "rect",
-      "from": {
-        "data": "noteText"
-      },
+      "from": {"data": "noteText"},
       "zindex": 1,
       "encode": {
-        "enter": {
-          "fill": {
-            "signal": "colorPage"
-          },
-          "cornerRadius": {
-            "value": 4
-          }
-        },
+        "enter": {"fill": {"signal": "colorPage"}, "cornerRadius": {"value": 4}},
         "update": {
-          "x": {
-            "signal": "narrow ? 0 : datum.bounds.x1 - 8"
-          },
-          "x2": {
-            "signal": "narrow ? width : datum.bounds.x2 + 8"
-          },
-          "y": {
-            "signal": "datum.bounds.y1 - 6"
-          },
-          "y2": {
-            "signal": "datum.bounds.y2 + 6"
-          }
+          "x": {"value": 0},
+          "x2": {"signal": "narrow ? width : max(datum.bounds.x2 + 8, scale('x', leaderAt) + 12)"},
+          "y": {"signal": "noteTop"},
+          "y2": {"signal": "datum.bounds.y2 + 6"}
         }
       }
     }
