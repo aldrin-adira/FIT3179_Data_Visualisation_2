@@ -1,18 +1,21 @@
 /* 1. COLOUR PALETTE change these values to recolour the website.
    Names describe purpose, so they still make sense after edits.
-   Future Vega chart colours are configured separately in chart specifications.
+   Vega charts read these variables through js/vega_lite_vis.js.
+   Blue (heading, accent) and red-brown (neutral, dark, light) stay distinct
+   for colour-blind readers; avoid green beside the red-brown group.
    Sections: 1. Colours | 2. Type settings | 3. Base | 4. Story | 5. Charts */
 :root {
-    --color-page: #efe7da;           /* Page background */
-    --color-surface: #ffffff;       /* Chart placeholder background */
+    --color-page: #dadfef;           /* Page background; chart annotation background */
+    --color-surface: #ffffff;       /* Chart card background */
     --color-text: #000000;          /* Main body text */
-    --color-heading: #002626;       /* Page and section headings */
-    --color-muted: #626963;         /* Supporting text and captions */
-    --color-accent: #0e4749;        /* Questions, links and keyboard focus */
-    --color-border: #d5dcd5;        /* Dividers and placeholder outlines */
+    --color-heading: #0b2540;       /* Page, section and chart headings */
+    --color-muted: #252725;         /* Supporting text, captions and chart labels */
+    --color-accent: #005a9c;        /* Questions, links, keyboard focus and chart highlights */
+    --color-border: #d5dcd5;        /* Dividers, placeholder outlines and chart gridlines */
     --color-aus-orange: #e55812;    /* Orange like the Australian colors */
-    --color-dark: #4E1A0A;
-    --color-light: #F5DFD8;
+    --color-dark: #4E1A0A;          /* Chart sequential scale: high values */
+    --color-light: #F5DFD8;         /* Chart sequential scale: low values */
+    --color-neutral: #512D22;       /* Chart marks without a colour encoding */
 }
 
 /* 2. TYPOGRAPHY SETTINGS fonts are loaded in index.html. */
@@ -47,13 +50,7 @@ body {
     font-family: var(--font-body);
 }
 
-h1 {
-    color: var(--color-aus-orange);
-    font-family: var(--font-heading);
-    font-weight: 400;
-    line-height: var(--line-height-heading);
-}
-
+h1,
 h2 {
     color: var(--color-heading);
     font-family: var(--font-heading);
@@ -120,7 +117,19 @@ footer h2 {
     font-size: var(--text-subheading);
 }
 
-/* 5. CHART PLACEHOLDERS */
+/* 5. CHARTS */
+.chart-figure {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+}
+
+.chart-source {
+    color: var(--color-muted);
+    font-size: var(--text-small);
+}
+
+/* CHART PLACEHOLDERS */
 .chart-placeholder {
     background-color: var(--color-surface);
     border: 1px dashed var(--color-border);
