@@ -1,0 +1,35 @@
+reason,cohort,percent,sample_n,source_id,pdf_page
+Ongoing costs,Prospective current owners,26,1502,AMA2025,36
+Ongoing costs,Prospective non-owners,25,425,AMA2025,36
+Already enough pets/do not want more,Prospective current owners,23,1502,AMA2025,36
+Already enough pets/do not want more,Prospective non-owners,2,425,AMA2025,36
+Initial costs,Prospective current owners,20,1502,AMA2025,36
+Initial costs,Prospective non-owners,18,425,AMA2025,36
+Responsibility,Prospective current owners,19,1502,AMA2025,36
+Responsibility,Prospective non-owners,20,425,AMA2025,36
+Unsuitable home/lifestyle,Prospective current owners,18,1502,AMA2025,36
+Unsuitable home/lifestyle,Prospective non-owners,31,425,AMA2025,36
+Uncertain employment/living situation,Prospective current owners,12,1502,AMA2025,36
+Uncertain employment/living situation,Prospective non-owners,13,425,AMA2025,36
+Other household members,Prospective current owners,11,1502,AMA2025,36
+Other household members,Prospective non-owners,8,425,AMA2025,36
+Cannot work from home enough,Prospective current owners,10,1502,AMA2025,36
+Cannot work from home enough,Prospective non-owners,10,425,AMA2025,36
+Previous pet died/not ready,Prospective current owners,10,1502,AMA2025,36
+Previous pet died/not ready,Prospective non-owners,20,425,AMA2025,36
+Landlord restriction,Prospective current owners,8,1502,AMA2025,36
+Landlord restriction,Prospective non-owners,16,425,AMA2025,36
+Buying/adoption process too difficult,Prospective current owners,6,1502,AMA2025,36
+Buying/adoption process too difficult,Prospective non-owners,4,425,AMA2025,36
+Wait times too long,Prospective current owners,5,1502,AMA2025,36
+Wait times too long,Prospective non-owners,2,425,AMA2025,36
+Allergies,Prospective current owners,5,1502,AMA2025,36
+Allergies,Prospective non-owners,5,425,AMA2025,36
+Body corporate/strata restriction,Prospective current owners,4,1502,AMA2025,36
+Body corporate/strata restriction,Prospective non-owners,9,425,AMA2025,36
+Gave away previous pet/not ready,Prospective current owners,4,1502,AMA2025,36
+Gave away previous pet/not ready,Prospective non-owners,4,425,AMA2025,36
+Other reasons,Prospective current owners,4,1502,AMA2025,36
+Other reasons,Prospective non-owners,9,425,AMA2025,36
+No particular reason,Prospective current owners,11,1502,AMA2025,36
+No particular reason,Prospective non-owners,4,425,AMA2025,36

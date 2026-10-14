@@ -1,0 +1,9 @@
+dimension,group,any_pet_ownership_pct,derivation,source_id,pdf_page
+Housing,Larger free-standing homes,78,reported,AMA2025,11
+Housing,Apartment/unit,57,100 minus reported 43 percent non-owners,AMA2025,11
+Tenure,Mortgage holders,85,reported,AMA2025,11
+Tenure,Own outright,66,100 minus reported 34 percent non-owners,AMA2025,11
+Household,Families with kids at home,85,reported,AMA2025,11
+Household,Living alone/couples without kids,65,100 minus reported 35 percent non-owners,AMA2025,11
+Income,At least AUD 100000 annually,81,reported,AMA2025,11
+Income,Below AUD 50000 annually,60,100 minus reported 40 percent non-owners,AMA2025,11

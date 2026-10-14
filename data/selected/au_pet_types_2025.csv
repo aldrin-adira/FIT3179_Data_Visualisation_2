@@ -1,0 +1,8 @@
+species,household_ownership_pct,owning_households_thousands,animals_per_owning_household,animals_thousands,source_id,pdf_page
+Dogs,49.3,5241.5,1.4,7367.3,AMA2025,10
+Cats,33.6,3567.0,1.6,5834.7,AMA2025,10
+Fish,11.5,1219.5,10.0,12138.9,AMA2025,10
+Birds,9.5,1005.8,4.4,4447.9,AMA2025,10
+Small mammals,3.0,315.1,2.4,769.5,AMA2025,10
+Reptiles,2.7,290.1,1.8,511.9,AMA2025,10
+Other pets,0.9,95.9,6.0,571.8,AMA2025,10

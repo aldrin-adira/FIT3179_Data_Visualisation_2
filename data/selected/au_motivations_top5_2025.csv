@@ -1,0 +1,31 @@
+species,reason,percent,sample_n,coverage,source_id,pdf_page
+Dogs,Companionship,56,1188,published_top_five_only,AMA2025,25
+Dogs,Mental health,28,1188,published_top_five_only,AMA2025,25
+Dogs,Breed temperament,26,1188,published_top_five_only,AMA2025,25
+Dogs,Relaxation,24,1188,published_top_five_only,AMA2025,25
+Dogs,Breed size,22,1188,published_top_five_only,AMA2025,25
+Cats,Companionship,48,779,published_top_five_only,AMA2025,25
+Cats,Rescue/give a home,32,779,published_top_five_only,AMA2025,25
+Cats,Relaxation,23,779,published_top_five_only,AMA2025,25
+Cats,Mental health,23,779,published_top_five_only,AMA2025,25
+Cats,Given/left to me,14,779,published_top_five_only,AMA2025,25
+Fish,Relaxation,49,275,published_top_five_only,AMA2025,25
+Fish,Hobby,37,275,published_top_five_only,AMA2025,25
+Fish,Lower maintenance,30,275,published_top_five_only,AMA2025,25
+Fish,Mental health,20,275,published_top_five_only,AMA2025,25
+Fish,Given/left to me,13,275,published_top_five_only,AMA2025,25
+Birds,Companionship,37,207,published_top_five_only,AMA2025,25
+Birds,Hobby,30,207,published_top_five_only,AMA2025,25
+Birds,Relaxation,27,207,published_top_five_only,AMA2025,25
+Birds,Mental health,23,207,published_top_five_only,AMA2025,25
+Birds,Eggs,20,207,published_top_five_only,AMA2025,25
+Small mammals,Companionship,34,65,published_top_five_only,AMA2025,25
+Small mammals,Hobby,33,65,published_top_five_only,AMA2025,25
+Small mammals,Relaxation,32,65,published_top_five_only,AMA2025,25
+Small mammals,Mental health,29,65,published_top_five_only,AMA2025,25
+Small mammals,Companion for other pets,19,65,published_top_five_only,AMA2025,25
+Reptiles,Lower maintenance,25,69,published_top_five_only,AMA2025,25
+Reptiles,Hobby,24,69,published_top_five_only,AMA2025,25
+Reptiles,Relaxation,19,69,published_top_five_only,AMA2025,25
+Reptiles,Mental health,15,69,published_top_five_only,AMA2025,25
+Reptiles,Breed temperament,15,69,published_top_five_only,AMA2025,25

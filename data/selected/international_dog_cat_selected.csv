@@ -1,0 +1,87 @@
+iso3,country,data_year,species,household_ownership_pct,source_id,review_status
+ALB,Albania,2024,Dogs,24,FEDIAF2026,published
+ALB,Albania,2024,Cats,25,FEDIAF2026,published
+AUT,Austria,2024,Dogs,17,FEDIAF2026,published
+AUT,Austria,2024,Cats,28,FEDIAF2026,published
+BEL,Belgium,2024,Dogs,28,FEDIAF2026,published
+BEL,Belgium,2024,Cats,33,FEDIAF2026,published
+BIH,Bosnia & Herzegovina,2024,Dogs,24,FEDIAF2026,published
+BIH,Bosnia & Herzegovina,2024,Cats,25,FEDIAF2026,published
+BGR,Bulgaria,2024,Dogs,24,FEDIAF2026,published
+BGR,Bulgaria,2024,Cats,25,FEDIAF2026,published
+HRV,Croatia,2024,Dogs,29,FEDIAF2026,published
+HRV,Croatia,2024,Cats,15,FEDIAF2026,published
+CYP,Cyprus,2024,Dogs,14,FEDIAF2026,published
+CYP,Cyprus,2024,Cats,13,FEDIAF2026,published
+CZE,Czechia,2024,Dogs,42,FEDIAF2026,published
+CZE,Czechia,2024,Cats,23,FEDIAF2026,published
+DNK,Denmark,2024,Dogs,21,FEDIAF2026,published
+DNK,Denmark,2024,Cats,19,FEDIAF2026,published
+EST,Estonia,2024,Dogs,22,FEDIAF2026,published
+EST,Estonia,2024,Cats,18,FEDIAF2026,published
+FIN,Finland,2024,Dogs,24,FEDIAF2026,published
+FIN,Finland,2024,Cats,23,FEDIAF2026,published
+FRA,France,2024,Dogs,29,FEDIAF2026,published
+FRA,France,2024,Cats,39,FEDIAF2026,published
+DEU,Germany,2024,Dogs,21,FEDIAF2026,published
+DEU,Germany,2024,Cats,25,FEDIAF2026,published
+GRC,Greece,2024,Dogs,14,FEDIAF2026,published
+GRC,Greece,2024,Cats,13,FEDIAF2026,published
+HUN,Hungary,2024,Dogs,50,FEDIAF2026,published
+HUN,Hungary,2024,Cats,34,FEDIAF2026,published
+ISL,Iceland,2024,Dogs,17,FEDIAF2026,published
+ISL,Iceland,2024,Cats,30,FEDIAF2026,published
+IRL,Ireland,2024,Dogs,25,FEDIAF2026,published
+IRL,Ireland,2024,Cats,18,FEDIAF2026,published
+ITA,Italy,2024,Dogs,22,FEDIAF2026,published
+ITA,Italy,2024,Cats,17,FEDIAF2026,published
+XKX,Kosovo,2024,Dogs,24,FEDIAF2026,published
+XKX,Kosovo,2024,Cats,25,FEDIAF2026,published
+LVA,Latvia,2024,Dogs,27,FEDIAF2026,published
+LVA,Latvia,2024,Cats,37,FEDIAF2026,published
+LIE,Liechtenstein,2024,Dogs,12,FEDIAF2026,published
+LIE,Liechtenstein,2024,Cats,31,FEDIAF2026,published
+LTU,Lithuania,2024,Dogs,34,FEDIAF2026,published
+LTU,Lithuania,2024,Cats,32,FEDIAF2026,published
+LUX,Luxembourg,2024,Dogs,21,FEDIAF2026,published
+LUX,Luxembourg,2024,Cats,25,FEDIAF2026,published
+MLT,Malta,2024,Dogs,28,FEDIAF2026,published
+MLT,Malta,2024,Cats,22,FEDIAF2026,published
+MNE,Montenegro,2024,Dogs,24,FEDIAF2026,published
+MNE,Montenegro,2024,Cats,25,FEDIAF2026,published
+NLD,Netherlands,2024,Dogs,16,FEDIAF2026,published
+NLD,Netherlands,2024,Cats,23,FEDIAF2026,published
+MKD,North Macedonia,2024,Dogs,24,FEDIAF2026,published
+MKD,North Macedonia,2024,Cats,25,FEDIAF2026,published
+NOR,Norway,2024,Dogs,17,FEDIAF2026,published
+NOR,Norway,2024,Cats,30,FEDIAF2026,published
+POL,Poland,2024,Dogs,52,FEDIAF2026,published
+POL,Poland,2024,Cats,42,FEDIAF2026,published
+PRT,Portugal,2024,Dogs,39,FEDIAF2026,published
+PRT,Portugal,2024,Cats,32,FEDIAF2026,published
+MDA,Rep. of Moldova,2024,Dogs,24,FEDIAF2026,published
+MDA,Rep. of Moldova,2024,Cats,25,FEDIAF2026,published
+ROU,Romania,2024,Dogs,45,FEDIAF2026,published
+ROU,Romania,2024,Cats,48,FEDIAF2026,published
+SRB,Serbia,2024,Dogs,24,FEDIAF2026,published
+SRB,Serbia,2024,Cats,25,FEDIAF2026,published
+SVK,Slovakia,2024,Dogs,29,FEDIAF2026,published
+SVK,Slovakia,2024,Cats,15,FEDIAF2026,published
+SVN,Slovenia,2024,Dogs,39,FEDIAF2026,published
+SVN,Slovenia,2024,Cats,32,FEDIAF2026,published
+SWE,Sweden,2024,Dogs,16,FEDIAF2026,published
+SWE,Sweden,2024,Cats,21,FEDIAF2026,published
+CHE,Switzerland,2025,Dogs,11,FEDIAF2026,published
+CHE,Switzerland,2025,Cats,25,FEDIAF2026,published
+TUR,Türkiye,2024,Dogs,25,FEDIAF2026,published
+TUR,Türkiye,2024,Cats,14,FEDIAF2026,published
+UKR,Ukraine,2024,Dogs,19,FEDIAF2026,published
+UKR,Ukraine,2024,Cats,30,FEDIAF2026,published
+AUS,Australia,2025,Dogs,49.3,AMA2025,published
+AUS,Australia,2025,Cats,33.6,AMA2025,published
+NZL,New Zealand,2024,Dogs,31,CANZ2024,published
+NZL,New Zealand,2024,Cats,40,CANZ2024,published
+GBR,United Kingdom,2026,Dogs,41,UK2026,published
+GBR,United Kingdom,2026,Cats,31,UK2026,published
+USA,United States,2024,Dogs,51,APPA2025,published
+USA,United States,2024,Cats,37,APPA2025,published
