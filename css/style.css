@@ -28,6 +28,14 @@
     --color-pet-small-mammals: #7759d1; /* Violet */
     --color-pet-reptiles: #d6336c;      /* Raspberry */
     --color-pet-other: #555555;         /* Grey */
+
+    /* Luminance ramps in a pet's own hue, for quantities about one pet type
+       (for example the dog and cat council maps): light = low, dark = high.
+       Each ramp passes through that pet's colour above. */
+    --color-pet-dogs-light: #fbe8d4;
+    --color-pet-dogs-dark: #4b2800;
+    --color-pet-cats-light: #f8e6f2;
+    --color-pet-cats-dark: #4e1f43;
 }
 
 /* 2. TYPOGRAPHY SETTINGS fonts are loaded in index.html. */

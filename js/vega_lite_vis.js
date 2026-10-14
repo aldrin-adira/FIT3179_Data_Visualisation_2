@@ -22,6 +22,10 @@ var themeSignals = {
     colorPetSmallMammals: "--color-pet-small-mammals",
     colorPetReptiles: "--color-pet-reptiles",
     colorPetOther: "--color-pet-other",
+    colorPetDogsLight: "--color-pet-dogs-light",
+    colorPetDogsDark: "--color-pet-dogs-dark",
+    colorPetCatsLight: "--color-pet-cats-light",
+    colorPetCatsDark: "--color-pet-cats-dark",
     fontHeading: "--font-heading",
     fontBody: "--font-body"
 };
@@ -59,3 +63,4 @@ embedChart("#chart7_chart", "js/motivations.vg.json");
 embedChart("#chart8_chart", "js/household_groups.vg.json");
 embedChart("#chart9_chart", "js/spending.vg.json");
 embedChart("#chart10_chart", "js/barriers.vg.json");
+embedChart("#chart11_chart", "js/sa_councils_map.vg.json");

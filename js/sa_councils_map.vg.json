@@ -1,0 +1,957 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Choropleth map of dogs recorded at home per 1,000 residents in South Australian councils, 2025, cropped to the settled south, with insets for Greater Adelaide and the outback towns of Coober Pedy and Roxby Downs. Dogs and Cats Online records (30 May 2025) and Australian Bureau of Statistics population (30 June 2025).",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "title": {
+    "text": {
+      "signal": "narrow ? ['Country councils record about', 'twice as many dogs per resident', 'as Greater Adelaide'] : 'Country councils record about twice as many dogs per resident as Greater Adelaide'"
+    },
+    "subtitle": {
+      "signal": "narrow ? ['Dogs recorded at home per 1,000 residents,', 'South Australian councils, 2025. Hover over', 'a council for its figures.'] : 'Dogs recorded at home per 1,000 residents, South Australian councils, 2025. Hover over a council for its figures.'"
+    },
+    "anchor": "start",
+    "offset": 16,
+    "font": {
+      "signal": "fontHeading"
+    },
+    "fontSize": {
+      "signal": "narrow ? 19 : 24"
+    },
+    "fontWeight": 400,
+    "color": {
+      "signal": "colorHeading"
+    },
+    "subtitleFont": {
+      "signal": "fontBody"
+    },
+    "subtitleFontSize": 13,
+    "subtitleColor": {
+      "signal": "colorMuted"
+    },
+    "subtitlePadding": 6
+  },
+  "signals": [
+    {
+      "name": "colorPetDogsLight",
+      "value": "#fbe8d4",
+      "description": "Theme: replaced by --color-pet-dogs-light (low values)."
+    },
+    {
+      "name": "colorPetDogs",
+      "value": "#9c6500",
+      "description": "Theme: replaced by --color-pet-dogs."
+    },
+    {
+      "name": "colorPetDogsDark",
+      "value": "#4b2800",
+      "description": "Theme: replaced by --color-pet-dogs-dark (high values)."
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Theme: replaced by --color-muted."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Theme: replaced by --color-heading."
+    },
+    {
+      "name": "colorBorder",
+      "value": "#a4adb8",
+      "description": "Theme: replaced by --color-border (no council data)."
+    },
+    {
+      "name": "colorSurface",
+      "value": "#ffffff",
+      "description": "Theme: replaced by --color-surface."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Theme: replaced by --font-heading."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Theme: replaced by --font-body."
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "on": [
+        {
+          "events": "window:resize",
+          "update": "containerSize()[0]"
+        }
+      ]
+    },
+    {
+      "name": "narrow",
+      "update": "width < 760"
+    },
+    {
+      "name": "mainWidth",
+      "update": "narrow ? width : width * 0.58",
+      "description": "Main map, cropped to the settled south."
+    },
+    {
+      "name": "mainHeight",
+      "update": "mainWidth * 0.98"
+    },
+    {
+      "name": "sideX",
+      "update": "narrow ? 0 : mainWidth + 28",
+      "description": "Column for the insets: beside the map on desktop, below it on narrow screens."
+    },
+    {
+      "name": "sideY",
+      "update": "narrow ? mainHeight + 18 : 0"
+    },
+    {
+      "name": "sideWidth",
+      "update": "narrow ? width : width - sideX"
+    },
+    {
+      "name": "adelaideHeight",
+      "update": "narrow ? width * 1.05 : mainHeight * 0.66"
+    },
+    {
+      "name": "townsY",
+      "update": "sideY + adelaideHeight + 14"
+    },
+    {
+      "name": "townWidth",
+      "update": "(sideWidth - 14) / 2"
+    },
+    {
+      "name": "townHeight",
+      "update": "narrow ? 150 : mainHeight - adelaideHeight - 14"
+    },
+    {
+      "name": "legendY",
+      "update": "narrow ? townsY + townHeight + 18 : mainHeight + 16"
+    },
+    {
+      "name": "legendWidth",
+      "update": "narrow ? width : mainWidth"
+    },
+    {
+      "name": "legendColumns",
+      "update": "narrow ? 2 : 3"
+    },
+    {
+      "name": "height",
+      "update": "legendY + 22 + (narrow ? 3 : 2) * 20"
+    },
+    {
+      "name": "hoverCode",
+      "value": null,
+      "on": [
+        {
+          "events": "shape:mouseover",
+          "update": "datum.code"
+        },
+        {
+          "events": "shape:mouseout",
+          "update": "null"
+        }
+      ],
+      "description": "Council under the pointer, highlighted on the map and in the insets."
+    }
+  ],
+  "data": [
+    {
+      "name": "rates",
+      "url": "data/selected/sa_council_animals_per_1000_residents_2025.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "recorded_animals_per_1000_residents": "number",
+          "recorded_at_home_animals": "number",
+          "residents_2025": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.species === 'Dog'"
+        },
+        {
+          "type": "formula",
+          "as": "code",
+          "expr": "'' + datum.lga_code_2025"
+        }
+      ]
+    },
+    {
+      "name": "councils",
+      "url": "data/selected/sa_council_boundaries_2025.geojson",
+      "format": {
+        "type": "json",
+        "property": "features"
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "code",
+          "expr": "'' + datum.properties.lga_code_2025"
+        },
+        {
+          "type": "formula",
+          "as": "name",
+          "expr": "replace(datum.properties.lga_name_2025, ' (SA)', '')"
+        },
+        {
+          "type": "lookup",
+          "from": "rates",
+          "key": "code",
+          "fields": [
+            "code"
+          ],
+          "values": [
+            "recorded_animals_per_1000_residents",
+            "recorded_at_home_animals",
+            "residents_2025"
+          ],
+          "as": [
+            "dog_rate",
+            "dog_count",
+            "residents"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "dog_class",
+          "expr": "!isValid(datum.dog_rate) ? -1 : datum.dog_rate < 100 ? 0 : datum.dog_rate < 200 ? 1 : datum.dog_rate < 300 ? 2 : datum.dog_rate < 400 ? 3 : 4"
+        },
+        {
+          "type": "formula",
+          "as": "tooltip",
+          "expr": "isValid(datum.dog_rate) ? {'title': datum.name, 'Dogs recorded at home': format(datum.dog_count, ','), 'Dogs per 1,000 residents': format(datum.dog_rate, '.0f'), 'Residents, June 2025': format(datum.residents, ',')} : {'title': datum.name, 'Dogs': 'No council data: not a municipal council in Dogs and Cats Online'}"
+        }
+      ]
+    },
+    {
+      "name": "south",
+      "source": "councils",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum.dog_rate) && indexof(['Coober Pedy', 'Roxby Downs'], datum.properties.lga_name_2025) < 0"
+        }
+      ],
+      "description": "Councils that set the main map's extent: all with data except the two isolated outback towns."
+    },
+    {
+      "name": "metro",
+      "source": "councils",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "indexof(['Adelaide', 'Burnside', 'Campbelltown (SA)', 'Charles Sturt', 'Gawler', 'Holdfast Bay', 'Marion', 'Mitcham', 'Norwood Payneham and St Peters', 'Onkaparinga', 'Playford', 'Port Adelaide Enfield', 'Prospect', 'Salisbury', 'Tea Tree Gully', 'Unley', 'Walkerville', 'West Torrens'], datum.properties.lga_name_2025) >= 0"
+        }
+      ]
+    },
+    {
+      "name": "cooberPedy",
+      "source": "councils",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.properties.lga_name_2025 === 'Coober Pedy'"
+        }
+      ]
+    },
+    {
+      "name": "roxbyDowns",
+      "source": "councils",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.properties.lga_name_2025 === 'Roxby Downs'"
+        }
+      ]
+    },
+    {
+      "name": "legend",
+      "values": [
+        {
+          "i": 0,
+          "label": "Under 100"
+        },
+        {
+          "i": 1,
+          "label": "100 to 199"
+        },
+        {
+          "i": 2,
+          "label": "200 to 299"
+        },
+        {
+          "i": 3,
+          "label": "300 to 399"
+        },
+        {
+          "i": 4,
+          "label": "400 or more"
+        },
+        {
+          "i": 5,
+          "label": "No council data"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "steps",
+      "type": "linear",
+      "domain": [
+        0,
+        2.5,
+        4
+      ],
+      "range": {
+        "signal": "[colorPetDogsLight, colorPetDogs, colorPetDogsDark]"
+      },
+      "interpolate": "lab"
+    }
+  ],
+  "projections": [
+    {
+      "name": "mainProjection",
+      "type": "conicEqualArea",
+      "parallels": [
+        -28,
+        -36
+      ],
+      "rotate": [
+        -135,
+        0
+      ],
+      "fit": {
+        "signal": "{type: 'FeatureCollection', features: data('south')}"
+      },
+      "size": {
+        "signal": "[mainWidth, mainHeight]"
+      }
+    }
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "description": "Main map of the settled south, clipped so the outback beyond it is cut off.",
+      "clip": true,
+      "encode": {
+        "update": {
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "value": 0
+          },
+          "width": {
+            "signal": "mainWidth"
+          },
+          "height": {
+            "signal": "mainHeight"
+          }
+        }
+      },
+      "marks": [
+        {
+          "type": "shape",
+          "name": "mainShape",
+          "from": {
+            "data": "councils"
+          },
+          "encode": {
+            "enter": {
+              "tooltip": {
+                "signal": "datum.tooltip"
+              }
+            },
+            "update": {
+              "fill": {
+                "signal": "datum.dog_class < 0 ? colorBorder : scale('steps', datum.dog_class)"
+              },
+              "stroke": {
+                "signal": "hoverCode === datum.code ? colorHeading : colorSurface"
+              },
+              "strokeWidth": {
+                "signal": "hoverCode === datum.code ? 2.5 : 0.6"
+              },
+              "zindex": {
+                "signal": "hoverCode === datum.code ? 1 : 0"
+              }
+            }
+          },
+          "transform": [
+            {
+              "type": "geoshape",
+              "projection": "mainProjection"
+            }
+          ]
+        },
+        {
+          "type": "rect",
+          "interactive": false,
+          "description": "Outline showing the area of the Greater Adelaide inset.",
+          "encode": {
+            "update": {
+              "x": {
+                "signal": "geoBounds('mainProjection', {type: 'FeatureCollection', features: data('metro')})[0][0] - 3"
+              },
+              "y": {
+                "signal": "geoBounds('mainProjection', {type: 'FeatureCollection', features: data('metro')})[0][1] - 3"
+              },
+              "x2": {
+                "signal": "geoBounds('mainProjection', {type: 'FeatureCollection', features: data('metro')})[1][0] + 3"
+              },
+              "y2": {
+                "signal": "geoBounds('mainProjection', {type: 'FeatureCollection', features: data('metro')})[1][1] + 3"
+              },
+              "fill": {
+                "value": "transparent"
+              },
+              "stroke": {
+                "signal": "colorHeading"
+              },
+              "strokeWidth": {
+                "value": 1.2
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "name": "adelaideBox",
+      "description": "Greater Adelaide inset: the 18 metropolitan councils.",
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "sideX"
+          },
+          "y": {
+            "signal": "sideY"
+          },
+          "width": {
+            "signal": "sideWidth"
+          },
+          "height": {
+            "signal": "adelaideHeight"
+          },
+          "fill": {
+            "signal": "colorSurface"
+          },
+          "stroke": {
+            "signal": "colorBorder"
+          },
+          "strokeWidth": {
+            "value": 1
+          }
+        }
+      },
+      "projections": [
+        {
+          "name": "adelaideProjection",
+          "type": "conicEqualArea",
+          "parallels": [
+            -28,
+            -36
+          ],
+          "rotate": [
+            -135,
+            0
+          ],
+          "fit": {
+            "signal": "{type: 'FeatureCollection', features: data('metro')}"
+          },
+          "size": {
+            "signal": "[sideWidth - 16, adelaideHeight - 34]"
+          }
+        }
+      ],
+      "marks": [
+        {
+          "type": "text",
+          "encode": {
+            "enter": {
+              "fontSize": {
+                "value": 12
+              },
+              "fontWeight": {
+                "value": 600
+              },
+              "baseline": {
+                "value": "top"
+              }
+            },
+            "update": {
+              "x": {
+                "value": 8
+              },
+              "y": {
+                "value": 6
+              },
+              "text": {
+                "signal": "'Greater Adelaide (outlined on the map)'"
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              }
+            }
+          }
+        },
+        {
+          "type": "group",
+          "clip": false,
+          "encode": {
+            "update": {
+              "x": {
+                "value": 8
+              },
+              "y": {
+                "value": 26
+              },
+              "width": {
+                "signal": "sideWidth - 16"
+              },
+              "height": {
+                "signal": "adelaideHeight - 34"
+              }
+            }
+          },
+          "marks": [
+            {
+              "type": "shape",
+              "name": "adelaideBox_shape",
+              "from": {
+                "data": "metro"
+              },
+              "encode": {
+                "enter": {
+                  "tooltip": {
+                    "signal": "datum.tooltip"
+                  }
+                },
+                "update": {
+                  "fill": {
+                    "signal": "datum.dog_class < 0 ? colorBorder : scale('steps', datum.dog_class)"
+                  },
+                  "stroke": {
+                    "signal": "hoverCode === datum.code ? colorHeading : colorSurface"
+                  },
+                  "strokeWidth": {
+                    "signal": "hoverCode === datum.code ? 2.5 : 0.8"
+                  },
+                  "zindex": {
+                    "signal": "hoverCode === datum.code ? 1 : 0"
+                  }
+                }
+              },
+              "transform": [
+                {
+                  "type": "geoshape",
+                  "projection": "adelaideProjection"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "name": "cooberBox",
+      "description": "Coober Pedy inset: an isolated outback council north of the main map.",
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "sideX"
+          },
+          "y": {
+            "signal": "townsY"
+          },
+          "width": {
+            "signal": "townWidth"
+          },
+          "height": {
+            "signal": "townHeight"
+          },
+          "fill": {
+            "signal": "colorSurface"
+          },
+          "stroke": {
+            "signal": "colorBorder"
+          },
+          "strokeWidth": {
+            "value": 1
+          }
+        }
+      },
+      "projections": [
+        {
+          "name": "cooberProjection",
+          "type": "conicEqualArea",
+          "parallels": [
+            -28,
+            -36
+          ],
+          "rotate": [
+            -135,
+            0
+          ],
+          "fit": {
+            "signal": "{type: 'FeatureCollection', features: data('cooberPedy')}"
+          },
+          "size": {
+            "signal": "[townWidth - 16, townHeight - 34]"
+          }
+        }
+      ],
+      "marks": [
+        {
+          "type": "text",
+          "encode": {
+            "enter": {
+              "fontSize": {
+                "value": 12
+              },
+              "fontWeight": {
+                "value": 600
+              },
+              "baseline": {
+                "value": "top"
+              }
+            },
+            "update": {
+              "x": {
+                "value": 8
+              },
+              "y": {
+                "value": 6
+              },
+              "text": {
+                "signal": "narrow ? 'Coober Pedy' : 'Coober Pedy (far north)'"
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              }
+            }
+          }
+        },
+        {
+          "type": "group",
+          "clip": true,
+          "encode": {
+            "update": {
+              "x": {
+                "value": 8
+              },
+              "y": {
+                "value": 26
+              },
+              "width": {
+                "signal": "townWidth - 16"
+              },
+              "height": {
+                "signal": "townHeight - 34"
+              }
+            }
+          },
+          "marks": [
+            {
+              "type": "shape",
+              "name": "cooberBox_shape",
+              "from": {
+                "data": "cooberPedy"
+              },
+              "encode": {
+                "enter": {
+                  "tooltip": {
+                    "signal": "datum.tooltip"
+                  }
+                },
+                "update": {
+                  "fill": {
+                    "signal": "datum.dog_class < 0 ? colorBorder : scale('steps', datum.dog_class)"
+                  },
+                  "stroke": {
+                    "signal": "hoverCode === datum.code ? colorHeading : colorSurface"
+                  },
+                  "strokeWidth": {
+                    "signal": "hoverCode === datum.code ? 2.5 : 0.8"
+                  },
+                  "zindex": {
+                    "signal": "hoverCode === datum.code ? 1 : 0"
+                  }
+                }
+              },
+              "transform": [
+                {
+                  "type": "geoshape",
+                  "projection": "cooberProjection"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "name": "roxbyBox",
+      "description": "Roxby Downs inset: an isolated outback council north of the main map.",
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "sideX + townWidth + 14"
+          },
+          "y": {
+            "signal": "townsY"
+          },
+          "width": {
+            "signal": "townWidth"
+          },
+          "height": {
+            "signal": "townHeight"
+          },
+          "fill": {
+            "signal": "colorSurface"
+          },
+          "stroke": {
+            "signal": "colorBorder"
+          },
+          "strokeWidth": {
+            "value": 1
+          }
+        }
+      },
+      "projections": [
+        {
+          "name": "roxbyProjection",
+          "type": "conicEqualArea",
+          "parallels": [
+            -28,
+            -36
+          ],
+          "rotate": [
+            -135,
+            0
+          ],
+          "fit": {
+            "signal": "{type: 'FeatureCollection', features: data('roxbyDowns')}"
+          },
+          "size": {
+            "signal": "[townWidth - 16, townHeight - 34]"
+          }
+        }
+      ],
+      "marks": [
+        {
+          "type": "text",
+          "encode": {
+            "enter": {
+              "fontSize": {
+                "value": 12
+              },
+              "fontWeight": {
+                "value": 600
+              },
+              "baseline": {
+                "value": "top"
+              }
+            },
+            "update": {
+              "x": {
+                "value": 8
+              },
+              "y": {
+                "value": 6
+              },
+              "text": {
+                "signal": "narrow ? 'Roxby Downs' : 'Roxby Downs (far north)'"
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              }
+            }
+          }
+        },
+        {
+          "type": "group",
+          "clip": true,
+          "encode": {
+            "update": {
+              "x": {
+                "value": 8
+              },
+              "y": {
+                "value": 26
+              },
+              "width": {
+                "signal": "townWidth - 16"
+              },
+              "height": {
+                "signal": "townHeight - 34"
+              }
+            }
+          },
+          "marks": [
+            {
+              "type": "shape",
+              "name": "roxbyBox_shape",
+              "from": {
+                "data": "roxbyDowns"
+              },
+              "encode": {
+                "enter": {
+                  "tooltip": {
+                    "signal": "datum.tooltip"
+                  }
+                },
+                "update": {
+                  "fill": {
+                    "signal": "datum.dog_class < 0 ? colorBorder : scale('steps', datum.dog_class)"
+                  },
+                  "stroke": {
+                    "signal": "hoverCode === datum.code ? colorHeading : colorSurface"
+                  },
+                  "strokeWidth": {
+                    "signal": "hoverCode === datum.code ? 2.5 : 0.8"
+                  },
+                  "zindex": {
+                    "signal": "hoverCode === datum.code ? 1 : 0"
+                  }
+                }
+              },
+              "transform": [
+                {
+                  "type": "geoshape",
+                  "projection": "roxbyProjection"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "description": "Legend title.",
+      "encode": {
+        "enter": {
+          "fontSize": {
+            "value": 12
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "text": {
+            "value": "Dogs recorded per 1,000 residents"
+          }
+        },
+        "update": {
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "signal": "legendY"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {
+        "data": "legend"
+      },
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "datum.i % legendColumns * (legendWidth / legendColumns)"
+          },
+          "y": {
+            "signal": "legendY + 22 + floor(datum.i / legendColumns) * 20"
+          },
+          "width": {
+            "value": 14
+          },
+          "height": {
+            "value": 14
+          },
+          "fill": {
+            "signal": "datum.i > 4 ? colorBorder : scale('steps', datum.i)"
+          },
+          "stroke": {
+            "signal": "colorBorder"
+          },
+          "strokeWidth": {
+            "value": 0.5
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {
+        "data": "legend"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "fontSize": {
+            "value": 11
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "text": {
+            "field": "label"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "datum.i % legendColumns * (legendWidth / legendColumns) + 19"
+          },
+          "y": {
+            "signal": "legendY + 22 + floor(datum.i / legendColumns) * 20 + 7"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    }
+  ]
+}
