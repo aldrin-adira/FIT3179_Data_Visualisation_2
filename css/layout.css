@@ -139,6 +139,12 @@ footer .colophon {
     padding: var(--placeholder-padding);
 }
 
+/* Paired charts: each figure fills its half-width column (the column supplies the gap). */
+.chart-pair > .chart-figure {
+    display: flex;
+    width: 100%;
+}
+
 .chart-source {
     margin-top: 0.75rem;
 }

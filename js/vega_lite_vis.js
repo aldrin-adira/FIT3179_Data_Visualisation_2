@@ -49,12 +49,34 @@ function refitAfterFonts(result) {
     });
 }
 
+// Returns a promise of the chart's Vega view, so charts can be linked.
 function embedChart(container, specUrl) {
-    fetch(specUrl)
+    return fetch(specUrl)
         .then(function (response) { return response.json(); })
         .then(function (spec) { return vegaEmbed(container, applyTheme(spec), embedOptions); })
-        .then(refitAfterFonts)
+        .then(function (result) {
+            refitAfterFonts(result);
+            return result.view;
+        })
         .catch(console.error);
+}
+
+// Keep a signal in step across two charts, for example the council under the pointer.
+function linkSignal(viewPromises, signalName) {
+    Promise.all(viewPromises).then(function (views) {
+        views.forEach(function (source) {
+            if (!source) {
+                return;
+            }
+            source.addSignalListener(signalName, function (name, value) {
+                views.forEach(function (target) {
+                    if (target && target !== source && target.signal(signalName) !== value) {
+                        target.signal(signalName, value).runAsync();
+                    }
+                });
+            });
+        });
+    });
 }
 
 embedChart("#chart1_chart", "js/world_map.vg.json");
@@ -65,6 +87,9 @@ embedChart("#chart7_chart", "js/motivations.vg.json");
 embedChart("#chart8_chart", "js/household_groups.vg.json");
 embedChart("#chart9_chart", "js/spending.vg.json");
 embedChart("#chart10_chart", "js/barriers.vg.json");
-embedChart("#chart11_chart", "js/sa_councils_map.vg.json");
+// Section 6 pair: dogs in total (symbols) beside dogs per person (choropleth), with linked hover.
+var dogCounts = embedChart("#chart14_chart", "js/sa_dog_symbols.vg.json");
+var dogRates = embedChart("#chart11_chart", "js/sa_councils_map.vg.json");
+linkSignal([dogCounts, dogRates], "hoverCode");
 embedChart("#chart12_chart", "js/density_scatter.vg.json");
 embedChart("#chart13_chart", "js/draws_and_limits.vg.json");

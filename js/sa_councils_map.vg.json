@@ -8,7 +8,7 @@
   },
   "title": {
     "text": {
-      "signal": "narrow ? ['Country councils record about', 'twice as many dogs per resident', 'as Greater Adelaide'] : 'Country councils record about twice as many dogs per resident as Greater Adelaide'"
+      "signal": "narrow ? ['Per person, country councils', 'record about twice as many', 'dogs as Greater Adelaide'] : 'Per person, country councils record about twice as many dogs as Greater Adelaide'"
     },
     "subtitle": {
       "signal": "narrow ? ['Dogs recorded at home per 1,000 residents,', 'South Australian councils, 2025. Hover over', 'a council for its figures.'] : 'Dogs recorded at home per 1,000 residents, South Australian councils, 2025. Hover over a council for its figures.'"
