@@ -26,14 +26,6 @@ var themeSignals = {
     colorPetDogsDark: "--color-pet-dogs-dark",
     colorPetCatsLight: "--color-pet-cats-light",
     colorPetCatsDark: "--color-pet-cats-dark",
-    colorCountryAustralia: "--color-country-australia",
-    colorCountryPoland: "--color-country-poland",
-    colorCountryUnitedStates: "--color-country-united-states",
-    colorCountryHungary: "--color-country-hungary",
-    colorCountryRomania: "--color-country-romania",
-    colorCountryFrance: "--color-country-france",
-    colorCountryNewZealand: "--color-country-new-zealand",
-    colorCountryLatvia: "--color-country-latvia",
     fontHeading: "--font-heading",
     fontBody: "--font-body"
 };

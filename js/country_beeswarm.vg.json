@@ -36,44 +36,9 @@
   },
   "signals": [
     {
-      "name": "colorCountryAustralia",
+      "name": "colorAccent",
       "value": "#005a9c",
-      "description": "Theme: replaced by --color-country-australia."
-    },
-    {
-      "name": "colorCountryPoland",
-      "value": "#efb39c",
-      "description": "Theme: replaced by --color-country-poland."
-    },
-    {
-      "name": "colorCountryUnitedStates",
-      "value": "#a8c8ea",
-      "description": "Theme: replaced by --color-country-united-states."
-    },
-    {
-      "name": "colorCountryHungary",
-      "value": "#b5d9a0",
-      "description": "Theme: replaced by --color-country-hungary."
-    },
-    {
-      "name": "colorCountryRomania",
-      "value": "#ecd57c",
-      "description": "Theme: replaced by --color-country-romania."
-    },
-    {
-      "name": "colorCountryFrance",
-      "value": "#e7b6f0",
-      "description": "Theme: replaced by --color-country-france."
-    },
-    {
-      "name": "colorCountryNewZealand",
-      "value": "#98d8cf",
-      "description": "Theme: replaced by --color-country-new-zealand."
-    },
-    {
-      "name": "colorCountryLatvia",
-      "value": "#f4c2d7",
-      "description": "Theme: replaced by --color-country-latvia."
+      "description": "Theme: replaced by --color-accent (Australia)."
     },
     {
       "name": "colorPetDogs",
@@ -169,7 +134,7 @@
     },
     {
       "name": "height",
-      "update": "legendY + (narrow ? 124 : 80)"
+      "update": "legendY + 24"
     },
     {
       "name": "hoverIso",
@@ -232,7 +197,8 @@
         {
           "type": "formula",
           "as": "colour",
-          "expr": "datum.top ? {'AUS': colorCountryAustralia, 'POL': colorCountryPoland, 'USA': colorCountryUnitedStates, 'HUN': colorCountryHungary, 'ROU': colorCountryRomania, 'FRA': colorCountryFrance, 'NZL': colorCountryNewZealand, 'LVA': colorCountryLatvia}[datum.iso3] : colorBorder"
+          "expr": "datum.iso3 === 'AUS' ? colorAccent : colorBorder",
+          "description": "Only Australia is coloured; every other country is grey."
         },
         {
           "type": "formula",
@@ -275,42 +241,23 @@
     },
     {
       "name": "legend",
-      "source": "countries",
+      "values": [
+        {
+          "i": 0,
+          "country": "Australia",
+          "key": "accent"
+        },
+        {
+          "i": 1,
+          "country": "Other countries",
+          "key": "grey"
+        }
+      ],
       "transform": [
         {
-          "type": "filter",
-          "expr": "datum.top"
-        },
-        {
-          "type": "aggregate",
-          "groupby": [
-            "iso3",
-            "country",
-            "colour"
-          ]
-        },
-        {
           "type": "formula",
-          "as": "order_key",
-          "expr": "(datum.iso3 === 'AUS' ? '0' : '1') + datum.country"
-        },
-        {
-          "type": "window",
-          "sort": {
-            "field": "order_key"
-          },
-          "ops": [
-            "row_number"
-          ],
-          "as": [
-            "n"
-          ]
-        },
-        {
-          "type": "formula",
-          "as": "i",
-          "expr": "datum.n - 1",
-          "description": "Australia first, then alphabetical."
+          "as": "colour",
+          "expr": "datum.key === 'accent' ? colorAccent : colorBorder"
         }
       ]
     },
@@ -508,10 +455,10 @@
                 "signal": "(datum.species === 'Dogs' ? rowDogs : rowCats)"
               },
               "size": {
-                "signal": "PI * radius * radius * (datum.iso3 === 'AUS' ? 2.2 : 1)"
+                "signal": "PI * radius * radius"
               },
               "r": {
-                "signal": "radius * (datum.iso3 === 'AUS' ? 1.5 : 1)"
+                "signal": "radius"
               },
               "fill": {
                 "field": "colour"
@@ -558,16 +505,13 @@
           "type": "text",
           "name": "ausLabels",
           "zindex": 3,
-          "description": "Australia's labels above its dots.",
+          "description": "Australia's labels: above its dog dot, below its cat dot so neighbouring cat dots stay visible.",
           "from": {
             "data": "dots"
           },
           "interactive": false,
           "encode": {
             "enter": {
-              "baseline": {
-                "value": "bottom"
-              },
               "fontWeight": {
                 "value": 600
               }
@@ -577,7 +521,10 @@
                 "signal": "datum.x > width - 50 ? datum.x + datum.r : datum.x"
               },
               "y": {
-                "signal": "datum.y - datum.r - 4"
+                "signal": "datum.datum.species === 'Cats' ? datum.y + datum.r + 12 : datum.y - datum.r - 4"
+              },
+              "baseline": {
+                "signal": "datum.datum.species === 'Cats' ? 'top' : 'bottom'"
               },
               "align": {
                 "signal": "datum.x > width - 50 ? 'right' : 'center'"
@@ -592,7 +539,7 @@
                 "signal": "fontBody"
               },
               "fill": {
-                "signal": "colorCountryAustralia"
+                "signal": "colorAccent"
               }
             }
           }
@@ -839,7 +786,7 @@
             "value": "top"
           },
           "text": {
-            "value": "Coloured: Australia and each row's top five; grey: other countries"
+            "value": ""
           }
         },
         "update": {
@@ -856,7 +803,7 @@
             "signal": "colorMuted"
           },
           "text": {
-            "signal": "narrow ? 'Coloured: Australia and the top five' : 'Coloured: Australia and each row\\'s top five; grey: other countries'"
+            "value": ""
           }
         }
       }
@@ -870,10 +817,10 @@
       "encode": {
         "update": {
           "x": {
-            "signal": "7 + (datum.i % (narrow ? 2 : 4)) * (width / (narrow ? 2 : 4))"
+            "signal": "7 + datum.i * 120"
           },
           "y": {
-            "signal": "legendY + 30 + floor(datum.i / (narrow ? 2 : 4)) * 22"
+            "signal": "legendY + 8"
           },
           "size": {
             "value": 120
@@ -901,10 +848,10 @@
         },
         "update": {
           "x": {
-            "signal": "18 + (datum.i % (narrow ? 2 : 4)) * (width / (narrow ? 2 : 4))"
+            "signal": "18 + datum.i * 120"
           },
           "y": {
-            "signal": "legendY + 30 + floor(datum.i / (narrow ? 2 : 4)) * 22"
+            "signal": "legendY + 8"
           },
           "text": {
             "field": "country"
