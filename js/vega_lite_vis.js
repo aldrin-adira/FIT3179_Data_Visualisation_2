@@ -67,3 +67,4 @@ embedChart("#chart9_chart", "js/spending.vg.json");
 embedChart("#chart10_chart", "js/barriers.vg.json");
 embedChart("#chart11_chart", "js/sa_councils_map.vg.json");
 embedChart("#chart12_chart", "js/density_scatter.vg.json");
+embedChart("#chart13_chart", "js/draws_and_limits.vg.json");

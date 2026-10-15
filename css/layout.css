@@ -114,6 +114,12 @@ footer .colophon {
     padding-left: 1rem;
 }
 
+/* Closing statement at the end of the story. */
+.section-conclusion {
+    max-width: var(--text-width);
+    padding-left: 1rem;
+}
+
 /* 4. CHARTS Pure CSS supplies full-width mobile columns. */
 .chart-container {
     display: flex;
