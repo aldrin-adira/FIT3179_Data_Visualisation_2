@@ -26,6 +26,14 @@ var themeSignals = {
     colorPetDogsDark: "--color-pet-dogs-dark",
     colorPetCatsLight: "--color-pet-cats-light",
     colorPetCatsDark: "--color-pet-cats-dark",
+    colorCountryAustralia: "--color-country-australia",
+    colorCountryPoland: "--color-country-poland",
+    colorCountryUnitedStates: "--color-country-united-states",
+    colorCountryHungary: "--color-country-hungary",
+    colorCountryRomania: "--color-country-romania",
+    colorCountryFrance: "--color-country-france",
+    colorCountryNewZealand: "--color-country-new-zealand",
+    colorCountryLatvia: "--color-country-latvia",
     fontHeading: "--font-heading",
     fontBody: "--font-body"
 };
@@ -58,7 +66,7 @@ function embedChart(container, specUrl) {
 }
 
 embedChart("#chart1_chart", "js/world_map.vg.json");
-embedChart("#chart2_chart", "js/country_ranking.vg.json");
+embedChart("#chart2_chart", "js/country_beeswarm.vg.json");
 embedChart("#chart3_chart", "js/ownership_trend.vg.json");
 embedChart("#chart5_chart", "js/pet_types.vg.json");
 embedChart("#chart7_chart", "js/motivations.vg.json");

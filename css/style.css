@@ -36,6 +36,19 @@
     --color-pet-dogs-dark: #4b2800;
     --color-pet-cats-light: #f8e6f2;
     --color-pet-cats-dark: #4e1f43;
+
+    /* Country colours for the top-countries treemap: one fixed colour per country.
+       Australia uses the accent (the story's highlight); the others are light tints,
+       kept well apart in lightness from the darker pet colours. Seven light hues cannot
+       all stay distinct under colour blindness, so every rectangle is labelled by name. */
+    --color-country-australia: #005a9c;
+    --color-country-poland: #efb39c;
+    --color-country-united-states: #a8c8ea;
+    --color-country-hungary: #b5d9a0;
+    --color-country-romania: #ecd57c;
+    --color-country-france: #e7b6f0;
+    --color-country-new-zealand: #98d8cf;
+    --color-country-latvia: #f4c2d7;
 }
 
 /* 2. TYPOGRAPHY SETTINGS fonts are loaded in index.html. */

@@ -1,0 +1,922 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Beeswarm plot: each of 43 countries is a dot placed by its share of households owning at least one dog (top row) or cat (bottom row), with the median country marked and Australia highlighted. Based on the Vega beeswarm example.",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "title": {
+    "text": {
+      "signal": "narrow ? ['Australia is far above the typical', 'country for dogs, and above it', 'for cats'] : 'Australia is far above the typical country for dogs, and above it for cats'"
+    },
+    "subtitle": {
+      "signal": "narrow ? ['Each dot is one of 43 countries, placed by', 'its share of households with a dog or a cat'] : 'Each dot is one of 43 countries, placed by its share of households owning at least one dog (top row) or cat (bottom row)'"
+    },
+    "anchor": "start",
+    "offset": 16,
+    "font": {
+      "signal": "fontHeading"
+    },
+    "fontSize": {
+      "signal": "narrow ? 19 : 24"
+    },
+    "fontWeight": 400,
+    "color": {
+      "signal": "colorHeading"
+    },
+    "subtitleFont": {
+      "signal": "fontBody"
+    },
+    "subtitleFontSize": 13,
+    "subtitleColor": {
+      "signal": "colorMuted"
+    },
+    "subtitlePadding": 6
+  },
+  "signals": [
+    {
+      "name": "colorCountryAustralia",
+      "value": "#005a9c",
+      "description": "Theme: replaced by --color-country-australia."
+    },
+    {
+      "name": "colorCountryPoland",
+      "value": "#efb39c",
+      "description": "Theme: replaced by --color-country-poland."
+    },
+    {
+      "name": "colorCountryUnitedStates",
+      "value": "#a8c8ea",
+      "description": "Theme: replaced by --color-country-united-states."
+    },
+    {
+      "name": "colorCountryHungary",
+      "value": "#b5d9a0",
+      "description": "Theme: replaced by --color-country-hungary."
+    },
+    {
+      "name": "colorCountryRomania",
+      "value": "#ecd57c",
+      "description": "Theme: replaced by --color-country-romania."
+    },
+    {
+      "name": "colorCountryFrance",
+      "value": "#e7b6f0",
+      "description": "Theme: replaced by --color-country-france."
+    },
+    {
+      "name": "colorCountryNewZealand",
+      "value": "#98d8cf",
+      "description": "Theme: replaced by --color-country-new-zealand."
+    },
+    {
+      "name": "colorCountryLatvia",
+      "value": "#f4c2d7",
+      "description": "Theme: replaced by --color-country-latvia."
+    },
+    {
+      "name": "colorPetDogs",
+      "value": "#9c6500",
+      "description": "Theme: replaced by --color-pet-dogs (row heading)."
+    },
+    {
+      "name": "colorPetCats",
+      "value": "#7a376b",
+      "description": "Theme: replaced by --color-pet-cats (row heading)."
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Theme: replaced by --color-muted."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Theme: replaced by --color-heading."
+    },
+    {
+      "name": "colorBorder",
+      "value": "#a4adb8",
+      "description": "Theme: replaced by --color-border (countries outside the top five)."
+    },
+    {
+      "name": "colorSurface",
+      "value": "#ffffff",
+      "description": "Theme: replaced by --color-surface."
+    },
+    {
+      "name": "colorPage",
+      "value": "#dadfef",
+      "description": "Theme: replaced by --color-page (note background)."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Theme: replaced by --font-heading."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Theme: replaced by --font-body."
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "on": [
+        {
+          "events": "window:resize",
+          "update": "containerSize()[0]"
+        }
+      ]
+    },
+    {
+      "name": "narrow",
+      "update": "width < 760"
+    },
+    {
+      "name": "radius",
+      "update": "narrow ? 5 : 9"
+    },
+    {
+      "name": "plotLeft",
+      "update": "narrow ? 0 : 70",
+      "description": "Desktop: room for the row names on the left."
+    },
+    {
+      "name": "rowHeight",
+      "update": "narrow ? 130 : 170"
+    },
+    {
+      "name": "rowDogs",
+      "update": "rowHeight / 2 + 10"
+    },
+    {
+      "name": "rowCats",
+      "update": "rowHeight * 1.5 + 30"
+    },
+    {
+      "name": "plotHeight",
+      "update": "2 * rowHeight + 40"
+    },
+    {
+      "name": "noteY",
+      "update": "plotHeight + 56"
+    },
+    {
+      "name": "legendY",
+      "update": "noteY + (narrow ? 112 : 78)"
+    },
+    {
+      "name": "height",
+      "update": "legendY + (narrow ? 124 : 80)"
+    },
+    {
+      "name": "hoverIso",
+      "value": null,
+      "on": [
+        {
+          "events": "@dots:mouseover",
+          "update": "datum.datum.iso3"
+        },
+        {
+          "events": "@dots:mouseout",
+          "update": "null"
+        }
+      ],
+      "description": "Country under the pointer: its dot is outlined in both rows."
+    }
+  ],
+  "data": [
+    {
+      "name": "countries",
+      "url": "data/selected/international_dog_cat_selected.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "household_ownership_pct": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "country",
+          "expr": "{'Rep. of Moldova': 'Republic of Moldova', 'Bosnia & Herzegovina': 'Bosnia and Herzegovina'}[datum.country] || datum.country"
+        },
+        {
+          "type": "formula",
+          "as": "value",
+          "expr": "datum.household_ownership_pct"
+        },
+        {
+          "type": "window",
+          "groupby": [
+            "species"
+          ],
+          "sort": {
+            "field": "value",
+            "order": "descending"
+          },
+          "ops": [
+            "rank"
+          ],
+          "as": [
+            "rank"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "top",
+          "expr": "datum.rank <= 5 || datum.iso3 === 'AUS'"
+        },
+        {
+          "type": "formula",
+          "as": "colour",
+          "expr": "datum.top ? {'AUS': colorCountryAustralia, 'POL': colorCountryPoland, 'USA': colorCountryUnitedStates, 'HUN': colorCountryHungary, 'ROU': colorCountryRomania, 'FRA': colorCountryFrance, 'NZL': colorCountryNewZealand, 'LVA': colorCountryLatvia}[datum.iso3] : colorBorder"
+        },
+        {
+          "type": "formula",
+          "as": "tooltip",
+          "expr": "{'title': datum.country, 'Pet': datum.species, 'Share of households owning one': format(datum.value, '.1~f') + '%', 'Rank': datum.rank + ' of 43', 'Survey year': datum.data_year, 'Source': {'FEDIAF2026': 'European Pet Food Industry Federation, Facts and Figures 2026', 'AMA2025': 'Animal Medicines Australia, Pets in Australia 2025', 'CANZ2024': 'Companion Animals New Zealand, 2024 report', 'UK2026': 'United Kingdom Pet Food, pet population 2026', 'APPA2025': 'American Pet Products Association, 2025 report'}[datum.source_id]}"
+        }
+      ]
+    },
+    {
+      "name": "medians",
+      "source": "countries",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": [
+            "species"
+          ],
+          "fields": [
+            "value"
+          ],
+          "ops": [
+            "median"
+          ],
+          "as": [
+            "median"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "rows",
+      "values": [
+        {
+          "species": "Dogs"
+        },
+        {
+          "species": "Cats"
+        }
+      ]
+    },
+    {
+      "name": "legend",
+      "source": "countries",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.top"
+        },
+        {
+          "type": "aggregate",
+          "groupby": [
+            "iso3",
+            "country",
+            "colour"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "order_key",
+          "expr": "(datum.iso3 === 'AUS' ? '0' : '1') + datum.country"
+        },
+        {
+          "type": "window",
+          "sort": {
+            "field": "order_key"
+          },
+          "ops": [
+            "row_number"
+          ],
+          "as": [
+            "n"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "i",
+          "expr": "datum.n - 1",
+          "description": "Australia first, then alphabetical."
+        }
+      ]
+    },
+    {
+      "name": "note",
+      "values": [
+        {
+          "lines": [
+            "Australia: 49% of homes have a dog, about twice the typical country (24%).",
+            "For cats, Australia's 34% is about a third above the typical country (25%)."
+          ],
+          "short": [
+            "Australia: 49% of homes have a dog,",
+            "about twice the typical country (24%).",
+            "For cats, 34% is about a third above",
+            "the typical country (25%)."
+          ]
+        }
+      ]
+    },
+    {
+      "name": "axisTicks",
+      "values": [
+        {
+          "v": 10
+        },
+        {
+          "v": 20
+        },
+        {
+          "v": 30
+        },
+        {
+          "v": 40
+        },
+        {
+          "v": 50
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": [
+        5,
+        55
+      ],
+      "range": [
+        {
+          "signal": "plotLeft"
+        },
+        {
+          "signal": "width"
+        }
+      ],
+      "zero": false
+    }
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "name": "plot",
+      "clip": true,
+      "description": "Clipped plot area: dots nudged past the edge would otherwise make fit-x autosizing shrink the chart in a loop.",
+      "encode": {
+        "update": {
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "value": 0
+          },
+          "width": {
+            "signal": "width"
+          },
+          "height": {
+            "signal": "plotHeight"
+          }
+        }
+      },
+      "axes": [
+        {
+          "orient": "bottom",
+          "scale": "x",
+          "values": {
+            "signal": "narrow ? [10, 30, 50] : [10, 20, 30, 40, 50]"
+          },
+          "grid": true,
+          "gridColor": {
+            "signal": "colorBorder"
+          },
+          "gridOpacity": 0.35,
+          "domain": false,
+          "ticks": false,
+          "labels": false,
+          "zindex": 0
+        }
+      ],
+      "marks": [
+        {
+          "type": "rule",
+          "description": "Median (typical) country in each row.",
+          "from": {
+            "data": "medians"
+          },
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "strokeDash": {
+                "value": [
+                  4,
+                  4
+                ]
+              },
+              "strokeWidth": {
+                "value": 1.5
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "median"
+              },
+              "y": {
+                "signal": "(datum.species === 'Dogs' ? rowDogs : rowCats) - rowHeight / 2 + 18"
+              },
+              "y2": {
+                "signal": "(datum.species === 'Dogs' ? rowDogs : rowCats) + rowHeight / 2 - 4"
+              },
+              "stroke": {
+                "signal": "colorMuted"
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "from": {
+            "data": "medians"
+          },
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "align": {
+                "value": "center"
+              },
+              "baseline": {
+                "value": "bottom"
+              },
+              "fontSize": {
+                "value": 11
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "median"
+              },
+              "y": {
+                "signal": "(datum.species === 'Dogs' ? rowDogs : rowCats) - rowHeight / 2 + 16"
+              },
+              "text": {
+                "signal": "'Typical country ' + datum.median + '%'"
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "name": "dots",
+          "description": "One dot per country, packed so dots do not overlap; x stays close to the exact share.",
+          "from": {
+            "data": "countries"
+          },
+          "encode": {
+            "enter": {
+              "shape": {
+                "value": "circle"
+              }
+            },
+            "update": {
+              "xfocus": {
+                "scale": "x",
+                "field": "value"
+              },
+              "yfocus": {
+                "signal": "(datum.species === 'Dogs' ? rowDogs : rowCats)"
+              },
+              "size": {
+                "signal": "PI * radius * radius * (datum.iso3 === 'AUS' ? 2.2 : 1)"
+              },
+              "r": {
+                "signal": "radius * (datum.iso3 === 'AUS' ? 1.5 : 1)"
+              },
+              "fill": {
+                "field": "colour"
+              },
+              "stroke": {
+                "signal": "hoverIso === datum.iso3 ? colorHeading : colorSurface"
+              },
+              "strokeWidth": {
+                "signal": "hoverIso === datum.iso3 ? 2.5 : 1"
+              },
+              "tooltip": {
+                "signal": "datum.tooltip"
+              }
+            }
+          },
+          "transform": [
+            {
+              "type": "force",
+              "iterations": 300,
+              "static": true,
+              "forces": [
+                {
+                  "force": "collide",
+                  "radius": {
+                    "field": "r"
+                  },
+                  "iterations": 2
+                },
+                {
+                  "force": "x",
+                  "x": "xfocus",
+                  "strength": 0.9
+                },
+                {
+                  "force": "y",
+                  "y": "yfocus",
+                  "strength": 0.08
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "name": "ausLabels",
+          "zindex": 3,
+          "description": "Australia's labels above its dots.",
+          "from": {
+            "data": "dots"
+          },
+          "interactive": false,
+          "encode": {
+            "enter": {
+              "baseline": {
+                "value": "bottom"
+              },
+              "fontWeight": {
+                "value": 600
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "datum.x > width - 50 ? datum.x + datum.r : datum.x"
+              },
+              "y": {
+                "signal": "datum.y - datum.r - 4"
+              },
+              "align": {
+                "signal": "datum.x > width - 50 ? 'right' : 'center'"
+              },
+              "text": {
+                "signal": "datum.datum.iso3 === 'AUS' ? 'Australia ' + format(datum.datum.value, '.0f') + '%' : ''"
+              },
+              "fontSize": {
+                "signal": "narrow ? 11 : 13"
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorCountryAustralia"
+              }
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "description": "Plain background behind Australia's labels so neighbouring dots do not show through; no outline or shadow.",
+          "from": {
+            "data": "ausLabels"
+          },
+          "interactive": false,
+          "zindex": 2,
+          "encode": {
+            "update": {
+              "x": {
+                "signal": "datum.bounds.x1 - 3"
+              },
+              "x2": {
+                "signal": "datum.bounds.x2 + 3"
+              },
+              "y": {
+                "signal": "datum.bounds.y1 - 1"
+              },
+              "y2": {
+                "signal": "datum.bounds.y2 + 1"
+              },
+              "fill": {
+                "signal": "colorSurface"
+              },
+              "fillOpacity": {
+                "signal": "datum.text ? 0.9 : 0"
+              },
+              "cornerRadius": {
+                "value": 3
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "description": "Row names in the pet colours.",
+      "from": {
+        "data": "rows"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "baseline": {
+            "value": "middle"
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "text": {
+            "field": "species"
+          }
+        },
+        "update": {
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "signal": "narrow ? (datum.species === 'Dogs' ? rowDogs : rowCats) - rowHeight / 2 + 10 : (datum.species === 'Dogs' ? rowDogs : rowCats)"
+          },
+          "fontSize": {
+            "signal": "narrow ? 13 : 15"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "datum.species === 'Dogs' ? colorPetDogs : colorPetCats"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "description": "Shared percentage axis labels under the plot.",
+      "interactive": false,
+      "from": {
+        "data": "axisTicks"
+      },
+      "encode": {
+        "enter": {
+          "align": {
+            "value": "center"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 12
+          }
+        },
+        "update": {
+          "x": {
+            "scale": "x",
+            "field": "v"
+          },
+          "y": {
+            "signal": "plotHeight + 4"
+          },
+          "text": {
+            "signal": "datum.v + '%'"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          },
+          "opacity": {
+            "signal": "narrow && datum.v % 20 === 0 ? 0 : 1"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "align": {
+            "value": "center"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 13
+          },
+          "fontWeight": {
+            "value": 500
+          },
+          "text": {
+            "value": "Share of households owning at least one"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "(plotLeft + width) / 2"
+          },
+          "y": {
+            "signal": "plotHeight + 22"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "name": "noteText",
+      "from": {
+        "data": "note"
+      },
+      "interactive": false,
+      "zindex": 2,
+      "encode": {
+        "enter": {
+          "baseline": {
+            "value": "top"
+          },
+          "lineHeight": {
+            "value": 17
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fontStyle": {
+            "value": "italic"
+          }
+        },
+        "update": {
+          "x": {
+            "value": 8
+          },
+          "y": {
+            "signal": "noteY + 6"
+          },
+          "text": {
+            "signal": "narrow ? datum.short : datum.lines"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "description": "Plain background sized to the note text; no outline or shadow.",
+      "from": {
+        "data": "noteText"
+      },
+      "interactive": false,
+      "zindex": 1,
+      "encode": {
+        "update": {
+          "x": {
+            "value": 0
+          },
+          "x2": {
+            "signal": "datum.bounds.x2 + 8"
+          },
+          "y": {
+            "signal": "noteY"
+          },
+          "y2": {
+            "signal": "datum.bounds.y2 + 6"
+          },
+          "fill": {
+            "signal": "colorPage"
+          },
+          "cornerRadius": {
+            "value": 4
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "description": "Legend title.",
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "fontSize": {
+            "value": 12
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "text": {
+            "value": "Coloured: Australia and each row's top five; grey: other countries"
+          }
+        },
+        "update": {
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "signal": "legendY"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          },
+          "text": {
+            "signal": "narrow ? 'Coloured: Australia and the top five' : 'Coloured: Australia and each row\\'s top five; grey: other countries'"
+          }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {
+        "data": "legend"
+      },
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "7 + (datum.i % (narrow ? 2 : 4)) * (width / (narrow ? 2 : 4))"
+          },
+          "y": {
+            "signal": "legendY + 30 + floor(datum.i / (narrow ? 2 : 4)) * 22"
+          },
+          "size": {
+            "value": 120
+          },
+          "fill": {
+            "field": "colour"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {
+        "data": "legend"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "baseline": {
+            "value": "middle"
+          },
+          "fontSize": {
+            "value": 12
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "18 + (datum.i % (narrow ? 2 : 4)) * (width / (narrow ? 2 : 4))"
+          },
+          "y": {
+            "signal": "legendY + 30 + floor(datum.i / (narrow ? 2 : 4)) * 22"
+          },
+          "text": {
+            "field": "country"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    }
+  ]
+}
