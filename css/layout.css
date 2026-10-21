@@ -77,8 +77,6 @@ p + p { margin-top: 1rem; }
 .chart-container > div, .vega-embed { width: 100%; min-width: 0; }
 .chart-figure > [id^="chart"] { margin-bottom: 12px; }
 .chart-source { padding-top: 10px; }
-.chart-data { margin-top: 6px; }
-.chart-data a { display: inline-block; margin: 8px 16px 0 0; }
 /* The map introduction and paired maps use the shared column grid. */
 .section-brief { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px var(--column-gap); margin-bottom: 16px; }
 .section-brief p { max-width: 54ch; margin: 0; }

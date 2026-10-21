@@ -130,8 +130,6 @@ function applyTheme(spec) {
 // the browser console and a visible message; other charts continue loading.
 function embedChart(container, specUrl) {
     var host = document.querySelector(container);
-    var oldDetails = host.closest("figure").querySelector(".chart-data");
-    if (oldDetails) oldDetails.remove();
     host.setAttribute("role", "group");
     host.setAttribute("aria-busy", "true");
     host.innerHTML = '<p class="chart-status" role="status">Loading chart…</p>';
@@ -143,21 +141,6 @@ function embedChart(container, specUrl) {
     var job = definition.then(function(spec) { return JSON.parse(JSON.stringify(spec)); })
         .then(function (spec) {
             host.setAttribute("aria-label", spec.description || "Data chart");
-            // The same data downloads are available to keyboard and screen-reader users.
-            var details = document.createElement("details");
-            details.className = "chart-data";
-            var summary = document.createElement("summary");
-            summary.textContent = "Chart specification and source data";
-            details.appendChild(summary);
-            [specUrl].concat((spec.data || []).map(function(d) { return d.url; }).filter(Boolean))
-                .filter(function(url, index, urls) { return urls.indexOf(url) === index; })
-                .forEach(function(url, index) {
-                    var link = document.createElement("a");
-                    link.href = url;
-                    link.textContent = index === 0 ? "Chart specification" : "Download chart data " + index;
-                    details.appendChild(link);
-                });
-            host.closest("figure").appendChild(details);
             return document.fonts.ready.then(function() {
                 return vegaEmbed(container, applyTheme(spec), embedOptions);
             });
@@ -183,7 +166,7 @@ function embedChart(container, specUrl) {
         })
         .catch(function(error) {
             host.setAttribute("aria-busy", "false");
-            host.innerHTML = '<p class="chart-status" role="alert">Chart unavailable. Reload or use the source data below.</p>';
+            host.innerHTML = '<p class="chart-status" role="alert">Chart unavailable. Reload or consult the sources in the footer.</p>';
             console.error(error);
         });
     chartJobs.push(job);
