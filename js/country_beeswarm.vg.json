@@ -7,8 +7,9 @@
     "contains": "padding"
   },
   "title": {
+    "description": "The big heading and the smaller line under it. On a phone the words are split into shorter lines.",
     "text": {
-      "signal": "narrow ? ['Australia is far above the typical', 'country for dogs, and above it', 'for cats'] : 'Australia is far above the typical country for dogs, and above it for cats'"
+      "signal": "narrow ? ['Australia stands out', 'most for dogs'] : 'Australia stands out most for dogs'"
     },
     "subtitle": {
       "signal": "narrow ? ['Each dot is one of 43 countries, placed by', 'its share of households with a dog or a cat'] : 'Each dot is one of 43 countries, placed by its share of households owning at least one dog (top row) or cat (bottom row)'"
@@ -34,127 +35,121 @@
     },
     "subtitlePadding": 6
   },
+  "usermeta": {
+    "readMe": "Vega ignores this box. It holds plain-language notes for the parts of the chart that cannot carry their own \"description\".",
+    "scales": {
+      "x": "Turns a percentage into a left-to-right position: 5% at the left edge of the dot area, 55% at the right edge."
+    },
+    "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
+    "projections": {},
+    "readingNote": "Australia stands further above the typical country for dogs than cats. Different survey methods limit close country comparisons."
+  },
   "signals": [
     {
       "name": "colorAccent",
-      "value": "#005a9c",
-      "description": "Theme: replaced by --color-accent (Australia)."
+      "description": "Colour: the blue highlight colour, used for the one thing we want you to notice. This is only a backup; the real colour comes from --color-accent in css/style.css.",
+      "value": "#005a9c"
     },
     {
       "name": "colorPetDogs",
-      "value": "#9c6500",
-      "description": "Theme: replaced by --color-pet-dogs (row heading)."
+      "description": "Colour: the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs in css/style.css.",
+      "value": "#9c6500"
     },
     {
       "name": "colorPetCats",
-      "value": "#7a376b",
-      "description": "Theme: replaced by --color-pet-cats (row heading)."
+      "description": "Colour: the colour for cats (plum). This is only a backup; the real colour comes from --color-pet-cats in css/style.css.",
+      "value": "#7a376b"
     },
     {
       "name": "colorMuted",
-      "value": "#252725",
-      "description": "Theme: replaced by --color-muted."
+      "description": "Colour: the dark grey colour of small text: labels, axis words and notes. This is only a backup; the real colour comes from --color-muted in css/style.css.",
+      "value": "#252725"
     },
     {
       "name": "colorHeading",
-      "value": "#0b2540",
-      "description": "Theme: replaced by --color-heading."
+      "description": "Colour: the dark blue colour of chart titles. This is only a backup; the real colour comes from --color-heading in css/style.css.",
+      "value": "#0b2540"
     },
     {
       "name": "colorBorder",
-      "value": "#a4adb8",
-      "description": "Theme: replaced by --color-border (countries outside the top five)."
+      "description": "Colour: light grey, used for gridlines, empty squares and places with no data. This is only a backup; the real colour comes from --color-border in css/style.css.",
+      "value": "#a4adb8"
     },
     {
       "name": "colorSurface",
-      "value": "#ffffff",
-      "description": "Theme: replaced by --color-surface."
-    },
-    {
-      "name": "colorPage",
-      "value": "#dadfef",
-      "description": "Theme: replaced by --color-page (note background)."
+      "description": "Colour: white, the colour of the card each chart sits on. This is only a backup; the real colour comes from --color-surface in css/style.css.",
+      "value": "#ffffff"
     },
     {
       "name": "fontHeading",
-      "value": "DM Serif Display",
-      "description": "Theme: replaced by --font-heading."
+      "description": "Font: the fancy title font (DM Serif Display). This is only a backup; the real font comes from --font-heading in css/style.css.",
+      "value": "DM Serif Display"
     },
     {
       "name": "fontBody",
-      "value": "Fira Sans",
-      "description": "Theme: replaced by --font-body."
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css.",
+      "value": "Fira Sans"
     },
     {
       "name": "width",
-      "init": "containerSize()[0]",
-      "on": [
-        {
-          "events": "window:resize",
-          "update": "containerSize()[0]"
-        }
-      ]
+      "description": "How wide the chart is. It starts as the width of the box on the page and updates whenever the browser window is resized.",
+      "init": "containerSize()[0]"
     },
     {
       "name": "narrow",
-      "update": "width < 760"
+      "description": "True below 680 pixels of available width. Use smaller dots and taller packing rows; annotations retain their own lines.",
+      "update": "width < 680"
     },
     {
       "name": "radius",
-      "update": "narrow ? 5 : 9"
+      "description": "How big each country dot is (its radius in pixels): smaller on a phone so all 43 dots still fit.",
+      "update": "narrow ? 5 : 6"
     },
     {
       "name": "plotLeft",
-      "update": "narrow ? 0 : 70",
-      "description": "Desktop: room for the row names on the left."
+      "description": "Where the dots may start from the left. On a computer it leaves room for the words \"Dogs\" and \"Cats\" on the left; on a phone those words sit above the rows instead.",
+      "update": "narrow ? 0 : 70"
     },
     {
       "name": "rowHeight",
-      "update": "narrow ? 130 : 170"
+      "description": "Height reserved for each swarm, separated from the two annotation lines above it.",
+      "update": "narrow ? 150 : 140"
     },
     {
       "name": "rowDogs",
-      "update": "rowHeight / 2 + 10"
+      "description": "The middle line of the dog row: dog dots gather around this height.",
+      "update": "rowHeight / 2 + 40"
     },
     {
       "name": "rowCats",
-      "update": "rowHeight * 1.5 + 30"
+      "description": "The middle line of the cat row: cat dots gather around this height.",
+      "update": "rowDogs + rowHeight + 48"
     },
     {
       "name": "plotHeight",
-      "update": "2 * rowHeight + 40"
-    },
-    {
-      "name": "noteY",
-      "update": "plotHeight + 56"
+      "description": "How tall the area with the dots is: both rows plus a little gap.",
+      "update": "rowCats + rowHeight / 2 + 20"
     },
     {
       "name": "legendY",
-      "update": "noteY + (narrow ? 112 : 78)"
+      "description": "A dedicated legend line below the numeric axis and its title.",
+      "update": "plotHeight + 52"
+    },
+    {
+      "name": "legendX",
+      "description": "Legend entries start at the left of their dedicated line below the plot.",
+      "update": "0"
     },
     {
       "name": "height",
+      "description": "Plot, axis and dedicated legend line; the reading note wraps in HTML below the SVG.",
       "update": "legendY + 24"
-    },
-    {
-      "name": "hoverIso",
-      "value": null,
-      "on": [
-        {
-          "events": "@dots:mouseover",
-          "update": "datum.datum.iso3"
-        },
-        {
-          "events": "@dots:mouseout",
-          "update": "null"
-        }
-      ],
-      "description": "Country under the pointer: its dot is outlined in both rows."
     }
   ],
   "data": [
     {
       "name": "countries",
+      "description": "The survey numbers: one row per country per pet, with the share of homes that own one.",
       "url": "data/selected/international_dog_cat_selected.csv",
       "format": {
         "type": "csv",
@@ -165,16 +160,19 @@
       "transform": [
         {
           "type": "formula",
+          "description": "Two country names are shortened in the survey file. This writes them out in full words.",
           "as": "country",
           "expr": "{'Rep. of Moldova': 'Republic of Moldova', 'Bosnia & Herzegovina': 'Bosnia and Herzegovina'}[datum.country] || datum.country"
         },
         {
           "type": "formula",
+          "description": "Copy the percentage into a shorter field name, \"value\".",
           "as": "value",
           "expr": "datum.household_ownership_pct"
         },
         {
           "type": "window",
+          "description": "Rank the countries from highest to lowest, separately for dogs and for cats (1 = highest).",
           "groupby": [
             "species"
           ],
@@ -191,28 +189,20 @@
         },
         {
           "type": "formula",
-          "as": "top",
-          "expr": "datum.rank <= 5 || datum.iso3 === 'AUS'"
-        },
-        {
-          "type": "formula",
+          "description": "Choose each dot's colour: blue for Australia, grey for every other country.",
           "as": "colour",
-          "expr": "datum.iso3 === 'AUS' ? colorAccent : colorBorder",
-          "description": "Only Australia is coloured; every other country is grey."
-        },
-        {
-          "type": "formula",
-          "as": "tooltip",
-          "expr": "{'title': datum.country, 'Pet': datum.species, 'Share of households owning one': format(datum.value, '.1~f') + '%', 'Rank': datum.rank + ' of 43', 'Survey year': datum.data_year, 'Source': {'FEDIAF2026': 'European Pet Food Industry Federation, Facts and Figures 2026', 'AMA2025': 'Animal Medicines Australia, Pets in Australia 2025', 'CANZ2024': 'Companion Animals New Zealand, 2024 report', 'UK2026': 'United Kingdom Pet Food, pet population 2026', 'APPA2025': 'American Pet Products Association, 2025 report'}[datum.source_id]}"
+          "expr": "datum.iso3 === 'AUS' ? colorAccent : colorBorder"
         }
       ]
     },
     {
       "name": "medians",
+      "description": "The \"typical country\" for each pet: the middle value when all 43 countries are lined up from lowest to highest.",
       "source": "countries",
       "transform": [
         {
           "type": "aggregate",
+          "description": "Find the middle value (median) of all countries, once for dogs and once for cats.",
           "groupby": [
             "species"
           ],
@@ -230,6 +220,7 @@
     },
     {
       "name": "rows",
+      "description": "The two rows of the chart: dogs and cats.",
       "values": [
         {
           "species": "Dogs"
@@ -241,6 +232,7 @@
     },
     {
       "name": "legend",
+      "description": "The two items in the key: Australia and other countries.",
       "values": [
         {
           "i": 0,
@@ -256,30 +248,15 @@
       "transform": [
         {
           "type": "formula",
+          "description": "Give each key item its colour: blue for Australia, grey for other countries.",
           "as": "colour",
           "expr": "datum.key === 'accent' ? colorAccent : colorBorder"
         }
       ]
     },
     {
-      "name": "note",
-      "values": [
-        {
-          "lines": [
-            "Australia: 49% of homes have a dog, about twice the typical country (24%).",
-            "For cats, Australia's 34% is about a third above the typical country (25%)."
-          ],
-          "short": [
-            "Australia: 49% of homes have a dog,",
-            "about twice the typical country (24%).",
-            "For cats, 34% is about a third above",
-            "the typical country (25%)."
-          ]
-        }
-      ]
-    },
-    {
       "name": "axisTicks",
+      "description": "The percentages written along the bottom (10%, 20%, 30%, 40%, 50%).",
       "values": [
         {
           "v": 10
@@ -322,8 +299,8 @@
     {
       "type": "group",
       "name": "plot",
+      "description": "The box that holds the dots. Anything outside it is cut off, because a dot pushed past the edge would otherwise make the whole chart shrink.",
       "clip": true,
-      "description": "Clipped plot area: dots nudged past the edge would otherwise make fit-x autosizing shrink the chart in a loop.",
       "encode": {
         "update": {
           "x": {
@@ -344,6 +321,7 @@
         {
           "orient": "bottom",
           "scale": "x",
+          "description": "Faint upright gridlines at each percentage, to help you read where a dot sits. No line, ticks or words here; the words are drawn separately underneath.",
           "values": {
             "signal": "narrow ? [10, 30, 50] : [10, 20, 30, 40, 50]"
           },
@@ -361,7 +339,7 @@
       "marks": [
         {
           "type": "rule",
-          "description": "Median (typical) country in each row.",
+          "description": "A dashed upright line in each row at the typical (median) country.",
           "from": {
             "data": "medians"
           },
@@ -384,7 +362,7 @@
                 "field": "median"
               },
               "y": {
-                "signal": "(datum.species === 'Dogs' ? rowDogs : rowCats) - rowHeight / 2 + 18"
+                "signal": "(datum.species === 'Dogs' ? 0 : rowCats - rowDogs) + 48"
               },
               "y2": {
                 "signal": "(datum.species === 'Dogs' ? rowDogs : rowCats) + rowHeight / 2 - 4"
@@ -397,6 +375,7 @@
         },
         {
           "type": "text",
+          "description": "Median labels occupy the first annotation line, above the swarm marks.",
           "from": {
             "data": "medians"
           },
@@ -419,7 +398,7 @@
                 "field": "median"
               },
               "y": {
-                "signal": "(datum.species === 'Dogs' ? rowDogs : rowCats) - rowHeight / 2 + 16"
+                "signal": "(datum.species === 'Dogs' ? 0 : rowCats - rowDogs) + 16"
               },
               "text": {
                 "signal": "'Typical country ' + datum.median + '%'"
@@ -431,12 +410,13 @@
                 "signal": "colorMuted"
               }
             }
-          }
+          },
+          "name": "medianLabels"
         },
         {
           "type": "symbol",
           "name": "dots",
-          "description": "One dot per country, packed so dots do not overlap; x stays close to the exact share.",
+          "description": "Static layout, data or appearance for this part of the chart.",
           "from": {
             "data": "countries"
           },
@@ -447,10 +427,6 @@
               }
             },
             "update": {
-              "xfocus": {
-                "scale": "x",
-                "field": "value"
-              },
               "yfocus": {
                 "signal": "(datum.species === 'Dogs' ? rowDogs : rowCats)"
               },
@@ -464,20 +440,22 @@
                 "field": "colour"
               },
               "stroke": {
-                "signal": "hoverIso === datum.iso3 ? colorHeading : colorSurface"
+                "signal": "colorSurface"
               },
               "strokeWidth": {
-                "signal": "hoverIso === datum.iso3 ? 2.5 : 1"
+                "value": 1
               },
-              "tooltip": {
-                "signal": "datum.tooltip"
+              "fx": {
+                "scale": "x",
+                "field": "value"
               }
             }
           },
           "transform": [
             {
               "type": "force",
-              "iterations": 300,
+              "description": "Fix x exactly at the reported percentage (fx). Collision avoidance moves points vertically only, so packing cannot distort quantitative position.",
+              "iterations": 500,
               "static": true,
               "forces": [
                 {
@@ -488,24 +466,22 @@
                   "iterations": 2
                 },
                 {
-                  "force": "x",
-                  "x": "xfocus",
-                  "strength": 0.9
-                },
-                {
                   "force": "y",
                   "y": "yfocus",
-                  "strength": 0.08
+                  "strength": {
+                    "signal": "narrow ? 0.08 : 0.3"
+                  }
                 }
-              ]
+              ],
+              "restart": true
             }
-          ]
+          ],
+          "interactive": false
         },
         {
           "type": "text",
           "name": "ausLabels",
-          "zindex": 3,
-          "description": "Australia's labels: above its dog dot, below its cat dot so neighbouring cat dots stay visible.",
+          "description": "Australian values occupy a separate annotation line above each swarm; text never masks the data dots.",
           "from": {
             "data": "dots"
           },
@@ -518,16 +494,16 @@
             },
             "update": {
               "x": {
-                "signal": "datum.x > width - 50 ? datum.x + datum.r : datum.x"
+                "signal": "clamp(datum.x, 48, width - 48)"
               },
               "y": {
-                "signal": "datum.datum.species === 'Cats' ? datum.y + datum.r + 12 : datum.y - datum.r - 4"
+                "signal": "(datum.datum.species === 'Dogs' ? 0 : rowCats - rowDogs) + 36"
               },
               "baseline": {
-                "signal": "datum.datum.species === 'Cats' ? 'top' : 'bottom'"
+                "value": "bottom"
               },
               "align": {
-                "signal": "datum.x > width - 50 ? 'right' : 'center'"
+                "value": "center"
               },
               "text": {
                 "signal": "datum.datum.iso3 === 'AUS' ? 'Australia ' + format(datum.datum.value, '.0f') + '%' : ''"
@@ -543,46 +519,13 @@
               }
             }
           }
-        },
-        {
-          "type": "rect",
-          "description": "Plain background behind Australia's labels so neighbouring dots do not show through; no outline or shadow.",
-          "from": {
-            "data": "ausLabels"
-          },
-          "interactive": false,
-          "zindex": 2,
-          "encode": {
-            "update": {
-              "x": {
-                "signal": "datum.bounds.x1 - 3"
-              },
-              "x2": {
-                "signal": "datum.bounds.x2 + 3"
-              },
-              "y": {
-                "signal": "datum.bounds.y1 - 1"
-              },
-              "y2": {
-                "signal": "datum.bounds.y2 + 1"
-              },
-              "fill": {
-                "signal": "colorSurface"
-              },
-              "fillOpacity": {
-                "signal": "datum.text ? 0.9 : 0"
-              },
-              "cornerRadius": {
-                "value": 3
-              }
-            }
-          }
         }
-      ]
+      ],
+      "interactive": false
     },
     {
       "type": "text",
-      "description": "Row names in the pet colours.",
+      "description": "Species names sit in each annotation heading, outside the packed dots.",
       "from": {
         "data": "rows"
       },
@@ -590,7 +533,7 @@
       "encode": {
         "enter": {
           "baseline": {
-            "value": "middle"
+            "value": "bottom"
           },
           "fontWeight": {
             "value": 600
@@ -604,7 +547,7 @@
             "value": 0
           },
           "y": {
-            "signal": "narrow ? (datum.species === 'Dogs' ? rowDogs : rowCats) - rowHeight / 2 + 10 : (datum.species === 'Dogs' ? rowDogs : rowCats)"
+            "signal": "(datum.species === 'Dogs' ? 0 : rowCats - rowDogs) + 16"
           },
           "fontSize": {
             "signal": "narrow ? 13 : 15"
@@ -616,11 +559,12 @@
             "signal": "datum.species === 'Dogs' ? colorPetDogs : colorPetCats"
           }
         }
-      }
+      },
+      "name": "rowLabels"
     },
     {
       "type": "text",
-      "description": "Shared percentage axis labels under the plot.",
+      "description": "The percentages under the dots. On a phone, 20% and 40% are hidden so the numbers do not crowd.",
       "interactive": false,
       "from": {
         "data": "axisTicks"
@@ -662,6 +606,7 @@
     },
     {
       "type": "text",
+      "description": "The axis title under the percentages: \"Share of households owning at least one\".",
       "interactive": false,
       "encode": {
         "enter": {
@@ -698,118 +643,8 @@
       }
     },
     {
-      "type": "text",
-      "name": "noteText",
-      "from": {
-        "data": "note"
-      },
-      "interactive": false,
-      "zindex": 2,
-      "encode": {
-        "enter": {
-          "baseline": {
-            "value": "top"
-          },
-          "lineHeight": {
-            "value": 17
-          },
-          "fontSize": {
-            "value": 12
-          },
-          "fontStyle": {
-            "value": "italic"
-          }
-        },
-        "update": {
-          "x": {
-            "value": 8
-          },
-          "y": {
-            "signal": "noteY + 6"
-          },
-          "text": {
-            "signal": "narrow ? datum.short : datum.lines"
-          },
-          "font": {
-            "signal": "fontBody"
-          },
-          "fill": {
-            "signal": "colorMuted"
-          }
-        }
-      }
-    },
-    {
-      "type": "rect",
-      "description": "Plain background sized to the note text; no outline or shadow.",
-      "from": {
-        "data": "noteText"
-      },
-      "interactive": false,
-      "zindex": 1,
-      "encode": {
-        "update": {
-          "x": {
-            "value": 0
-          },
-          "x2": {
-            "signal": "datum.bounds.x2 + 8"
-          },
-          "y": {
-            "signal": "noteY"
-          },
-          "y2": {
-            "signal": "datum.bounds.y2 + 6"
-          },
-          "fill": {
-            "signal": "colorPage"
-          },
-          "cornerRadius": {
-            "value": 4
-          }
-        }
-      }
-    },
-    {
-      "type": "text",
-      "description": "Legend title.",
-      "interactive": false,
-      "encode": {
-        "enter": {
-          "fontSize": {
-            "value": 12
-          },
-          "fontWeight": {
-            "value": 600
-          },
-          "baseline": {
-            "value": "top"
-          },
-          "text": {
-            "value": ""
-          }
-        },
-        "update": {
-          "x": {
-            "value": 0
-          },
-          "y": {
-            "signal": "legendY"
-          },
-          "font": {
-            "signal": "fontBody"
-          },
-          "fill": {
-            "signal": "colorMuted"
-          },
-          "text": {
-            "value": ""
-          }
-        }
-      }
-    },
-    {
       "type": "symbol",
+      "description": "The two coloured dots in the key: blue and grey.",
       "from": {
         "data": "legend"
       },
@@ -817,7 +652,7 @@
       "encode": {
         "update": {
           "x": {
-            "signal": "7 + datum.i * 120"
+            "signal": "legendX + 7 + datum.i * 120"
           },
           "y": {
             "signal": "legendY + 8"
@@ -833,6 +668,7 @@
     },
     {
       "type": "text",
+      "description": "The words next to the key dots: \"Australia\" and \"Other countries\".",
       "from": {
         "data": "legend"
       },
@@ -848,7 +684,7 @@
         },
         "update": {
           "x": {
-            "signal": "18 + datum.i * 120"
+            "signal": "legendX + 18 + datum.i * 120"
           },
           "y": {
             "signal": "legendY + 8"

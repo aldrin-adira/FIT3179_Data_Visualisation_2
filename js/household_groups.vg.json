@@ -2,299 +2,603 @@
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "description": "Grouped lollipop chart of pet ownership for eight Australian household groups, each drawn from the national rate of 73%, Animal Medicines Australia survey 2025.",
   "padding": 5,
-  "autosize": {"type": "fit-x", "contains": "padding"},
-
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
   "title": {
-    "text": {"signal": "narrow ? ['In every comparison, one group', 'sits above the national rate', 'and one below'] : 'In every comparison, one group sits above the national rate and one below'"},
-    "subtitle": {"signal": "narrow ? ['Share of households owning at least one pet,', 'by household group, 2025'] : 'Share of households owning at least one pet, by household group, 2025'"},
+    "description": "The big heading and the smaller line under it. On a phone the words are split into shorter lines.",
+    "text": {
+      "signal": "narrow ? ['Families and mortgage holders', 'are likeliest to own pets'] : 'Families and mortgage holders are likeliest to own pets'"
+    },
+    "subtitle": {
+      "signal": "narrow ? ['Share of households owning at least one pet,', 'by household group, 2025'] : 'Share of households owning at least one pet, by household group, 2025'"
+    },
     "anchor": "start",
     "offset": 30,
-    "font": {"signal": "fontHeading"},
-    "fontSize": {"signal": "narrow ? 19 : 24"},
+    "font": {
+      "signal": "fontHeading"
+    },
+    "fontSize": {
+      "signal": "narrow ? 19 : 24"
+    },
     "fontWeight": 400,
-    "color": {"signal": "colorHeading"},
-    "subtitleFont": {"signal": "fontBody"},
+    "color": {
+      "signal": "colorHeading"
+    },
+    "subtitleFont": {
+      "signal": "fontBody"
+    },
     "subtitleFontSize": 13,
-    "subtitleColor": {"signal": "colorMuted"},
+    "subtitleColor": {
+      "signal": "colorMuted"
+    },
     "subtitlePadding": 6
   },
-
+  "usermeta": {
+    "readMe": "Vega ignores this box. It holds plain-language notes for the parts of the chart that cannot carry their own \"description\".",
+    "scales": {
+      "x": "Turns a percentage into a left-to-right position, from 50% to 92% (to 97% on a phone, to leave room for labels)."
+    },
+    "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
+    "projections": {},
+    "readingNote": "Household circumstances may shape the feasibility of pet care. These comparisons cannot establish what causes ownership."
+  },
   "signals": [
-    {"name": "colorNeutral", "value": "#512D22", "description": "Theme: replaced by --color-neutral from css/style.css."},
-    {"name": "colorAccent", "value": "#005a9c", "description": "Theme: replaced by --color-accent (highlighted comparison)."},
-    {"name": "colorMuted", "value": "#252725", "description": "Theme: replaced by --color-muted."},
-    {"name": "colorHeading", "value": "#0b2540", "description": "Theme: replaced by --color-heading."},
-    {"name": "colorPage", "value": "#dadfef", "description": "Theme: replaced by --color-page."},
-    {"name": "fontHeading", "value": "DM Serif Display", "description": "Theme: replaced by --font-heading."},
-    {"name": "fontBody", "value": "Fira Sans", "description": "Theme: replaced by --font-body."},
+    {
+      "name": "colorNeutral",
+      "value": "#512D22",
+      "description": "Colour: the main brown colour, used for plain bars, lines and dots. This is only a backup; the real colour comes from --color-neutral in css/style.css."
+    },
+    {
+      "name": "colorAccent",
+      "value": "#005a9c",
+      "description": "Colour: the blue highlight colour, used for the one thing we want you to notice. This is only a backup; the real colour comes from --color-accent in css/style.css."
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Colour: the dark grey colour of small text: labels, axis words and notes. This is only a backup; the real colour comes from --color-muted in css/style.css."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Colour: the dark blue colour of chart titles. This is only a backup; the real colour comes from --color-heading in css/style.css."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Font: the fancy title font (DM Serif Display). This is only a backup; the real font comes from --font-heading in css/style.css."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css."
+    },
     {
       "name": "width",
-      "init": "containerSize()[0]",
-      "on": [{"events": "window:resize", "update": "containerSize()[0]"}]
+      "description": "How wide the chart is. It starts as the width of the box on the page and updates whenever the browser window is resized.",
+      "init": "containerSize()[0]"
     },
-    {"name": "narrow", "update": "width < 760"},
-    {"name": "nationalRate", "value": 73},
-    {"name": "leaderAt", "update": "narrow ? 95.5 : 91.5", "description": "Axis position of the leader line, right of every value label."},
-    {"name": "highlight", "value": "Household", "description": "Comparison emphasised to match the annotation."},
-    {"name": "labelWidth", "update": "narrow ? 0 : 300", "description": "Desktop: column for group names; narrow screens put names above each lollipop."},
-    {"name": "headerHeight", "update": "narrow ? 24 : 26"},
-    {"name": "rowHeight", "update": "narrow ? 44 : 30"},
-    {"name": "blockGap", "update": "narrow ? 12 : 16"},
-    {"name": "blockHeight", "update": "headerHeight + 2 * rowHeight + blockGap"},
-    {"name": "plotHeight", "update": "4 * blockHeight - blockGap"},
-    {"name": "noteTop", "update": "plotHeight + 56", "description": "Top edge of the note background."},
-    {"name": "height", "update": "plotHeight + (narrow ? 205 : 112)"}
+    {
+      "name": "narrow",
+      "description": "True below 640 pixels of available width. Group names move above the benchmark dots; wider charts keep a 300-pixel label column.",
+      "update": "width < 640"
+    },
+    {
+      "name": "nationalRate",
+      "description": "The share of all Australian homes with a pet: 73%. Every lollipop starts from here.",
+      "value": 73
+    },
+    {
+      "name": "highlight",
+      "value": "Household",
+      "description": "Which comparison is coloured blue to match the note: \"Household\" (household make-up)."
+    },
+    {
+      "name": "labelWidth",
+      "update": "narrow ? 0 : 300",
+      "description": "How much room is kept on the left for group names: 300 pixels on a computer, none on a phone (names go above each lollipop)."
+    },
+    {
+      "name": "headerHeight",
+      "description": "Room above each comparison block for its heading.",
+      "update": "narrow ? 24 : 26"
+    },
+    {
+      "name": "rowHeight",
+      "description": "How tall each group row is: taller on a phone to fit the name above the lollipop.",
+      "update": "narrow ? 44 : 30"
+    },
+    {
+      "name": "blockGap",
+      "description": "Extra space between two comparison blocks.",
+      "update": "narrow ? 12 : 16"
+    },
+    {
+      "name": "blockHeight",
+      "description": "How tall one comparison block is: its heading, two group rows and the gap.",
+      "update": "headerHeight + 2 * rowHeight + blockGap"
+    },
+    {
+      "name": "plotHeight",
+      "description": "How tall the area with the lollipops is: four blocks.",
+      "update": "4 * blockHeight - blockGap"
+    },
+    {
+      "name": "height",
+      "description": "Plot and axis only; the reading note wraps in HTML below the SVG.",
+      "update": "plotHeight + 60"
+    }
   ],
-
   "data": [
     {
       "name": "groups",
+      "description": "The survey numbers: for each household group (for example \"Apartments or units\"), the share of homes with a pet.",
       "url": "data/selected/au_selected_demographics_2025.csv",
-      "format": {"type": "csv", "parse": {"any_pet_ownership_pct": "number"}},
+      "format": {
+        "type": "csv",
+        "parse": {
+          "any_pet_ownership_pct": "number"
+        }
+      },
       "transform": [
-        {"type": "formula", "as": "pct", "expr": "datum.any_pet_ownership_pct"},
         {
           "type": "formula",
+          "description": "Copy the percentage into a shorter field name, \"pct\".",
+          "as": "pct",
+          "expr": "datum.any_pet_ownership_pct"
+        },
+        {
+          "type": "formula",
+          "description": "Replace short group names from the file with full words, for example \"Families with children at home\".",
           "as": "label",
           "expr": "{'Apartment/unit': 'Apartments or units', 'Own outright': 'Own their home outright', 'Families with kids at home': 'Families with children at home', 'Living alone/couples without kids': 'Living alone or couples without children', 'At least AUD 100000 annually': '$100,000 or more a year', 'Below AUD 50000 annually': 'Under $50,000 a year'}[datum.group] || datum.group"
         },
-        {"type": "formula", "as": "dimension_label", "expr": "{'Housing': 'Type of home', 'Tenure': 'Home ownership', 'Household': 'Household make-up', 'Income': 'Household income'}[datum.dimension]"},
-        {"type": "formula", "as": "block", "expr": "indexof(['Housing', 'Tenure', 'Household', 'Income'], datum.dimension)"},
-        {"type": "window", "groupby": ["dimension"], "sort": {"field": "pct", "order": "descending"}, "ops": ["row_number"], "as": ["rank"]},
-        {"type": "formula", "as": "difference", "expr": "datum.pct - nationalRate"},
-        {"type": "formula", "as": "emphasis", "expr": "datum.dimension === highlight"},
         {
           "type": "formula",
-          "as": "tooltip",
-          "expr": "{'Group': datum.label, 'Households owning a pet': datum.pct + '%', 'Compared with the national rate': (datum.difference > 0 ? datum.difference + ' points above' : -datum.difference + ' points below') + ' (' + nationalRate + '%)', 'Source of value': datum.derivation === 'reported' ? 'Published in the report' : 'Calculated as 100% minus the published share of non-owners'}"
+          "description": "Write each comparison's heading in full words, for example \"Type of home\".",
+          "as": "dimension_label",
+          "expr": "{'Housing': 'Type of home', 'Tenure': 'Home ownership', 'Household': 'Household make-up', 'Income': 'Household income'}[datum.dimension]"
+        },
+        {
+          "type": "formula",
+          "description": "Give each comparison its block number, 0 to 3, from top to bottom.",
+          "as": "block",
+          "expr": "indexof(['Housing', 'Tenure', 'Household', 'Income'], datum.dimension)"
+        },
+        {
+          "type": "window",
+          "description": "Inside each comparison, number the groups 1 and 2, with the higher percentage first.",
+          "groupby": [
+            "dimension"
+          ],
+          "sort": {
+            "field": "pct",
+            "order": "descending"
+          },
+          "ops": [
+            "row_number"
+          ],
+          "as": [
+            "rank"
+          ]
+        },
+        {
+          "type": "formula",
+          "description": "Work out how far each group is above or below the national rate.",
+          "as": "difference",
+          "expr": "datum.pct - nationalRate"
+        },
+        {
+          "type": "formula",
+          "description": "Mark the groups in the highlighted comparison, so they can be coloured blue.",
+          "as": "emphasis",
+          "expr": "datum.dimension === highlight"
         }
       ]
     },
     {
       "name": "blocks",
+      "description": "One row per comparison (type of home, home ownership, household make-up, household income), used for the headings.",
       "source": "groups",
-      "transform": [{"type": "aggregate", "groupby": ["dimension", "dimension_label", "block", "emphasis"]}]
-    },
-    {
-      "name": "note",
-      "values": [
+      "transform": [
         {
-          "lines": [
-            "Household make-up: a 20-point gap. Families with children under 18 are also around twice as likely",
-            "to be planning to get a pet (67%) as couples without children (39%) or people living alone (36%).",
-            "The report does not give a reason, so this shows who owns pets, not what causes it."
-          ],
-          "short": [
-            "Household make-up: a 20-point gap.",
-            "Families with children under 18 are",
-            "also around twice as likely to be",
-            "planning to get a pet (67%) as couples",
-            "without children (39%) or people",
-            "living alone (36%). The report gives",
-            "no reason, so this shows who owns",
-            "pets, not what causes it."
+          "type": "aggregate",
+          "description": "Keep one row per comparison.",
+          "groupby": [
+            "dimension",
+            "dimension_label",
+            "block",
+            "emphasis"
           ]
         }
       ]
     }
   ],
-
   "scales": [
-    {"name": "x", "type": "linear", "domain": {"signal": "narrow ? [50, 97] : [50, 92]"}, "range": [{"signal": "labelWidth"}, {"signal": "width"}], "zero": false}
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": {
+        "signal": "narrow ? [50, 97] : [50, 92]"
+      },
+      "range": [
+        {
+          "signal": "labelWidth"
+        },
+        {
+          "signal": "width"
+        }
+      ],
+      "zero": false
+    }
   ],
-
   "marks": [
     {
       "type": "group",
-      "description": "Plot area: comparison blocks, lollipops, national rate and axis.",
-      "encode": {"update": {"x": {"value": 0}, "y": {"value": 0}, "width": {"signal": "width"}, "height": {"signal": "plotHeight"}}},
+      "description": "The box that holds the lollipops, headings, national rate line and axis.",
+      "encode": {
+        "update": {
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "value": 0
+          },
+          "width": {
+            "signal": "width"
+          },
+          "height": {
+            "signal": "plotHeight"
+          }
+        }
+      },
       "axes": [
         {
           "orient": "bottom",
           "scale": "x",
-          "values": {"signal": "narrow ? [50, 60, 70, 80] : [50, 60, 70, 80, 90]"},
+          "description": "The bottom axis: share of homes owning at least one pet, in percent.",
+          "values": {
+            "signal": "narrow ? [50, 60, 70, 80] : [50, 60, 70, 80, 90]"
+          },
           "domain": false,
           "ticks": false,
           "grid": false,
           "labelPadding": 8,
-          "labelColor": {"signal": "colorMuted"},
-          "labelFont": {"signal": "fontBody"},
+          "labelColor": {
+            "signal": "colorMuted"
+          },
+          "labelFont": {
+            "signal": "fontBody"
+          },
           "labelFontSize": 12,
           "title": "Households owning at least one pet",
-          "titleColor": {"signal": "colorMuted"},
-          "titleFont": {"signal": "fontBody"},
+          "titleColor": {
+            "signal": "colorMuted"
+          },
+          "titleFont": {
+            "signal": "fontBody"
+          },
           "titleFontSize": 13,
           "titleFontWeight": 500,
           "titlePadding": 8,
-          "encode": {"labels": {"update": {"text": {"signal": "datum.value + '%'"}}}}
+          "encode": {
+            "labels": {
+              "update": {
+                "text": {
+                  "signal": "datum.value + '%'"
+                }
+              }
+            }
+          }
         }
       ],
       "marks": [
         {
           "type": "rule",
-          "description": "Desktop: national rate as one continuous dashed line.",
+          "description": "On a computer: one dashed upright line at the national rate (73%), running the full height. Hidden on a phone.",
           "encode": {
-            "enter": {"stroke": {"signal": "colorMuted"}, "strokeWidth": {"value": 1.5}, "strokeDash": {"value": [4, 4]}},
-            "update": {"x": {"scale": "x", "signal": "nationalRate"}, "y": {"value": 0}, "y2": {"signal": "plotHeight"}, "strokeOpacity": {"signal": "narrow ? 0 : 1"}}
-          }
+            "enter": {
+              "stroke": {
+                "signal": "colorMuted"
+              },
+              "strokeWidth": {
+                "value": 1.5
+              },
+              "strokeDash": {
+                "value": [
+                  4,
+                  4
+                ]
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "signal": "nationalRate"
+              },
+              "y": {
+                "value": 0
+              },
+              "y2": {
+                "signal": "plotHeight"
+              },
+              "strokeOpacity": {
+                "signal": "narrow ? 0 : 1"
+              }
+            }
+          },
+          "interactive": false
         },
         {
           "type": "rule",
-          "description": "Narrow screens: national rate drawn only beside each lollipop so it never crosses the group names above them.",
-          "from": {"data": "groups"},
+          "description": "On a phone: short dashed pieces of the national rate line, only beside each lollipop, so the line never crosses the group names. Hidden on a computer.",
+          "from": {
+            "data": "groups"
+          },
           "encode": {
-            "enter": {"stroke": {"signal": "colorMuted"}, "strokeWidth": {"value": 1.5}, "strokeDash": {"value": [4, 4]}},
+            "enter": {
+              "stroke": {
+                "signal": "colorMuted"
+              },
+              "strokeWidth": {
+                "value": 1.5
+              },
+              "strokeDash": {
+                "value": [
+                  4,
+                  4
+                ]
+              }
+            },
             "update": {
-              "x": {"scale": "x", "signal": "nationalRate"},
-              "y": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + 30 - 12"},
-              "y2": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + 30 + 12"},
-              "strokeOpacity": {"signal": "narrow ? 1 : 0"}
+              "x": {
+                "scale": "x",
+                "signal": "nationalRate"
+              },
+              "y": {
+                "signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + 30 - 12"
+              },
+              "y2": {
+                "signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + 30 + 12"
+              },
+              "strokeOpacity": {
+                "signal": "narrow ? 1 : 0"
+              }
             }
-          }
+          },
+          "interactive": false
         },
         {
           "type": "text",
+          "description": "The words \"National rate 73%\" at the top of the dashed line.",
           "encode": {
-            "enter": {"align": {"value": "center"}, "baseline": {"value": "bottom"}, "fontSize": {"value": 12}, "fontWeight": {"value": 500}, "font": {"signal": "fontBody"}, "fill": {"signal": "colorMuted"}},
-            "update": {"x": {"scale": "x", "signal": "nationalRate"}, "y": {"value": -6}, "text": {"signal": "'National rate ' + nationalRate + '%'"}}
-          }
+            "enter": {
+              "align": {
+                "value": "center"
+              },
+              "baseline": {
+                "value": "bottom"
+              },
+              "fontSize": {
+                "value": 12
+              },
+              "fontWeight": {
+                "value": 500
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fill": {
+                "signal": "colorMuted"
+              }
+            },
+            "update": {
+              "x": {
+                "scale": "x",
+                "signal": "nationalRate"
+              },
+              "y": {
+                "value": -6
+              },
+              "text": {
+                "signal": "'National rate ' + nationalRate + '%'"
+              }
+            }
+          },
+          "interactive": false
         },
         {
           "type": "text",
-          "description": "Comparison headings.",
-          "from": {"data": "blocks"},
+          "description": "The comparison headings, for example \"Type of home\". The highlighted one is blue.",
+          "from": {
+            "data": "blocks"
+          },
           "encode": {
-            "enter": {"align": {"value": "left"}, "baseline": {"value": "top"}, "fontSize": {"value": 13}, "fontWeight": {"value": 600}, "font": {"signal": "fontBody"}, "text": {"field": "dimension_label"}},
+            "enter": {
+              "align": {
+                "value": "left"
+              },
+              "baseline": {
+                "value": "top"
+              },
+              "fontSize": {
+                "value": 13
+              },
+              "fontWeight": {
+                "value": 600
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "text": {
+                "field": "dimension_label"
+              }
+            },
             "update": {
-              "x": {"value": 0},
-              "y": {"signal": "datum.block * blockHeight + 4"},
-              "fill": {"signal": "datum.emphasis ? colorAccent : colorMuted"}
+              "x": {
+                "value": 0
+              },
+              "y": {
+                "signal": "datum.block * blockHeight + 4"
+              },
+              "fill": {
+                "signal": "datum.emphasis ? colorAccent : colorMuted"
+              }
             }
-          }
+          },
+          "interactive": false
         },
         {
           "type": "text",
-          "description": "Group names: left column on desktop, above each lollipop on narrow screens.",
-          "from": {"data": "groups"},
+          "description": "The group names: in a left column on a computer, above each lollipop on a phone. Its height is worked out from its comparison block and whether it is the first or second group in that block.",
+          "from": {
+            "data": "groups"
+          },
           "encode": {
-            "enter": {"baseline": {"value": "middle"}, "font": {"signal": "fontBody"}, "text": {"field": "label"}},
+            "enter": {
+              "baseline": {
+                "value": "middle"
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "text": {
+                "field": "label"
+              }
+            },
             "update": {
-              "x": {"signal": "narrow ? 0 : labelWidth - 16"},
-              "y": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 10 : rowHeight / 2)"},
-              "align": {"signal": "narrow ? 'left' : 'right'"},
-              "fontSize": {"signal": "narrow ? 12 : 13"},
-              "fontWeight": {"signal": "datum.emphasis ? 600 : 400"},
-              "fill": {"signal": "datum.emphasis ? colorAccent : colorMuted"}
+              "x": {
+                "signal": "narrow ? 0 : labelWidth - 16"
+              },
+              "y": {
+                "signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 10 : rowHeight / 2)"
+              },
+              "align": {
+                "signal": "narrow ? 'left' : 'right'"
+              },
+              "fontSize": {
+                "signal": "narrow ? 12 : 13"
+              },
+              "fontWeight": {
+                "signal": "datum.emphasis ? 600 : 400"
+              },
+              "fill": {
+                "signal": "datum.emphasis ? colorAccent : colorMuted"
+              }
             }
-          }
+          },
+          "interactive": false
         },
         {
           "type": "rule",
-          "description": "Lollipop stick from the national rate to the group's value.",
-          "from": {"data": "groups"},
+          "description": "The lollipop stick: a line from the national rate to the group's value. Brown, or blue for the highlighted comparison.",
+          "from": {
+            "data": "groups"
+          },
           "encode": {
-            "enter": {"strokeWidth": {"value": 3}, "strokeCap": {"value": "butt"}},
+            "enter": {
+              "strokeWidth": {
+                "value": 3
+              },
+              "strokeCap": {
+                "value": "butt"
+              }
+            },
             "update": {
-              "x": {"scale": "x", "signal": "nationalRate"},
-              "x2": {"scale": "x", "field": "pct"},
-              "y": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 30 : rowHeight / 2)"},
-              "stroke": {"signal": "datum.emphasis ? colorAccent : colorNeutral"}
+              "x": {
+                "scale": "x",
+                "signal": "nationalRate"
+              },
+              "x2": {
+                "scale": "x",
+                "field": "pct"
+              },
+              "y": {
+                "signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 30 : rowHeight / 2)"
+              },
+              "stroke": {
+                "signal": "datum.emphasis ? colorAccent : colorNeutral"
+              }
             }
-          }
+          },
+          "interactive": false
         },
         {
           "type": "symbol",
-          "description": "Lollipop head at the group's value.",
-          "from": {"data": "groups"},
+          "description": "The lollipop head: a dot at the group's value.",
+          "from": {
+            "data": "groups"
+          },
           "encode": {
-            "enter": {"tooltip": {"signal": "datum.tooltip"}},
+            "enter": {},
             "update": {
-              "x": {"scale": "x", "field": "pct"},
-              "y": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 30 : rowHeight / 2)"},
-              "size": {"value": 130},
-              "fill": {"signal": "datum.emphasis ? colorAccent : colorNeutral"}
+              "x": {
+                "scale": "x",
+                "field": "pct"
+              },
+              "y": {
+                "signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 30 : rowHeight / 2)"
+              },
+              "size": {
+                "value": 130
+              },
+              "fill": {
+                "signal": "datum.emphasis ? colorAccent : colorNeutral"
+              }
             }
-          }
+          },
+          "interactive": false
         },
         {
           "type": "text",
           "name": "valueLabel",
-          "description": "Value beyond each lollipop head, on the side it points.",
-          "from": {"data": "groups"},
+          "description": "The percentage beside each lollipop head, on the side the stick points to.",
+          "from": {
+            "data": "groups"
+          },
           "encode": {
-            "enter": {"baseline": {"value": "middle"}, "fontSize": {"value": 13}, "font": {"signal": "fontBody"}},
+            "enter": {
+              "baseline": {
+                "value": "middle"
+              },
+              "fontSize": {
+                "value": 13
+              },
+              "font": {
+                "signal": "fontBody"
+              }
+            },
             "update": {
-              "x": {"scale": "x", "field": "pct", "offset": {"signal": "datum.difference > 0 ? 11 : -11"}},
-              "y": {"signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 30 : rowHeight / 2)"},
-              "align": {"signal": "datum.difference > 0 ? 'left' : 'right'"},
-              "text": {"signal": "datum.pct + '%'"},
-              "fontWeight": {"signal": "datum.emphasis ? 600 : 400"},
-              "fill": {"signal": "datum.emphasis ? colorAccent : colorMuted"}
+              "x": {
+                "scale": "x",
+                "field": "pct",
+                "offset": {
+                  "signal": "datum.difference > 0 ? 11 : -11"
+                }
+              },
+              "y": {
+                "signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 30 : rowHeight / 2)"
+              },
+              "align": {
+                "signal": "datum.difference > 0 ? 'left' : 'right'"
+              },
+              "text": {
+                "signal": "datum.pct + '%'"
+              },
+              "fontWeight": {
+                "signal": "datum.emphasis ? 600 : 400"
+              },
+              "fill": {
+                "signal": "datum.emphasis ? colorAccent : colorMuted"
+              }
             }
-          }
-        },
-        {
-          "type": "rule",
-          "description": "Leader from the note up the right edge to the highlighted comparison.",
-          "from": {"data": "valueLabel"},
-          "interactive": false,
-          "encode": {
-            "enter": {"stroke": {"signal": "colorMuted"}, "strokeWidth": {"value": 1}},
-            "update": {
-              "x": {"scale": "x", "signal": "leaderAt"},
-              "y": {"signal": "noteTop"},
-              "x2": {"scale": "x", "signal": "leaderAt"},
-              "y2": {"signal": "datum.y"},
-              "strokeOpacity": {"signal": "datum.datum.emphasis && datum.datum.rank === 1 ? 1 : 0"}
-            }
-          }
-        },
-        {
-          "type": "rule",
-          "description": "Leader: short horizontal segment ending just after the highlighted value label.",
-          "from": {"data": "valueLabel"},
-          "interactive": false,
-          "encode": {
-            "enter": {"stroke": {"signal": "colorMuted"}, "strokeWidth": {"value": 1}},
-            "update": {
-              "x": {"scale": "x", "signal": "leaderAt"},
-              "x2": {"signal": "datum.bounds.x2 + 6"},
-              "y": {"signal": "datum.y"},
-              "y2": {"signal": "datum.y"},
-              "strokeOpacity": {"signal": "datum.datum.emphasis && datum.datum.rank === 1 ? 1 : 0"}
-            }
-          }
+          },
+          "interactive": false
         }
-      ]
-    },
-    {
-      "type": "text",
-      "name": "noteText",
-      "from": {"data": "note"},
-      "zindex": 2,
-      "encode": {
-        "enter": {"align": {"value": "left"}, "baseline": {"value": "top"}, "lineHeight": {"value": 17}, "fontSize": {"value": 12}, "font": {"signal": "fontBody"}, "fontStyle": {"value": "italic"}, "fill": {"signal": "colorMuted"}},
-        "update": {
-          "x": {"value": 8},
-          "y": {"signal": "noteTop + 6"},
-          "text": {"signal": "narrow ? datum.short : datum.lines"}
-        }
-      }
-    },
-    {
-      "description": "Plain background sized to the note text; no outline or shadow.",
-      "type": "rect",
-      "from": {"data": "noteText"},
-      "zindex": 1,
-      "encode": {
-        "enter": {"fill": {"signal": "colorPage"}, "cornerRadius": {"value": 4}},
-        "update": {
-          "x": {"value": 0},
-          "x2": {"signal": "narrow ? width : max(datum.bounds.x2 + 8, scale('x', leaderAt) + 12)"},
-          "y": {"signal": "noteTop"},
-          "y2": {"signal": "datum.bounds.y2 + 6"}
-        }
-      }
+      ],
+      "interactive": false
     }
   ]
 }

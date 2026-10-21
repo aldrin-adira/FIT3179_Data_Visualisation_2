@@ -7,8 +7,9 @@
     "contains": "padding"
   },
   "title": {
+    "description": "The big heading and the smaller line under it. On a phone the words are split into shorter lines.",
     "text": {
-      "signal": "narrow ? ['Companionship leads for', 'most pets, but not for', 'fish or reptiles'] : 'Companionship leads for most pets, but not for fish or reptiles'"
+      "signal": "narrow ? ['Companionship leads, except', 'for fish and reptiles'] : 'Companionship leads, except for fish and reptiles'"
     },
     "subtitle": {
       "signal": "narrow ? ['Share of owners giving each reason for', 'getting their pet, 2025'] : 'Share of owners giving each reason for getting their pet, 2025'"
@@ -34,6 +35,18 @@
     },
     "subtitlePadding": 6
   },
+  "usermeta": {
+    "readMe": "Vega ignores this box. It holds plain-language notes for the parts of the chart that cannot carry their own \"description\".",
+    "config": "Default look for every axis in this chart: no axis line, no tick marks, no gridlines, and a small gap between the words and the squares.",
+    "scales": {
+      "x": "Gives each pet its own column, from left to right, after the room kept for reason names.",
+      "y": "Gives each reason its own row, sorted so the most common reason overall is at the top.",
+      "colour": "Turns a percentage into a colour: palest brown for 0%, darkest brown for 60%. Darker means more owners gave that reason.",
+      "petColour": "Gives each pet its fixed colour, used for the pet names along the top."
+    },
+    "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
+    "projections": {}
+  },
   "config": {
     "axis": {
       "domain": false,
@@ -45,117 +58,119 @@
   "signals": [
     {
       "name": "colorMuted",
-      "value": "#252725",
-      "description": "Theme: replaced by --color-muted from css/style.css."
+      "description": "Colour: the dark grey colour of small text: labels, axis words and notes. This is only a backup; the real colour comes from --color-muted in css/style.css.",
+      "value": "#252725"
     },
     {
       "name": "colorHeading",
-      "value": "#0b2540",
-      "description": "Theme: replaced by --color-heading."
+      "description": "Colour: the dark blue colour of chart titles. This is only a backup; the real colour comes from --color-heading in css/style.css.",
+      "value": "#0b2540"
     },
     {
       "name": "colorLight",
-      "value": "#F5DFD8",
-      "description": "Theme: replaced by --color-light (low values)."
+      "description": "Colour: the palest brown, used for the smallest numbers on a colour scale. This is only a backup; the real colour comes from --color-light in css/style.css.",
+      "value": "#F5DFD8"
     },
     {
       "name": "colorDark",
-      "value": "#4E1A0A",
-      "description": "Theme: replaced by --color-dark (high values)."
+      "description": "Colour: the darkest brown, used for the biggest numbers on a colour scale. This is only a backup; the real colour comes from --color-dark in css/style.css.",
+      "value": "#4E1A0A"
     },
     {
       "name": "colorBorder",
-      "value": "#a4adb8",
-      "description": "Theme: replaced by --color-border."
+      "description": "Colour: light grey, used for gridlines, empty squares and places with no data. This is only a backup; the real colour comes from --color-border in css/style.css.",
+      "value": "#a4adb8"
     },
     {
       "name": "colorSurface",
-      "value": "#ffffff",
-      "description": "Theme: replaced by --color-surface."
+      "description": "Colour: white, the colour of the card each chart sits on. This is only a backup; the real colour comes from --color-surface in css/style.css.",
+      "value": "#ffffff"
     },
     {
       "name": "colorPetDogs",
-      "value": "#9c6500",
-      "description": "Theme: replaced by --color-pet-dogs."
+      "description": "Colour: the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs in css/style.css.",
+      "value": "#9c6500"
     },
     {
       "name": "colorPetCats",
-      "value": "#7a376b",
-      "description": "Theme: replaced by --color-pet-cats."
+      "description": "Colour: the colour for cats (plum). This is only a backup; the real colour comes from --color-pet-cats in css/style.css.",
+      "value": "#7a376b"
     },
     {
       "name": "colorPetFish",
-      "value": "#007f80",
-      "description": "Theme: replaced by --color-pet-fish."
+      "description": "Colour: the colour for fish (teal). This is only a backup; the real colour comes from --color-pet-fish in css/style.css.",
+      "value": "#007f80"
     },
     {
       "name": "colorPetBirds",
-      "value": "#1e6b2a",
-      "description": "Theme: replaced by --color-pet-birds."
+      "description": "Colour: the colour for birds (green). This is only a backup; the real colour comes from --color-pet-birds in css/style.css.",
+      "value": "#1e6b2a"
     },
     {
       "name": "colorPetSmallMammals",
-      "value": "#7759d1",
-      "description": "Theme: replaced by --color-pet-small-mammals."
+      "description": "Colour: the colour for small mammals (violet). This is only a backup; the real colour comes from --color-pet-small-mammals in css/style.css.",
+      "value": "#7759d1"
     },
     {
       "name": "colorPetReptiles",
-      "value": "#d6336c",
-      "description": "Theme: replaced by --color-pet-reptiles."
+      "description": "Colour: the colour for reptiles (raspberry). This is only a backup; the real colour comes from --color-pet-reptiles in css/style.css.",
+      "value": "#d6336c"
     },
     {
       "name": "colorPetOther",
-      "value": "#555555",
-      "description": "Theme: replaced by --color-pet-other."
+      "description": "Colour: the colour for other pets (grey). This is only a backup; the real colour comes from --color-pet-other in css/style.css.",
+      "value": "#555555"
     },
     {
       "name": "fontHeading",
-      "value": "DM Serif Display",
-      "description": "Theme: replaced by --font-heading."
+      "description": "Font: the fancy title font (DM Serif Display). This is only a backup; the real font comes from --font-heading in css/style.css.",
+      "value": "DM Serif Display"
     },
     {
       "name": "fontBody",
-      "value": "Fira Sans",
-      "description": "Theme: replaced by --font-body."
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css.",
+      "value": "Fira Sans"
     },
     {
       "name": "width",
-      "init": "containerSize()[0]",
-      "on": [
-        {
-          "events": "window:resize",
-          "update": "containerSize()[0]"
-        }
-      ]
+      "description": "How wide the chart is. It starts as the width of the box on the page and updates whenever the browser window is resized.",
+      "init": "containerSize()[0]"
     },
     {
       "name": "narrow",
-      "update": "width < 640"
+      "description": "True when the chart is less than 640 pixels wide (for example on a phone). Other parts check it to use shorter words, upright pet names and a stacked key.",
+      "update": "containerSize()[0] < 760"
     },
     {
       "name": "labelWidth",
+      "description": "How much room is kept on the left for the reason names.",
       "update": "narrow ? 104 : 210"
     },
     {
       "name": "rowHeight",
+      "description": "How tall each row of squares is.",
       "update": "narrow ? 36 : 34"
     },
     {
       "name": "gridHeight",
+      "description": "How tall the whole grid of squares is: 11 reasons times the row height.",
       "update": "11 * rowHeight"
     },
     {
       "name": "height",
+      "description": "How tall the whole chart is: the grid plus room underneath for the key.",
       "update": "gridHeight + (narrow ? 96 : 56)"
     },
     {
       "name": "legendY",
+      "description": "How far down the key starts: just under the grid.",
       "update": "gridHeight + 22"
     }
   ],
   "data": [
     {
       "name": "published",
+      "description": "The survey numbers: for each pet, the share of owners who gave each reason. Only each pet's top five reasons were published.",
       "url": "data/selected/au_motivations_top5_2025.csv",
       "format": {
         "type": "csv",
@@ -167,6 +182,7 @@
       "transform": [
         {
           "type": "formula",
+          "description": "Make a joined-up key like \"Dogs|Companionship\", so each square can find its number.",
           "as": "key",
           "expr": "datum.species + '|' + datum.reason"
         }
@@ -174,10 +190,12 @@
     },
     {
       "name": "owners",
+      "description": "How many owners of each pet were asked (used in the pop-up box).",
       "source": "published",
       "transform": [
         {
           "type": "aggregate",
+          "description": "Find how many owners of each pet were asked.",
           "groupby": [
             "species"
           ],
@@ -195,6 +213,7 @@
     },
     {
       "name": "reasons",
+      "description": "One row per distinct reason. A fixed thematic order avoids treating sums of percentages from different owner groups as a combined prevalence.",
       "source": "published",
       "transform": [
         {
@@ -202,28 +221,29 @@
           "groupby": [
             "reason"
           ],
-          "fields": [
-            "percent"
-          ],
-          "ops": [
-            "sum"
-          ],
-          "as": [
-            "total"
-          ]
+          "description": "Keep distinct reason names without summing percentages across species."
         },
         {
           "type": "formula",
+          "as": "reasonOrder",
+          "expr": "indexof([\"Companionship\",\"Mental health\",\"Relaxation\",\"Hobby\",\"Lower maintenance\",\"Given/left to me\",\"Breed temperament\",\"Rescue/give a home\",\"Breed size\",\"Eggs\",\"Companion for other pets\"], datum.reason)",
+          "description": "Group motivations in a deliberate reading order, not by a pooled percentage."
+        },
+        {
+          "type": "formula",
+          "description": "Replace short reason names from the file with clearer full words, for example \"Breed has a good temperament\".",
           "as": "label",
           "expr": "{'Mental health': 'For mental health', 'Given/left to me': 'Given or left to me', 'Breed temperament': 'Breed has a good temperament', 'Rescue/give a home': 'Rescue or give a home', 'Breed size': 'Breed is a suitable size', 'Eggs': 'For their eggs'}[datum.reason] || datum.reason"
         },
         {
           "type": "formula",
+          "description": "Shorter versions of each reason name, split into two lines, for phones.",
           "as": "short_lines",
           "expr": "{'Companionship': ['Companionship'], 'Mental health': ['For mental', 'health'], 'Relaxation': ['Relaxation'], 'Hobby': ['Hobby'], 'Lower maintenance': ['Lower', 'maintenance'], 'Given/left to me': ['Given or', 'left to me'], 'Breed temperament': ['Good breed', 'temperament'], 'Rescue/give a home': ['Rescue or', 'give a home'], 'Breed size': ['Breed is a', 'suitable size'], 'Eggs': ['For their eggs'], 'Companion for other pets': ['Companion for', 'other pets']}[datum.reason] || [datum.reason]"
         },
         {
           "type": "formula",
+          "description": "List the six pets, so every reason can be paired with every pet.",
           "as": "pets",
           "expr": "['Dogs', 'Cats', 'Fish', 'Birds', 'Small mammals', 'Reptiles']"
         }
@@ -231,10 +251,12 @@
     },
     {
       "name": "cells",
+      "description": "One row per square in the grid: every reason for every pet, with its number if it was published.",
       "source": "reasons",
       "transform": [
         {
           "type": "flatten",
+          "description": "Make one row for every reason and pet pair (11 reasons times 6 pets).",
           "fields": [
             "pets"
           ],
@@ -244,11 +266,13 @@
         },
         {
           "type": "formula",
+          "description": "Make the same joined-up key, like \"Dogs|Companionship\".",
           "as": "key",
           "expr": "datum.species + '|' + datum.reason"
         },
         {
           "type": "lookup",
+          "description": "Look up the published percentage for this pair. If there is none, leave it empty (not zero).",
           "from": "published",
           "key": "key",
           "fields": [
@@ -264,6 +288,7 @@
         },
         {
           "type": "lookup",
+          "description": "Look up how many owners of this pet were asked.",
           "from": "owners",
           "key": "species",
           "fields": [
@@ -278,31 +303,31 @@
         },
         {
           "type": "formula",
+          "description": "Mark whether this square has a published number.",
           "as": "published_cell",
           "expr": "isValid(datum.percent)"
-        },
-        {
-          "type": "formula",
-          "as": "tooltip",
-          "expr": "datum.published_cell ? {'Type of pet': datum.species, 'Reason': datum.label, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',')} : {'Type of pet': datum.species, 'Reason': datum.label, 'Owners giving this reason': 'Not published: outside this pet\\'s top five reasons'}"
         }
       ]
     },
     {
       "name": "hatchLines",
+      "description": "The short diagonal lines that cross out squares with no published number.",
       "source": "cells",
       "transform": [
         {
           "type": "filter",
+          "description": "Keep only the squares with no published number.",
           "expr": "!datum.published_cell"
         },
         {
           "type": "formula",
+          "description": "Make a list of starting points, 8 pixels apart, for the diagonal lines.",
           "as": "offsets",
           "expr": "sequence(4, 320, 8)"
         },
         {
           "type": "flatten",
+          "description": "Make one row per diagonal line.",
           "fields": [
             "offsets"
           ],
@@ -314,17 +339,20 @@
     },
     {
       "name": "legendHatch",
+      "description": "The diagonal lines inside the crossed-out square in the key.",
       "values": [
         {}
       ],
       "transform": [
         {
           "type": "formula",
+          "description": "Make a list of starting points, 8 pixels apart, for the key's diagonal lines.",
           "as": "offsets",
           "expr": "sequence(4, 60, 8)"
         },
         {
           "type": "flatten",
+          "description": "Make one row per diagonal line in the key.",
           "fields": [
             "offsets"
           ],
@@ -364,9 +392,9 @@
         "data": "reasons",
         "field": "reason",
         "sort": {
-          "field": "total",
-          "op": "max",
-          "order": "descending"
+          "field": "reasonOrder",
+          "op": "min",
+          "order": "ascending"
         }
       },
       "range": [
@@ -410,6 +438,7 @@
     {
       "orient": "top",
       "scale": "x",
+      "description": "The pet names along the top of the grid, each in its pet colour. On a phone they stand upright to fit.",
       "labelFont": {
         "signal": "fontBody"
       },
@@ -445,7 +474,7 @@
   "marks": [
     {
       "type": "text",
-      "description": "Reason labels for each row.",
+      "description": "The reason names on the left of each row (shorter, two-line names on a phone).",
       "from": {
         "data": "reasons"
       },
@@ -491,16 +520,12 @@
     },
     {
       "type": "rect",
-      "description": "Published cells coloured by share of owners.",
+      "description": "The squares of the grid. Squares with a published number are coloured by it; the others are white.",
       "from": {
         "data": "cells"
       },
       "encode": {
-        "enter": {
-          "tooltip": {
-            "signal": "datum.tooltip"
-          }
-        },
+        "enter": {},
         "update": {
           "x": {
             "scale": "x",
@@ -520,13 +545,17 @@
           },
           "fill": {
             "signal": "datum.published_cell ? scale('colour', datum.percent) : colorSurface"
+          },
+          "opacity": {
+            "value": 1
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "rule",
-      "description": "Diagonal hatching for unpublished cells, clipped to each cell.",
+      "description": "Diagonal lines over the white squares, to show \"not published\". Each line is cut to stay inside its square (lines poking out would make the chart shrink).",
       "from": {
         "data": "hatchLines"
       },
@@ -557,53 +586,8 @@
       }
     },
     {
-      "type": "text",
-      "description": "Percentage in each published cell.",
-      "from": {
-        "data": "cells"
-      },
-      "interactive": false,
-      "encode": {
-        "enter": {
-          "align": {
-            "value": "center"
-          },
-          "baseline": {
-            "value": "middle"
-          },
-          "font": {
-            "signal": "fontBody"
-          }
-        },
-        "update": {
-          "x": {
-            "scale": "x",
-            "field": "species",
-            "band": 0.5
-          },
-          "y": {
-            "scale": "y",
-            "field": "reason",
-            "band": 0.5
-          },
-          "text": {
-            "signal": "datum.published_cell ? (narrow ? '' + datum.percent : datum.percent + '%') : ''"
-          },
-          "fontSize": {
-            "signal": "narrow ? 11 : 13"
-          },
-          "fontWeight": {
-            "value": 500
-          },
-          "fill": {
-            "signal": "datum.percent >= 30 ? colorSurface : colorMuted"
-          }
-        }
-      }
-    },
-    {
       "type": "rect",
-      "description": "Legend: colour gradient for published shares.",
+      "description": "The colour strip in the key, going from pale to dark.",
       "encode": {
         "update": {
           "x": {
@@ -622,10 +606,12 @@
             "signal": "{gradient: 'linear', stops: [{offset: 0, color: colorLight}, {offset: 1, color: colorDark}]}"
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "text",
+      "description": "The words above the colour strip: \"Share of owners: 0% to 60%\".",
       "encode": {
         "enter": {
           "baseline": {
@@ -652,11 +638,12 @@
             "value": "Share of owners: 0% to 60%"
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "rect",
-      "description": "Legend: hatched swatch for unpublished cells.",
+      "description": "The white square in the key that shows what \"not published\" looks like.",
       "encode": {
         "update": {
           "x": {
@@ -675,10 +662,12 @@
             "signal": "colorSurface"
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "rule",
+      "description": "The diagonal lines inside that key square.",
       "from": {
         "data": "legendHatch"
       },
@@ -713,6 +702,7 @@
     },
     {
       "type": "text",
+      "description": "The words next to that key square, explaining \"not published\".",
       "encode": {
         "enter": {
           "baseline": {
@@ -737,6 +727,50 @@
           },
           "text": {
             "signal": "narrow ? ['Not published: outside', 'this pet\\'s top five'] : 'Not published: outside this pet\\'s top five reasons'"
+          }
+        }
+      },
+      "interactive": false
+    },
+    {
+      "type": "text",
+      "description": "Print every published percentage; unpublished cells remain hatched.",
+      "from": {
+        "data": "cells"
+      },
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "scale": "x",
+            "field": "species",
+            "band": 0.5
+          },
+          "y": {
+            "scale": "y",
+            "field": "reason",
+            "band": 0.5
+          },
+          "align": {
+            "value": "center"
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "signal": "narrow ? 10 : 11"
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "text": {
+            "signal": "datum.published_cell ? datum.percent+'%' : ''"
+          },
+          "fill": {
+            "signal": "datum.percent>=35 ? colorSurface : colorHeading"
           }
         }
       }

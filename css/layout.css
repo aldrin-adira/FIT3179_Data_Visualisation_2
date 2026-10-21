@@ -1,182 +1,129 @@
-/* LAYOUT: sizes, spacing and positioning. See style.css for colours and type.
-   Sections: 1. Settings | 2. Page | 3. Story | 4. Charts | 5. Desktop */
-
-/* 1. SETTINGS edit these to adjust the overall layout. */
+/* LAYOUT CONTROL: one column system. Full rows and halves share the same
+   outer edges and a single centre line, because every two-column split uses
+   --column-gap. Colour and type rules are in style.css. */
 :root {
-    --page-width: 95%;
-    --page-gutter: clamp(1rem, 4vw, 3rem);
-    --text-width: 70ch;
-    --section-space: clamp(2.5rem, 6vw, 5rem);
-    --chart-gap: 1.5rem;
-    --placeholder-padding: clamp(1rem, 2vw, 1.5rem);
-    --placeholder-height: 16rem;
+ --content-width: 1200px; /* Keep charts readable on wide screens. */
+ --page-gutter: clamp(18px, 4vw, 52px);
+ --column-gap: clamp(16px, 2vw, 24px); /* The only gap between two columns. */
+ --section-space: clamp(32px, 4vw, 52px); /* Above and below each chapter. */
+ --row-space: clamp(24px, 2.5vw, 32px); /* Between modules within a chapter. */
+ --stack-gap: 16px; /* Between a finding and its chart card. */
+ --card-padding: clamp(14px, 1.7vw, 24px);
 }
-
-/* 2. PAGE */
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
+/* Include padding in widths so nested chart cards cannot overflow. */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; width: 100%; }
+h1, h2, h3, p { margin: 0; }
+p + p { margin-top: 1rem; }
+.header, .sections > section, footer { padding-inline: max(var(--page-gutter), calc((100% - var(--content-width)) / 2)); }
+/* Header: one centred column, the title above the figures, both on the
+   same centre line as the charts below. */
+.header { display: grid; justify-items: center; gap: 28px; padding-block: 40px; text-align: center; }
+.main-title > p { margin-top: 18px; }
+.hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; width: 100%; max-width: 720px; }
+.stat-card { padding: 18px 14px; }
+.stats-source { grid-column: 1 / -1; margin: 0; }
+.title-paw { width: .65em; height: .65em; margin-left: .15em; transform: rotate(14deg); }
+/* Chapters: title block, then modules. A module is a finding followed by its
+   chart card, so prose never sits beside a taller chart with a gap below. */
+.sections > section { padding-block: var(--section-space); }
+/* The section number sits in the top right corner of the title block; the
+   right padding stops long headings running under it. */
+.section-title { position: relative; margin-bottom: 24px; padding-right: 9rem; }
+.section-number { position: absolute; top: 0; right: 0; }
+.section-title h2 { margin-bottom: 6px; }
+.section-deck { max-width: 56ch; }
+.story-row { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--stack-gap); }
+.story-row + .story-row { margin-top: var(--row-space); }
+.story-row > *, .map-pair > * { min-width: 0; }
+/* Full-row modules (world map, beeswarm, ownership trend, household groups, spending,
+   barriers, closing chart): the
+   finding splits into two text columns on the shared centre line. */
+.panels-featured .narrative { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px var(--column-gap); }
+.panels-featured .narrative h3 { grid-column: 1 / -1; margin: 0; }
+.panels-featured .narrative p { margin: 0; }
+.panels-featured .narrative .section-callout { border-top: 0; padding-top: 0; }
+/* Paired modules: two findings share a text row and two equal cards share a
+   chart row, giving one centre line and common top and bottom edges. */
+.panels-even { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--stack-gap) var(--column-gap); align-items: start; }
+.panels-even > .story-row { display: contents; }
+.panels-even > .story-row:first-child > * { grid-column: 1; }
+.panels-even > .story-row:nth-child(2) > * { grid-column: 2; }
+.panels-even .narrative { grid-row: 1; }
+.panels-even .chart-figure { grid-row: 2; }
+/* Stretch the cards to a shared bottom edge. The source line takes any spare
+   height; vega_lite_vis.js then grows a data-fill-height chart into it, so
+   the shorter card is filled by its chart instead of an empty band. */
+.panels-even .chart-figure, .map-pair .chart-figure { align-self: stretch; }
+.panels-even .chart-source, .map-pair .chart-source { margin-top: auto; }
+.local-panels { margin-top: var(--row-space); }
+.narrative h3 { margin-bottom: 8px; }
+.narrative p { max-width: 48ch; }
+.narrative p + p { margin-top: 12px; }
+.section-callout { display: flex; align-items: center; gap: 20px; margin-top: 14px; padding-top: 12px; }
+.section-callout strong { white-space: nowrap; font-size: 3rem; }
+.section-callout span { display: block; max-width: 28ch; }
+/* Paired callouts sit on the text row's bottom edge, so their rules align
+   even when the two paragraphs differ in length. */
+@media (min-width: 1101px) {
+ .panels-even .narrative { align-self: stretch; display: flex; flex-direction: column; }
+ .panels-even .narrative .section-callout { margin-top: auto; }
+ .panels-even .narrative > :has(+ .section-callout) { margin-bottom: 14px; }
 }
-
-body {
-    max-width: var(--page-width);
-    margin: 0 auto;
-    padding: 0 var(--page-gutter);
+.section-transition { margin-top: 24px; padding-top: 12px; max-width: 62ch; }
+.section-conclusion { padding-top: 12px; }
+/* Captions follow their charts. */
+.chart-figure { margin: 0; padding: var(--card-padding); display: flex; flex-direction: column; }
+.chart-container > div, .vega-embed { width: 100%; min-width: 0; }
+.chart-figure > [id^="chart"] { margin-bottom: 12px; }
+.chart-source { padding-top: 10px; }
+.chart-data { margin-top: 6px; }
+.chart-data a { display: inline-block; margin: 8px 16px 0 0; }
+/* The map introduction and paired maps use the shared column grid. */
+.section-brief { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px var(--column-gap); margin-bottom: 16px; }
+.section-brief p { max-width: 54ch; margin: 0; }
+.map-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); align-items: start; }
+/* Expanded footer follows the same outer edge and two-column grid. */
+footer { padding-block: 30px; }
+.footer-toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.footer-toggle-row h2 { margin-top: 4px; }
+#footer-content { padding-top: 28px; }
+.sources-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); }
+.sources-grid .source-column { width: auto; min-width: 0; }
+.source-column > :first-child { margin-top: 0; }
+footer p { max-width: 56ch; }
+footer h3 { margin: 24px 0 10px; }
+.colophon { margin-top: 28px; padding-top: 16px; max-width: none; }
+/* Stack before narrow columns would squeeze the data. DOM order is kept.
+   Every finding keeps the two-column text split above its full-width card. */
+@media (max-width: 1100px) {
+ .narrative { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px var(--column-gap); }
+ .narrative h3 { grid-column: 1 / -1; margin: 0; }
+ .narrative p { margin: 0; }
+ .section-callout { padding-top: 0; border-top: 0 !important; }
+ .map-pair { grid-template-columns: minmax(0, 1fr); }
+ .panels-even { display: block; }
+ .panels-even > .story-row { display: grid; }
+ .panels-even > .story-row > * { grid-column: auto !important; grid-row: auto; }
+ .panels-even > .story-row + .story-row { margin-top: var(--row-space); }
 }
-
-h1,
-h2,
-h3,
-p {
-    margin: 0;
+/* Phone text uses its natural font size and a single reading column. */
+@media (max-width: 600px) {
+ .header { padding-block: 28px; }
+ .section-title { padding-right: 0; }
+ .section-number { position: static; display: block; margin-bottom: 6px; }
+ .hero-stats { gap: 8px; }
+ .stat-card { padding: 16px 10px; }
+ .narrative, .panels-featured .narrative, .section-brief, .sources-grid { grid-template-columns: minmax(0, 1fr); }
+ .narrative p + p, .panels-featured .narrative p + p { margin-top: 8px; }
+ .section-brief { gap: 12px; }
+ .section-callout { margin-top: 8px !important; }
+ .footer-toggle-row { flex-direction: column; align-items: flex-start; }
 }
-
-p + p {
-    margin-top: 0.75rem;
-}
-
-.header {
-    padding: var(--section-space) 0;
-    text-align: center;
-}
-
-.main-title {
-    max-width: var(--text-width);
-    margin: 0 auto;
-}
-
-.subtitle {
-    margin-top: 1rem;
-}
-
-footer {
-    padding: 2rem 0 var(--section-space);
-}
-
-footer h2 {
-    margin-bottom: 1rem;
-}
-
-footer p {
-    max-width: var(--text-width);
-}
-
-footer h3 {
-    margin: 1.25rem 0 0.25rem;
-}
-
-/* Two source columns on desktop; Pure CSS stacks them on small screens. */
-.source-column {
-    min-width: 0;
-    padding-right: var(--chart-gap);
-}
-
-/* Align the tops of both columns. */
-.source-column > :first-child {
-    margin-top: 0;
-}
-
-footer .colophon {
-    max-width: none;
-    margin-top: 2rem;
-    padding-top: 1rem;
-}
-
-/* 3. STORY SECTIONS */
-.sections > section {
-    padding: var(--section-space) 0;
-    row-gap: var(--chart-gap);
-}
-
-.section-title {
-    min-width: 0;
-    position: relative;
-}
-
-/* Section numbers sit above the heading on small screens and move into the
-   empty space to the right of the header text on desktop (section 5). */
-.section-number {
-    display: block;
-    margin-bottom: 0.25rem;
-}
-
-.section-question {
-    margin-top: 1rem;
-}
-
-.section-title p,
-.section-transition {
-    max-width: var(--text-width);
-}
-
-.section-transition {
-    padding-left: 1rem;
-}
-
-/* Closing statement at the end of the story. */
-.section-conclusion {
-    max-width: var(--text-width);
-    padding-left: 1rem;
-}
-
-/* 4. CHARTS Pure CSS supplies full-width mobile columns. */
-.chart-container {
-    display: flex;
-    min-width: 0;
-}
-
-.chart-container > div,
-.vega-embed {
-    width: 100%;
-    min-width: 0;
-}
-
-/* Embedded charts stack the chart above its source caption. */
-.chart-figure {
-    flex-direction: column;
-    margin: 0;
-    padding: var(--placeholder-padding);
-}
-
-/* Paired charts: each figure fills its half-width column (the column supplies the gap). */
-.chart-pair > .chart-figure {
-    display: flex;
-    width: 100%;
-}
-
-.chart-source {
-    margin-top: 0.75rem;
-}
-
-/* Remove chart-placeholder when its real chart is embedded. */
-.chart-placeholder {
-    min-height: var(--placeholder-height);
-    padding: var(--placeholder-padding);
-}
-
-.chart-placeholder h3 {
-    margin-bottom: 0.75rem;
-}
-
-/* 5. DESKTOP matches Pure CSS's md breakpoint.
-   Padding keeps the existing 2/3 + 1/3 widths within their row.
-   CSS variables cannot be used in media-query conditions. */
-@media (min-width: 48em) {
-    /* Gap only between charts sharing a row, not full-width charts stacked below. */
-    .chart-container[class*="pure-u-md-"] + .chart-container[class*="pure-u-md-"] {
-        padding-left: var(--chart-gap);
-    }
-
-    /* Reserve the right edge so long headings never run under the number. */
-    .section-title {
-        padding-right: 9rem;
-    }
-
-    .section-number {
-        position: absolute;
-        top: 0;
-        right: 0;
-        margin-bottom: 0;
-    }
+/* Print includes complete metadata even when the screen footer is closed. */
+@media print {
+ #footer-toggle, .skip-link { display: none; }
+ .header, .sections > section, footer { padding: 24px 0; }
+ #footer-content[hidden] { display: block; }
+ .chart-figure { break-inside: avoid; }
 }

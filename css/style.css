@@ -1,9 +1,15 @@
-/* 1. COLOUR PALETTE change these values to recolour the website.
-   Names describe purpose, so they still make sense after edits.
-   Vega charts read these variables through js/vega_lite_vis.js.
-   Blue (heading, accent) and red-brown (neutral, dark, light) stay distinct
-   for colour-blind readers; avoid green beside the red-brown group.
+/* STYLE: how things LOOK (colours, fonts, text sizes, borders).
+   Where things SIT (spacing, widths, columns) is in layout.css.
    Sections: 1. Colours | 2. Type settings | 3. Base | 4. Story | 5. Charts */
+
+/* 1. COLOUR PALETTE: change these values to recolour the whole website.
+   Each colour is stored once here, with a name that says what it is for,
+   so the names still make sense after a colour changes.
+   The charts use these colours too: js/vega_lite_vis.js reads them and
+   hands them to every chart, so the page and the charts always match.
+   Blue (heading, accent) and red-brown (neutral, dark, light) are kept far
+   apart so colour-blind readers can tell them apart; do not add green next
+   to the red-brown colours. */
 :root {
     --color-page: #dadfef;           /* Page background; chart annotation background */
     --color-surface: #ffffff;       /* Chart card background */
@@ -17,10 +23,11 @@
     --color-light: #F5DFD8;         /* Chart sequential scale: low values */
     --color-neutral: #512D22;       /* Chart marks without a colour encoding */
 
-    /* Pet type colours: one fixed hue per pet in every chart that colours by pet type.
-       Chosen to avoid the blue and red-brown groups above, with at least 4.5:1
-       contrast on white so they also work as label text. Always label pet types
-       directly as well, because no seven-colour set is fully colour-blind safe. */
+    /* Pet type colours: each pet always has the same colour in every chart.
+       None of them is blue or red-brown, so they never get mixed up with the
+       colours above. Each is dark enough to read as text on white. Pets must
+       always be named on the chart too, because with seven colours some look
+       alike to colour-blind readers. */
     --color-pet-dogs: #9c6500;          /* Amber */
     --color-pet-cats: #7a376b;          /* Plum */
     --color-pet-fish: #007f80;          /* Teal */
@@ -29,203 +36,92 @@
     --color-pet-reptiles: #d6336c;      /* Raspberry */
     --color-pet-other: #555555;         /* Grey */
 
-    /* Luminance ramps in a pet's own hue, for quantities about one pet type
-       (for example the dog and cat council maps): light = low, dark = high.
-       Each ramp passes through that pet's colour above. */
+    /* Pale-to-dark shades of one pet's colour, for maps about one pet
+       (for example dogs per council): pale = small number, dark = big number.
+       The middle of each ramp is that pet's normal colour from above. */
     --color-pet-dogs-light: #fbe8d4;
+    --color-pet-dogs-mid-light: #e5c18b; /* Existing second map class */
+    --color-pet-dogs-mid-dark: #764300;  /* Existing fourth map class */
     --color-pet-dogs-dark: #4b2800;
     --color-pet-cats-light: #f8e6f2;
     --color-pet-cats-dark: #4e1f43;
 
 }
 
-/* 2. TYPOGRAPHY SETTINGS fonts are loaded in index.html. */
+/* 2. TYPOGRAPHY SETTINGS: fonts and text sizes, all in one place.
+   The fonts themselves are downloaded by a link in index.html.
+   "clamp(small, preferred, big)" lets a size grow with the screen width
+   but never go below "small" or above "big". */
 :root {
-    --font-body: "Fira Sans", sans-serif;
-    --font-heading: "DM Serif Display", Georgia, serif;
-    --text-base: 1rem;
-    --text-small: 0.875rem;
-    --text-title: clamp(2.5rem, 6vw, 4.5rem);
-    --text-section: clamp(1.75rem, 3vw, 2.5rem);
-    --text-subheading: 1.125rem;
-    --text-section-number: clamp(4rem, 8vw, 7rem);
-    --line-height-body: 1.65;
-    --line-height-heading: 1.15;
+    --font-body: "Fira Sans", sans-serif;               /* Plain font for reading */
+    --font-heading: "DM Serif Display", Georgia, serif; /* Fancy font for headings */
+    --text-subheading: 1.125rem;                        /* Smaller headings and the subtitle */
 }
 
-/* 3. BASE */
-html {
-    background-color: var(--color-page);
-    color: var(--color-text);
-}
 
-body {
-    font-family: var(--font-body);
-    font-size: var(--text-base);
-    line-height: var(--line-height-body);
-    overflow-wrap: break-word;
+/* BASE TYPE: title → chapter → finding → caption form the visual hierarchy. */
+html { background: var(--color-page); color: var(--color-text); scroll-padding-top: 24px; }
+body, .pure-g, .pure-g [class*="pure-u"] { font-family: var(--font-body); }
+body { font-size: 1rem; line-height: 1.65; overflow-wrap: break-word; }
+h1, h2 { font-family: var(--font-heading); color: var(--color-heading); font-weight: 400; letter-spacing: -.025em; line-height: 1.12; }
+h1 { font-size: clamp(3rem, 5.5vw, 4.75rem); line-height: .99; }
+h1 span { color: var(--color-aus-orange); }
+h2 { font-size: clamp(1.85rem, 3vw, 2.6rem); }
+h3 { color: var(--color-heading); font-size: 1.05rem; line-height: 1.4; font-weight: 600; }
+strong { font-weight: 600; }
+a { color: var(--color-accent); text-underline-offset: .2em; }
+a:hover { text-decoration-thickness: .13em; }
+:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 4px; }
+[hidden] { display: none !important; } /* Hidden wins over flex and grid display. */
+/* Hero: orange leads the headline. */
+.subtitle { color: var(--color-heading); font-size: 1.1rem; }
+.title-paw { fill: var(--color-aus-orange); }
+.stat-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 5px; }
+.stat-card strong { color: var(--color-aus-orange); font-size: clamp(1.9rem, 3vw, 2.9rem); line-height: 1.1; letter-spacing: -.04em; }
+.stat-card strong span { font-size: .65em; }
+.stat-card strong .stat-unit { display: block; font-size: .45em; line-height: 1.4; letter-spacing: 0; }
+.stat-card p { font-size: .85rem; color: var(--color-heading); line-height: 1.4; margin-block: 12px; }
+.stat-card small, .stats-source { font-size: .72rem; color: var(--color-muted); }
+/* Chapter bands group content without adding further floating boxes. */
+.sections > section { border-top: 1px solid var(--color-border); }
+.sections > section:nth-of-type(even) { background: color-mix(in srgb, var(--color-surface) 35%, var(--color-page)); }
+/* The section number (01, 02 ...) in the heading font. It is only decoration,
+   so index.html hides it from screen readers. */
+.section-number { color: var(--color-muted); font-family: var(--font-heading); font-size: var(--text-subheading); line-height: 1; }
+.section-deck { font-size: 1rem; color: var(--color-muted); }
+.narrative { font-size: .94rem; }
+.method-note { color: var(--color-muted); font-size: .82rem; line-height: 1.65; }
+.section-callout { border-top: 1px solid var(--color-border); }
+.section-callout strong { font-family: var(--font-heading); color: var(--color-accent); font-weight: 400; font-size: clamp(2.9rem, 5vw, 4rem); line-height: 1; }
+.section-callout span { color: var(--color-heading); font-size: .94rem; }
+.section-transition { border-top: 1px solid var(--color-border); color: var(--color-muted); font-size: .82rem; }
+.section-conclusion { border-top: 3px solid var(--color-aus-orange); color: var(--color-heading); font-weight: 500; }
+/* Chart cards separate analytical content from surrounding prose. */
+.chart-figure { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 5px; }
+.chart-source { border-top: 1px solid var(--color-border); font-size: .74rem; line-height: 1.6; color: var(--color-muted); }
+.chart-data { font-size: .74rem; }
+.chart-data summary { cursor: pointer; color: var(--color-accent); }
+.chart-status { color: var(--color-muted); padding: 20px; }
+/* Reading notes wrap as normal text below the SVG, clear of plotted marks. */
+.chart-reading-note { margin: 0 0 12px; padding: 10px 12px; background: var(--color-page); border-radius: 4px; font-size: .78rem; line-height: 1.6; }
+/* Map titles stay outside the geographic clipping region and never pan. */
+.chart-heading { font: 400 1.35rem/1.25 var(--font-heading); letter-spacing: -.02em; }
+.chart-subtitle { margin: 6px 0 14px; font-size: .78rem; color: var(--color-muted); }
+.map-note { margin-top: 10px; }
+/* Native controls support touch, keyboard and browser accessibility tools. */
+button { font: inherit; color: var(--color-heading); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; min-height: 42px; padding: 8px 12px; }
+button { cursor: pointer; transition: background-color 160ms, border-color 160ms; }
+button:hover { border-color: var(--color-accent); background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface)); }
+/* Source links open this complete metadata disclosure automatically. */
+footer { border-top: 1px solid var(--color-border); color: var(--color-muted); font-size: .84rem; }
+.footer-eyebrow { color: var(--color-accent); font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; }
+footer h2 { font-size: 1.3rem; }
+footer h3 { font-size: .94rem; }
+footer a { overflow-wrap: anywhere; }
+.colophon { border-top: 1px solid var(--color-border); font-size: .76rem; }
+.skip-link { position: absolute; left: 16px; top: -100px; z-index: 10; background: var(--color-surface); padding: 12px; }
+.skip-link:focus { top: 12px; }
+@media (prefers-reduced-motion: reduce) {
+ *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
-
-/* Override Pure CSS's grid fonts so story text stays consistent. */
-.pure-g,
-.pure-g [class*="pure-u"] {
-    font-family: var(--font-body);
-}
-
-h1,
-h2 {
-    color: var(--color-heading);
-    font-family: var(--font-heading);
-    font-weight: 400;
-    line-height: var(--line-height-heading);
-}
-
-h1 {
-    font-size: var(--text-title);
-}
-
-h2 {
-    font-size: var(--text-section);
-}
-
-h3 {
-    color: var(--color-heading);
-    font-size: var(--text-subheading);
-    font-weight: 600;
-    line-height: 1.4;
-}
-
-a {
-    color: var(--color-accent);
-    text-underline-offset: 0.2em;
-}
-
-a:hover {
-    text-decoration-thickness: 0.15em;
-}
-
-a:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 3px;
-}
-
-/* 4. STORY */
-.subtitle {
-    color: var(--color-heading);
-    font-size: var(--text-subheading);
-}
-
-.sections > section,
-footer {
-    border-top: 1px solid var(--color-border);
-}
-
-.section-question {
-    color: var(--color-accent);
-}
-
-/* Decorative section number; hidden from screen readers in index.html. */
-.section-number {
-    color: var(--color-muted);
-    font-family: var(--font-heading);
-    font-size: var(--text-subheading);
-    line-height: 1;
-}
-
-.section-transition {
-    border-left: 3px solid var(--color-border);
-    color: var(--color-muted);
-    font-style: italic;
-}
-
-/* Doubled class beats Pure CSS's body-font rule on grid units. */
-.pure-g .section-conclusion {
-    border-left: 3px solid var(--color-accent);
-    color: var(--color-heading);
-    font-family: var(--font-heading);
-    font-size: var(--text-subheading);
-    line-height: var(--line-height-body);
-}
-
-footer {
-    color: var(--color-muted);
-    font-size: var(--text-small);
-}
-
-footer h2 {
-    font-size: var(--text-subheading);
-}
-
-footer h3 {
-    color: var(--color-heading);
-    font-size: var(--text-small);
-}
-
-.footer-eyebrow {
-    color: var(--color-accent);
-    font-weight: 600;
-}
-
-footer a {
-    overflow-wrap: anywhere; /* Long source links wrap on small screens. */
-}
-
-.colophon {
-    border-top: 1px solid var(--color-border);
-}
-
-/* 5. CHARTS */
-.chart-figure {
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 0.375rem;
-}
-
-.chart-source {
-    color: var(--color-muted);
-    font-size: var(--text-small);
-}
-
-/* Chart controls created by Vega signal bindings (for example "Include food"). */
-.vega-bindings {
-    color: var(--color-muted);
-    font-family: var(--font-body);
-    font-size: var(--text-small);
-    margin-top: 0.75rem;
-}
-
-.vega-bind label {
-    align-items: center;
-    cursor: pointer;
-    display: inline-flex;
-    flex-direction: row-reverse;
-    gap: 0.5rem;
-}
-
-.vega-bind input[type="radio"] {
-    accent-color: var(--color-accent);
-    margin: 0 0.25rem 0 0.75rem;
-}
-
-.vega-bind-radio label {
-    display: inline-flex;
-    flex-direction: row;
-}
-
-.vega-bind input[type="checkbox"] {
-    accent-color: var(--color-accent);
-    height: 1.1rem;
-    width: 1.1rem;
-}
-
-/* CHART PLACEHOLDERS */
-.chart-placeholder {
-    background-color: var(--color-surface);
-    border: 1px dashed var(--color-border);
-    border-radius: 0.375rem;
-}
-
-.chart-placeholder p:last-child {
-    color: var(--color-muted);
-    font-size: var(--text-small);
-}
+@media print { #footer-content[hidden] { display: block !important; } }

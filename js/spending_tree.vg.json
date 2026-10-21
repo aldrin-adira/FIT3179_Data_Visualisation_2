@@ -1,0 +1,766 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Weighted dendrogram of average annual spending per dog-owning or cat-owning household, 2025. Pet / editorial cost group / reported category is a hierarchy; branch width encodes dollars with one common linear scale. All reported categories are retained. Species means have separate household denominators and must not be added into a grand total.",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "title": {
+    "text": {
+      "signal": "narrow ? ['Food is the biggest cost;', 'health care comes next'] : 'Food is the biggest cost; health care comes next'"
+    },
+    "subtitle": {
+      "signal": "narrow ? ['Average annual spending per owning household,', '2025 · Branch width encodes Australian dollars'] : 'Average annual spending per owning household, 2025 · Branch width encodes Australian dollars'"
+    },
+    "anchor": "start",
+    "offset": 18,
+    "font": {
+      "signal": "fontHeading"
+    },
+    "fontSize": {
+      "signal": "narrow ? 19 : 24"
+    },
+    "fontWeight": 400,
+    "color": {
+      "signal": "colorHeading"
+    },
+    "subtitleFont": {
+      "signal": "fontBody"
+    },
+    "subtitleFontSize": 12,
+    "subtitleColor": {
+      "signal": "colorMuted"
+    },
+    "subtitlePadding": 8
+  },
+  "signals": [
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Colour: the dark grey colour of small text: labels, axis words and notes. This is only a backup; the real colour comes from --color-muted in css/style.css."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Colour: the dark blue colour of chart titles. This is only a backup; the real colour comes from --color-heading in css/style.css."
+    },
+    {
+      "name": "colorSurface",
+      "value": "#ffffff",
+      "description": "Colour: white, the colour of the card each chart sits on; also the halo behind labels. This is only a backup; the real colour comes from --color-surface in css/style.css."
+    },
+    {
+      "name": "colorNeutral",
+      "value": "#512D22",
+      "description": "Colour: the starting node, which belongs to no single pet. This is only a backup; the real colour comes from --color-neutral in css/style.css."
+    },
+    {
+      "name": "colorPetDogs",
+      "value": "#9c6500",
+      "description": "Colour: the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs in css/style.css."
+    },
+    {
+      "name": "colorPetCats",
+      "value": "#7a376b",
+      "description": "Colour: the colour for cats (plum). This is only a backup; the real colour comes from --color-pet-cats in css/style.css."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Font: the fancy title font (DM Serif Display). This is only a backup; the real font comes from --font-heading in css/style.css."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css."
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "description": "Measured by the loader; small-screen charts keep a compact minimum width."
+    },
+    {
+      "name": "narrow",
+      "update": "width < 560",
+      "description": "Shorter labels, tighter rows and a three-line note on a phone; no data are removed."
+    },
+    {
+      "name": "ringgitRate",
+      "value": 2.76,
+      "description": "Static layout, data or appearance for this part of the chart."
+    },
+    {
+      "name": "rootX",
+      "value": 8,
+      "description": "Where the tree starts on the left."
+    },
+    {
+      "name": "labelWidth",
+      "update": "narrow ? 150 : 220",
+      "description": "Room on the right for each category's name and amount."
+    },
+    {
+      "name": "leafX",
+      "update": "width - labelWidth",
+      "description": "Where the categories (the leaves of the tree) line up."
+    },
+    {
+      "name": "plotTop",
+      "value": 34,
+      "description": "Room above the tree for the column headings."
+    },
+    {
+      "name": "leafStep",
+      "update": "narrow ? 20 : 22",
+      "description": "Vertical distance between two neighbouring categories."
+    },
+    {
+      "name": "plotHeight",
+      "update": "(length(data('items')) - 1) * leafStep",
+      "description": "How tall the tree is: one row per category."
+    },
+    {
+      "name": "height",
+      "update": "plotTop + plotHeight + 16",
+      "description": "How tall the whole chart is: headings, tree and note."
+    }
+  ],
+  "data": [
+    {
+      "name": "spend",
+      "url": "data/selected/au_household_spending_2025.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "annual_aud": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.value_status === 'reported'",
+          "description": "Retain every reported amount, including Other spending. A source dash is missing, not zero."
+        },
+        {
+          "type": "formula",
+          "as": "group",
+          "expr": "datum.category === 'Anything_else' ? 'Other' : datum.category === 'Food' ? 'Food' : indexof(['Veterinary_services', 'Veterinary_medicines', 'Flea_worming_tick_treatments', 'Dietary_supplements', 'Alternative_healthcare_treatments', 'Pet_insurance'], datum.category) >= 0 ? 'Health care' : datum.category === 'Products_or_accessories' ? 'Products' : 'Services'",
+          "description": "Editorial grouping for reading the hierarchy: food, health care, services, products and other. These group labels are not additional survey measurements."
+        },
+        {
+          "type": "formula",
+          "as": "label",
+          "expr": "{'Anything_else': 'Other spending', 'Food': 'Food', 'Veterinary_services': 'Veterinary services', 'Veterinary_medicines': 'Veterinary medicines', 'Flea_worming_tick_treatments': 'Parasite treatments', 'Dietary_supplements': 'Supplements', 'Alternative_healthcare_treatments': 'Alternative therapies', 'Pet_insurance': 'Insurance', 'Clipping_grooming': 'Grooming', 'Training_behaviour_therapy': 'Behaviour training', 'Walking': 'Walking', 'Boarding_minding': 'Boarding and care', 'Transport': 'Transport', 'Competitions_memberships': 'Clubs and contests', 'Products_or_accessories': 'Pet products'}[datum.category]",
+          "description": "Short, readable names for the report's categories."
+        }
+      ]
+    },
+    {
+      "name": "items",
+      "source": "spend",
+      "transform": [
+        {
+          "type": "formula",
+          "as": "id",
+          "expr": "datum.species + '/' + datum.category"
+        },
+        {
+          "type": "formula",
+          "as": "parent",
+          "expr": "datum.species + '/type/' + datum.group"
+        },
+        {
+          "type": "formula",
+          "as": "key",
+          "expr": "datum.category"
+        },
+        {
+          "type": "formula",
+          "as": "name",
+          "expr": "datum.label"
+        },
+        {
+          "type": "formula",
+          "as": "amount",
+          "expr": "datum.annual_aud"
+        },
+        {
+          "type": "formula",
+          "as": "kind",
+          "expr": "'item'"
+        }
+      ],
+      "description": "The leaves: one row per pet and spending category."
+    },
+    {
+      "name": "groups",
+      "source": "spend",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": [
+            "species",
+            "group"
+          ],
+          "ops": [
+            "sum",
+            "count"
+          ],
+          "fields": [
+            "annual_aud",
+            "annual_aud"
+          ],
+          "as": [
+            "amount",
+            "n"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "id",
+          "expr": "datum.species + '/type/' + datum.group",
+          "description": "The '/type/' part keeps a type of cost's id distinct from a category of the same name (Food)."
+        },
+        {
+          "type": "formula",
+          "as": "parent",
+          "expr": "datum.species"
+        },
+        {
+          "type": "formula",
+          "as": "key",
+          "expr": "datum.group"
+        },
+        {
+          "type": "formula",
+          "as": "name",
+          "expr": "datum.group"
+        },
+        {
+          "type": "formula",
+          "as": "kind",
+          "expr": "'group'"
+        }
+      ],
+      "description": "The middle level: each pet's spending summed by type of cost."
+    },
+    {
+      "name": "pets",
+      "source": "spend",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": [
+            "species"
+          ],
+          "ops": [
+            "sum"
+          ],
+          "fields": [
+            "annual_aud"
+          ],
+          "as": [
+            "amount"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "id",
+          "expr": "datum.species"
+        },
+        {
+          "type": "formula",
+          "as": "parent",
+          "expr": "'root'"
+        },
+        {
+          "type": "formula",
+          "as": "key",
+          "expr": "datum.species"
+        },
+        {
+          "type": "formula",
+          "as": "name",
+          "expr": "datum.species"
+        },
+        {
+          "type": "formula",
+          "as": "kind",
+          "expr": "'pet'"
+        }
+      ],
+      "description": "Sum of all displayed, rounded category averages within each species. Dogs sum to $2,521 (published total $2,520); cats sum to $1,656."
+    },
+    {
+      "name": "trunk",
+      "values": [
+        {
+          "id": "root",
+          "parent": null,
+          "key": "root",
+          "name": "Pet spending",
+          "kind": "root"
+        }
+      ],
+      "description": "The single starting node the tree grows from."
+    },
+    {
+      "name": "nodes",
+      "source": [
+        "trunk",
+        "pets",
+        "groups",
+        "items"
+      ],
+      "transform": [
+        {
+          "type": "collect",
+          "sort": {
+            "field": "amount",
+            "order": "descending"
+          },
+          "description": "Largest first: the tree keeps this order, so every split lists its biggest branch at the top."
+        },
+        {
+          "type": "stratify",
+          "key": "id",
+          "parentKey": "parent"
+        },
+        {
+          "type": "tree",
+          "method": "cluster",
+          "size": [
+            {
+              "signal": "plotHeight"
+            },
+            {
+              "signal": "leafX - rootX"
+            }
+          ],
+          "separation": false,
+          "as": [
+            "breadth",
+            "depthPos",
+            "depth",
+            "children"
+          ]
+        },
+        {
+          "type": "formula",
+          "as": "sx",
+          "expr": "datum.depthPos + rootX",
+          "description": "Screen position across: the tree grows from left to right."
+        },
+        {
+          "type": "formula",
+          "as": "sy",
+          "expr": "datum.breadth + plotTop",
+          "description": "Screen position down: one row per category, largest first."
+        },
+        {
+          "type": "lookup",
+          "from": "pets",
+          "key": "species",
+          "fields": [
+            "species"
+          ],
+          "values": [
+            "amount"
+          ],
+          "as": [
+            "petTotal"
+          ]
+        }
+      ],
+      "description": "All four levels together, laid out as a dendrogram: every category lines up in one column on the right."
+    },
+    {
+      "name": "links",
+      "source": "nodes",
+      "transform": [
+        {
+          "type": "treelinks"
+        },
+        {
+          "type": "linkpath",
+          "orient": "horizontal",
+          "shape": "diagonal",
+          "sourceX": "source.sx",
+          "sourceY": "source.sy",
+          "targetX": "target.sx",
+          "targetY": "target.sy"
+        }
+      ],
+      "description": "One curved branch from each node to each of its children."
+    },
+    {
+      "name": "levels",
+      "values": [
+        {
+          "depth": 1,
+          "label": "Pet"
+        },
+        {
+          "depth": 2,
+          "label": "Type of cost"
+        },
+        {
+          "depth": 3,
+          "label": "Category"
+        }
+      ],
+      "description": "Column headings above each level of the tree."
+    }
+  ],
+  "scales": [
+    {
+      "name": "branchWidth",
+      "type": "linear",
+      "domain": [
+        0,
+        2521
+      ],
+      "range": [
+        0,
+        {
+          "signal": "narrow ? 14 : 20"
+        }
+      ],
+      "zero": true,
+      "nice": false
+    },
+    {
+      "name": "colour",
+      "type": "ordinal",
+      "domain": [
+        "Dogs",
+        "Cats"
+      ],
+      "range": {
+        "signal": "[colorPetDogs, colorPetCats]"
+      }
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "description": "Column headings: Pet, Type of cost, Category, and the amount column.",
+      "interactive": false,
+      "from": {
+        "data": "levels"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "datum.depth === 3 ? leafX + 10 : rootX + (leafX - rootX) * datum.depth / 3"
+          },
+          "y": {
+            "value": 8
+          },
+          "align": {
+            "signal": "datum.depth === 3 ? 'left' : 'center'"
+          },
+          "text": {
+            "field": "label"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "description": "Heading over the amounts on the right.",
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "width"
+          },
+          "y": {
+            "value": 8
+          },
+          "align": {
+            "value": "right"
+          },
+          "text": {
+            "value": "Dollars a year"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "path",
+      "name": "branches",
+      "description": "Branches. Width is proportional to the child's dollars, so a branch splits into thinner branches that add up to it.",
+      "from": {
+        "data": "links"
+      },
+      "encode": {
+        "update": {
+          "path": {
+            "field": "path"
+          },
+          "stroke": {
+            "scale": "colour",
+            "field": "target.species"
+          },
+          "strokeWidth": {
+            "scale": "branchWidth",
+            "field": "target.amount"
+          },
+          "strokeCap": {
+            "value": "butt"
+          },
+          "strokeOpacity": {
+            "value": 0.55
+          }
+        }
+      },
+      "interactive": false
+    },
+    {
+      "type": "symbol",
+      "name": "nodeDots",
+      "description": "A small dot where each branch splits, and at each category.",
+      "from": {
+        "data": "nodes"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "field": "sx"
+          },
+          "y": {
+            "field": "sy"
+          },
+          "size": {
+            "signal": "datum.kind === 'item' ? 36 : 70"
+          },
+          "fill": {
+            "signal": "datum.kind === 'root' ? colorNeutral : scale('colour', datum.species)"
+          },
+          "stroke": {
+            "signal": "colorSurface"
+          },
+          "strokeWidth": {
+            "value": 1.5
+          },
+          "opacity": {
+            "value": 1
+          }
+        }
+      },
+      "interactive": false
+    },
+    {
+      "type": "text",
+      "description": "Labels for the pets and types of cost, set just above their split point on a white halo so branches never run through the words. A type of cost with a single category (food, products) is named once, on the right.",
+      "interactive": false,
+      "from": {
+        "data": "nodes"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "datum.sx + (datum.kind === 'root' ? 0 : -4)"
+          },
+          "y": {
+            "signal": "datum.sy - 8"
+          },
+          "align": {
+            "signal": "datum.kind === 'root' ? 'left' : 'right'"
+          },
+          "baseline": {
+            "value": "bottom"
+          },
+          "text": {
+            "signal": "datum.kind === 'root' || datum.kind === 'item' || (datum.kind === 'group' && datum.n < 2) ? '' : datum.name + ' $' + format(datum.amount, ',')"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "signal": "datum.kind === 'pet' ? 13 : 12"
+          },
+          "fontWeight": {
+            "signal": "datum.kind === 'pet' ? 600 : 500"
+          },
+          "fill": {
+            "signal": "scale('colour', datum.species)"
+          },
+          "stroke": {
+            "signal": "colorSurface"
+          },
+          "strokeWidth": {
+            "value": 3
+          },
+          "strokeOpacity": {
+            "value": 0.9
+          },
+          "opacity": {
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "description": "The same labels drawn again without the halo, on top, so the words stay crisp.",
+      "interactive": false,
+      "from": {
+        "data": "nodes"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "datum.sx + (datum.kind === 'root' ? 0 : -4)"
+          },
+          "y": {
+            "signal": "datum.sy - 8"
+          },
+          "align": {
+            "signal": "datum.kind === 'root' ? 'left' : 'right'"
+          },
+          "baseline": {
+            "value": "bottom"
+          },
+          "text": {
+            "signal": "datum.kind === 'root' || datum.kind === 'item' || (datum.kind === 'group' && datum.n < 2) ? '' : datum.name + ' $' + format(datum.amount, ',')"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "signal": "datum.kind === 'pet' ? 13 : 12"
+          },
+          "fontWeight": {
+            "signal": "datum.kind === 'pet' ? 600 : 500"
+          },
+          "fill": {
+            "signal": "scale('colour', datum.species)"
+          },
+          "opacity": {
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "name": "leafNames",
+      "description": "Category names, lined up on the right.",
+      "from": {
+        "data": "nodes"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "leafX + 10"
+          },
+          "y": {
+            "field": "sy"
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "text": {
+            "signal": "datum.kind === 'item' ? (narrow && datum.category === 'Products_or_accessories' ? 'Products / gear' : datum.name) : ''"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "signal": "narrow ? 11 : 12"
+          },
+          "fontWeight": {
+            "value": 400
+          },
+          "fill": {
+            "signal": "colorMuted"
+          },
+          "opacity": {
+            "value": 1
+          }
+        }
+      },
+      "interactive": false
+    },
+    {
+      "type": "text",
+      "description": "Each category's average yearly amount, right-aligned like a table column.",
+      "interactive": false,
+      "from": {
+        "data": "nodes"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "width"
+          },
+          "y": {
+            "field": "sy"
+          },
+          "align": {
+            "value": "right"
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "text": {
+            "signal": "datum.kind === 'item' ? '$' + format(datum.amount, ',') : ''"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "signal": "narrow ? 11 : 12"
+          },
+          "fontWeight": {
+            "signal": "datum.key === 'Food' ? 600 : 400"
+          },
+          "fill": {
+            "signal": "scale('colour', datum.species)"
+          },
+          "opacity": {
+            "value": 1
+          }
+        }
+      }
+    }
+  ],
+  "usermeta": {
+    "idiom": "Dendrogram (node-link tree, cluster layout): hierarchy of pet → type of cost → category, with leaves aligned and branch width proportional to dollars. Kirk, hierarchical idioms (tree hierarchy / dendrogram).",
+    "scales": {
+      "branchWidth": "Common zero-based linear dollar scale, with no minimum-width floor. Small branches remain small; printed labels retain the amounts.",
+      "colour": "Species identity only."
+    },
+    "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
+    "projections": {},
+    "courseBasis": "W06 Network and Trees, slide 7, and Network idioms (Kirk), PDF page 2, explicitly allow line width for quantitative attributes in a dendrogram. The root groups the two species for navigation; it is not a summed household budget.",
+    "readingNote": "All reported categories are included. Dog items sum to 2,521 Australian dollars; the published 2,520 Australian dollars total differs by one Australian dollar from rounding. Averages include owners who spent nothing in a category. A source dash is missing, not zero."
+  }
+}

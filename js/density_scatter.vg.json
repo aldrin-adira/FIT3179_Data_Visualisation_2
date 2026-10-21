@@ -7,8 +7,9 @@
     "contains": "padding"
   },
   "title": {
+    "description": "The big heading and the smaller line under it. On a phone the words are split into shorter lines.",
     "text": {
-      "signal": "narrow ? ['The denser the council, the fewer', 'dogs per resident; cats barely', 'change'] : 'The denser the council, the fewer dogs per resident; cats barely change'"
+      "signal": "narrow ? ['Denser councils, fewer dogs;', 'cats hold steady'] : 'Denser councils, fewer dogs; cats hold steady'"
     },
     "subtitle": {
       "signal": "narrow ? ['Animals recorded at home per 1,000 residents', 'against population density, 68 South', 'Australian councils, 2025'] : 'Animals recorded at home per 1,000 residents against population density, 68 South Australian councils, 2025'"
@@ -34,98 +35,93 @@
     },
     "subtitlePadding": 6
   },
+  "usermeta": {
+    "readMe": "Vega ignores this box. It holds plain-language notes for the parts of the chart that cannot carry their own \"description\".",
+    "scales": {
+      "x": "Turns people per square kilometre into a left-to-right position. It is a logarithmic (stretched) scale: each step of ten times more people (1, 10, 100, 1,000) takes the same distance, so crowded city councils and empty country ones both fit.",
+      "y": "Turns animals per 1,000 residents into an up-and-down position: 0 at the bottom, 520 at the top.",
+      "petColour": "Gives each pet its fixed colour: dogs amber, cats plum."
+    },
+    "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
+    "projections": {},
+    "readingNote": "Density may reflect housing constraints and different lifestyles. Recording practices also affect these observed relationships."
+  },
   "signals": [
     {
+      "name": "extraHeight",
+      "value": 0,
+      "description": "Extra plot height set by the page so this card ends level with its paired card instead of leaving a gap."
+    },
+    {
       "name": "colorPetDogs",
-      "value": "#9c6500",
-      "description": "Theme: replaced by --color-pet-dogs."
+      "description": "Colour: the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs in css/style.css.",
+      "value": "#9c6500"
     },
     {
       "name": "colorPetCats",
-      "value": "#7a376b",
-      "description": "Theme: replaced by --color-pet-cats."
+      "description": "Colour: the colour for cats (plum). This is only a backup; the real colour comes from --color-pet-cats in css/style.css.",
+      "value": "#7a376b"
     },
     {
       "name": "colorMuted",
-      "value": "#252725",
-      "description": "Theme: replaced by --color-muted."
+      "description": "Colour: the dark grey colour of small text: labels, axis words and notes. This is only a backup; the real colour comes from --color-muted in css/style.css.",
+      "value": "#252725"
     },
     {
       "name": "colorHeading",
-      "value": "#0b2540",
-      "description": "Theme: replaced by --color-heading."
+      "description": "Colour: the dark blue colour of chart titles. This is only a backup; the real colour comes from --color-heading in css/style.css.",
+      "value": "#0b2540"
     },
     {
       "name": "colorBorder",
-      "value": "#a4adb8",
-      "description": "Theme: replaced by --color-border."
+      "description": "Colour: light grey, used for gridlines, empty squares and places with no data. This is only a backup; the real colour comes from --color-border in css/style.css.",
+      "value": "#a4adb8"
     },
     {
       "name": "colorSurface",
-      "value": "#ffffff",
-      "description": "Theme: replaced by --color-surface."
-    },
-    {
-      "name": "colorPage",
-      "value": "#dadfef",
-      "description": "Theme: replaced by --color-page."
+      "description": "Colour: white, the colour of the card each chart sits on. This is only a backup; the real colour comes from --color-surface in css/style.css.",
+      "value": "#ffffff"
     },
     {
       "name": "fontHeading",
-      "value": "DM Serif Display",
-      "description": "Theme: replaced by --font-heading."
+      "description": "Font: the fancy title font (DM Serif Display). This is only a backup; the real font comes from --font-heading in css/style.css.",
+      "value": "DM Serif Display"
     },
     {
       "name": "fontBody",
-      "value": "Fira Sans",
-      "description": "Theme: replaced by --font-body."
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css.",
+      "value": "Fira Sans"
     },
     {
       "name": "width",
-      "init": "containerSize()[0]",
-      "on": [
-        {
-          "events": "window:resize",
-          "update": "containerSize()[0]"
-        }
-      ]
+      "description": "How wide the chart is. It starts as the width of the box on the page and updates whenever the browser window is resized.",
+      "init": "containerSize()[0]"
     },
     {
       "name": "narrow",
+      "description": "True when the chart is less than 700 pixels wide (for example on a phone). Other parts check it to use smaller dots, shorter words and to move the note below the plot.",
       "update": "width < 700"
     },
     {
       "name": "plotHeight",
-      "update": "narrow ? 330 : 400"
+      "description": "How tall the area with the dots is, plus any extra height that fills a paired card.",
+      "update": "(narrow ? 330 : 400) + extraHeight"
     },
     {
       "name": "height",
-      "update": "plotHeight + (narrow ? 190 : 60)"
+      "description": "Plot and axis only; the reading note wraps in HTML below the SVG.",
+      "update": "plotHeight + 64"
     },
     {
       "name": "plotRight",
-      "update": "width - (narrow ? 44 : 56)",
-      "description": "Room on the right for the species labels at the end of each trend line."
-    },
-    {
-      "name": "hoverCode",
-      "value": null,
-      "on": [
-        {
-          "events": "symbol:mouseover",
-          "update": "datum.code"
-        },
-        {
-          "events": "symbol:mouseout",
-          "update": "null"
-        }
-      ],
-      "description": "Council under the pointer: both its dog and cat points are enlarged."
+      "description": "Where the dots must stop on the right, leaving room for the words \"Dogs\" and \"Cats\" at the end of each trend line.",
+      "update": "width - (narrow ? 44 : 56)"
     }
   ],
   "data": [
     {
       "name": "points",
+      "description": "The council numbers: one row per council per pet, with animals per 1,000 residents and how crowded the council is (people per square kilometre).",
       "url": "data/selected/sa_council_animals_per_1000_residents_2025.csv",
       "format": {
         "type": "csv",
@@ -139,42 +135,44 @@
       "transform": [
         {
           "type": "formula",
+          "description": "Static layout, data or appearance for this part of the chart.",
           "as": "code",
           "expr": "'' + datum.lga_code_2025"
         },
         {
           "type": "formula",
+          "description": "Write the pet name as \"Dogs\" or \"Cats\".",
           "as": "pet",
           "expr": "datum.species === 'Dog' ? 'Dogs' : 'Cats'"
         },
         {
           "type": "formula",
+          "description": "Copy the animals per 1,000 residents into a shorter field name, \"rate\".",
           "as": "rate",
           "expr": "datum.recorded_animals_per_1000_residents"
         },
         {
           "type": "formula",
+          "description": "Copy the people per square kilometre into a shorter field name, \"density\".",
           "as": "density",
           "expr": "datum.population_density_per_km2"
         },
         {
           "type": "formula",
+          "description": "Tidy the council name by removing \" (SA)\" from the end.",
           "as": "name",
           "expr": "replace(datum.lga_name_2025, ' (SA)', '')"
-        },
-        {
-          "type": "formula",
-          "as": "tooltip",
-          "expr": "{'title': datum.name, 'Pet': datum.pet, 'Recorded at home': format(datum.recorded_at_home_animals, ',') + ' (' + format(datum.rate, '.0f') + ' per 1,000 residents)', 'Population density': format(datum.density, datum.density < 10 ? '.1f' : ',.0f') + ' people per square kilometre'}"
         }
       ]
     },
     {
       "name": "trend",
+      "description": "The two trend lines (one for dogs, one for cats): the best-fitting curve through each pet's dots.",
       "source": "points",
       "transform": [
         {
           "type": "regression",
+          "description": "Work out the best-fitting curve through the dots, once for dogs and once for cats. \"log\" means it follows the stretched (logarithmic) bottom axis, so it looks like a straight line.",
           "groupby": [
             "pet"
           ],
@@ -194,10 +192,12 @@
     },
     {
       "name": "trendEnds",
+      "description": "The right-hand end of each trend line, where its name is written.",
       "source": "trend",
       "transform": [
         {
           "type": "aggregate",
+          "description": "For each pet, find the point of the trend line that is furthest to the right.",
           "groupby": [
             "pet"
           ],
@@ -216,11 +216,13 @@
         },
         {
           "type": "formula",
+          "description": "Copy out that end point's left-to-right value.",
           "as": "density",
           "expr": "datum.end.density"
         },
         {
           "type": "formula",
+          "description": "Copy out that end point's up-and-down value.",
           "as": "rate",
           "expr": "datum.end.rate"
         }
@@ -228,37 +230,19 @@
     },
     {
       "name": "callouts",
+      "description": "The two councils that get a written label: Adelaide Plains (most dogs per resident) and the City of Adelaide (fewest).",
       "source": "points",
       "transform": [
         {
           "type": "filter",
+          "description": "Keep only the dog dots for the City of Adelaide and Adelaide Plains.",
           "expr": "datum.species === 'Dog' && (datum.name === 'Adelaide' || datum.name === 'Adelaide Plains')"
         },
         {
           "type": "formula",
+          "description": "Write the label text, for example \"Adelaide Plains: 493 dogs\".",
           "as": "text",
           "expr": "datum.name === 'Adelaide' ? 'City of Adelaide: ' + format(datum.rate, '.0f') + ' dogs' : 'Adelaide Plains: ' + format(datum.rate, '.0f') + ' dogs'"
-        }
-      ]
-    },
-    {
-      "name": "note",
-      "values": [
-        {
-          "lines": [
-            "Each tenfold rise in density goes with about 47 fewer dogs",
-            "per 1,000 residents, but only about 3 fewer cats. This is an",
-            "association: denser areas also have more apartments, and",
-            "records depend on how many owners register their pets."
-          ],
-          "short": [
-            "Each tenfold rise in density goes with",
-            "about 47 fewer dogs per 1,000 residents,",
-            "but only about 3 fewer cats. This is an",
-            "association: denser areas also have more",
-            "apartments, and records depend on how",
-            "many owners register their pets."
-          ]
         }
       ]
     }
@@ -309,7 +293,7 @@
   "marks": [
     {
       "type": "group",
-      "description": "Plot area with axes.",
+      "description": "The box that holds the dots, lines and axes.",
       "encode": {
         "update": {
           "x": {
@@ -330,6 +314,7 @@
         {
           "orient": "bottom",
           "scale": "x",
+          "description": "The bottom axis: people per square kilometre, with numbers and upright gridlines only at 0.1, 1, 10, 100 and 1,000.",
           "values": [
             0.1,
             1,
@@ -353,7 +338,7 @@
           },
           "labelFontSize": 12,
           "title": {
-            "signal": "narrow ? 'People per square kilometre (log scale)' : 'Population density: people per square kilometre (each step is ten times denser)'"
+            "signal": "narrow ? 'People per square kilometre (tenfold steps)' : 'Population density: people per square kilometre (each step is ten times denser)'"
           },
           "titleColor": {
             "signal": "colorMuted"
@@ -372,11 +357,13 @@
                 }
               }
             }
-          }
+          },
+          "gridScale": "y"
         },
         {
           "orient": "left",
           "scale": "y",
+          "description": "The left axis: animals recorded per 1,000 residents, with flat gridlines.",
           "values": [
             0,
             100,
@@ -409,21 +396,19 @@
           },
           "titleFontSize": 13,
           "titleFontWeight": 500,
-          "titlePadding": 8
+          "titlePadding": 8,
+          "gridScale": "x"
         }
       ],
       "marks": [
         {
           "type": "symbol",
-          "description": "One point per council and pet.",
+          "description": "Static layout, data or appearance for this part of the chart.",
           "from": {
             "data": "points"
           },
           "encode": {
             "enter": {
-              "tooltip": {
-                "signal": "datum.tooltip"
-              },
               "stroke": {
                 "signal": "colorSurface"
               },
@@ -445,19 +430,21 @@
                 "field": "pet"
               },
               "size": {
-                "signal": "hoverCode === datum.code ? 160 : (narrow ? 34 : 48)"
+                "signal": "narrow ? 34 : 48"
               },
               "fillOpacity": {
-                "signal": "hoverCode === null || hoverCode === datum.code ? 0.8 : 0.3"
+                "value": 0.8
               },
               "zindex": {
-                "signal": "hoverCode === datum.code ? 1 : 0"
+                "value": 0
               }
             }
-          }
+          },
+          "interactive": false
         },
         {
           "type": "group",
+          "description": "Splits the trend data into one group per pet, so each pet gets its own line.",
           "from": {
             "facet": {
               "name": "trendLine",
@@ -468,7 +455,7 @@
           "marks": [
             {
               "type": "line",
-              "description": "Logarithmic trend line for each pet (straight on the log scale).",
+              "description": "Draws the trend line for one pet, in that pet's colour.",
               "from": {
                 "data": "trendLine"
               },
@@ -497,7 +484,7 @@
         },
         {
           "type": "text",
-          "description": "Species labels at the right end of each trend line, in place of a legend.",
+          "description": "Writes \"Dogs\" and \"Cats\" at the right end of their trend lines, so no separate key is needed.",
           "from": {
             "data": "trendEnds"
           },
@@ -539,7 +526,6 @@
         },
         {
           "type": "text",
-          "description": "Callouts for the highest and lowest dog rates; the City of Adelaide label sits in clear space with a leader.",
           "from": {
             "data": "callouts"
           },
@@ -577,11 +563,12 @@
               }
             }
           },
-          "name": "calloutText"
+          "name": "calloutText",
+          "description": "The labels for Adelaide Plains and the City of Adelaide. The City of Adelaide label sits in empty space (its dot is hidden among the cat dots) and is hidden on a phone."
         },
         {
           "type": "rule",
-          "description": "Leader from the City of Adelaide label to its point.",
+          "description": "A thin line from the City of Adelaide label to its dot. Hidden on a phone.",
           "from": {
             "data": "calloutText"
           },
@@ -614,83 +601,8 @@
             }
           }
         }
-      ]
-    },
-    {
-      "type": "text",
-      "name": "noteText",
-      "from": {
-        "data": "note"
-      },
-      "zindex": 2,
-      "encode": {
-        "enter": {
-          "baseline": {
-            "value": "top"
-          },
-          "lineHeight": {
-            "value": 17
-          },
-          "fontSize": {
-            "value": 12
-          },
-          "fontStyle": {
-            "value": "italic"
-          }
-        },
-        "update": {
-          "x": {
-            "signal": "narrow ? 8 : plotRight - 8"
-          },
-          "y": {
-            "signal": "narrow ? plotHeight + 76 : 10"
-          },
-          "align": {
-            "signal": "narrow ? 'left' : 'right'"
-          },
-          "text": {
-            "signal": "narrow ? datum.short : datum.lines"
-          },
-          "font": {
-            "signal": "fontBody"
-          },
-          "fill": {
-            "signal": "colorMuted"
-          }
-        }
-      }
-    },
-    {
-      "description": "Plain background sized to the note text; no outline or shadow.",
-      "type": "rect",
-      "from": {
-        "data": "noteText"
-      },
-      "zindex": 1,
-      "encode": {
-        "enter": {
-          "cornerRadius": {
-            "value": 4
-          }
-        },
-        "update": {
-          "x": {
-            "signal": "datum.bounds.x1 - 8"
-          },
-          "x2": {
-            "signal": "datum.bounds.x2 + 8"
-          },
-          "y": {
-            "signal": "datum.bounds.y1 - 6"
-          },
-          "y2": {
-            "signal": "datum.bounds.y2 + 6"
-          },
-          "fill": {
-            "signal": "colorPage"
-          }
-        }
-      }
+      ],
+      "interactive": false
     }
   ]
 }

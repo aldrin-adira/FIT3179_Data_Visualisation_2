@@ -1,0 +1,276 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Static layout, data or appearance for this part of the chart.",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "signals": [
+    {
+      "name": "colorSurface",
+      "value": "#ffffff",
+      "description": "Colour: white, the colour of the card each chart sits on. This is only a backup; the real colour comes from --color-surface in css/style.css."
+    },
+    {
+      "name": "colorPetDogs",
+      "value": "#9c6500",
+      "description": "Colour: the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs in css/style.css."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Font: the fancy title font (DM Serif Display). This is only a backup; the real font comes from --font-heading in css/style.css."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css."
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "description": "Measured by the loader; small-screen charts keep a compact minimum width."
+    },
+    {
+      "name": "narrow",
+      "update": "width < 540",
+      "description": "Short labels for a compact chart; no data are removed."
+    },
+    {
+      "name": "plotHeight",
+      "value": 410,
+      "description": "Identical viewport height to the rate map beside it, so places line up."
+    },
+    {
+      "name": "height",
+      "value": 410,
+      "description": "Viewport plus a small fixed legend area."
+    },
+    {
+      "name": "cameraLon",
+      "value": 137.1,
+      "description": "Longitude at the centre of the fixed map view."
+    },
+    {
+      "name": "cameraLat",
+      "value": -34.9,
+      "description": "Latitude at the centre of the fixed map view."
+    },
+    {
+      "name": "cameraSpan",
+      "value": 0.132,
+      "description": "Vertical extent of the fixed view over the settled south."
+    }
+  ],
+  "data": [
+    {
+      "name": "rates",
+      "description": "Dog totals, residents and dog rates for the 68 councils; the maps show the settled south.",
+      "url": "data/selected/sa_council_animals_per_1000_residents_2025.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "recorded_animals_per_1000_residents": "number",
+          "recorded_at_home_animals": "number",
+          "residents_2025": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.species === \"Dog\"",
+          "description": "Show dogs; cats remain in the source table and the density scatterplot."
+        },
+        {
+          "type": "formula",
+          "as": "code",
+          "expr": "'' + datum.lga_code_2025",
+          "description": "formula: code using '' + datum.lga_code_2025"
+        }
+      ]
+    },
+    {
+      "name": "councils",
+      "description": "Council shapes, each with the chosen species' numbers attached.",
+      "url": "data/selected/sa_council_boundaries_2025.geojson",
+      "format": {
+        "type": "json",
+        "property": "features"
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "code",
+          "expr": "'' + datum.properties.lga_code_2025",
+          "description": "formula: code using '' + datum.properties.lga_code_2025"
+        },
+        {
+          "type": "formula",
+          "as": "name",
+          "expr": "replace(datum.properties.lga_name_2025, ' (SA)', '')",
+          "description": "formula: name using replace(datum.properties.lga_name_2025, ' (SA)', '')"
+        },
+        {
+          "type": "lookup",
+          "from": "rates",
+          "key": "code",
+          "fields": [
+            "code"
+          ],
+          "values": [
+            "recorded_at_home_animals",
+            "recorded_animals_per_1000_residents",
+            "residents_2025"
+          ],
+          "as": [
+            "animals",
+            "rate",
+            "residents"
+          ],
+          "description": "lookup transform derives fields for councils; field/as name the input/output columns."
+        },
+        {
+          "type": "formula",
+          "as": "metro",
+          "expr": "indexof(['Adelaide', 'Burnside', 'Campbelltown (SA)', 'Charles Sturt', 'Gawler', 'Holdfast Bay', 'Marion', 'Mitcham', 'Norwood Payneham and St Peters', 'Onkaparinga', 'Playford', 'Port Adelaide Enfield', 'Prospect', 'Salisbury', 'Tea Tree Gully', 'Unley', 'Walkerville', 'West Torrens'], datum.properties.lga_name_2025) >= 0",
+          "description": "formula: metro using indexof(['Adelaide', 'Burnside', 'Campbelltown (SA)', 'Charles Sturt', 'Gawler', 'Holdfast Bay', 'Marion', 'Mitcham', 'Norwood Payneham and St Peters', 'Onkaparinga', 'Playford', 'Port Adelaide Enfield', 'Prospect', 'Salisbury', 'Tea Tree Gully', 'Unley', 'Walkerville', 'West Torrens'], datum.properties.lga_name_2025) >= 0"
+        }
+      ]
+    },
+    {
+      "name": "dots",
+      "url": "data/selected/sa_pet_display_dots.json",
+      "description": "Fixed-seed display dots for both species (scripts/prepare-pet-dots.cjs), filtered to the chosen one. Generated from council totals, not addresses.",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.species === \"Dog\""
+        }
+      ]
+    },
+    {
+      "name": "mappedCouncils",
+      "source": "councils",
+      "description": "Draw the 68 councils with an animal record; other geometries are outside dataset coverage.",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum.animals)",
+          "description": "Exclude unincorporated and non-municipal geometries rather than imply an observed zero."
+        }
+      ]
+    }
+  ],
+  "projections": [
+    {
+      "name": "map",
+      "type": "conicEqualArea",
+      "parallels": [
+        -28,
+        -36
+      ],
+      "rotate": [
+        -135,
+        0
+      ],
+      "center": {
+        "signal": "[cameraLon-135,cameraLat]"
+      },
+      "scale": {
+        "signal": "min(width / (cameraSpan*1.15),plotHeight/cameraSpan)"
+      },
+      "translate": {
+        "signal": "[width/2,plotHeight/2]"
+      }
+    }
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "description": "A single viewport replaces the overview plus enlarged duplicate.",
+      "clip": true,
+      "encode": {
+        "update": {
+          "width": {
+            "signal": "width"
+          },
+          "height": {
+            "signal": "plotHeight"
+          },
+          "fill": {
+            "value": "#f4f6f7"
+          }
+        }
+      },
+      "marks": [
+        {
+          "type": "shape",
+          "name": "councilAreas",
+          "from": {
+            "data": "mappedCouncils"
+          },
+          "description": "Council boundaries give the level at which the dots should be read.",
+          "transform": [
+            {
+              "type": "geoshape",
+              "projection": "map"
+            }
+          ],
+          "encode": {
+            "update": {
+              "fill": {
+                "value": "#e9e7de"
+              },
+              "stroke": {
+                "signal": "colorSurface"
+              },
+              "strokeWidth": {
+                "value": 0.8
+              }
+            }
+          },
+          "interactive": false
+        },
+        {
+          "type": "symbol",
+          "name": "petDots",
+          "from": {
+            "data": "dots"
+          },
+          "description": "Equal-area symbols for both species: each dot represents about 250 recorded animals. Only species hue changes.",
+          "encode": {
+            "update": {
+              "x": {
+                "signal": "geoCentroid('map',{type:'Point',coordinates:[datum.longitude,datum.latitude]})[0]"
+              },
+              "y": {
+                "signal": "geoCentroid('map',{type:'Point',coordinates:[datum.longitude,datum.latitude]})[1]"
+              },
+              "size": {
+                "value": 12
+              },
+              "fill": {
+                "signal": "colorPetDogs"
+              },
+              "opacity": {
+                "value": 0.8
+              }
+            }
+          },
+          "interactive": false
+        }
+      ],
+      "interactive": false
+    }
+  ],
+  "usermeta": {
+    "method": "250 animals per dot for both species; each council rounded independently (maximum error 125 animals). Fixed-seed, area-uniform positions within polygons and outside holes. Audit: docs/pet-dot-audit.json.",
+    "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
+    "scales": {},
+    "projections": {
+      "map": "conicEqualArea projection; camera or fit parameters control the visible geography."
+    },
+    "pageTitle": "Where dogs (or cats) are recorded"
+  }
+}

@@ -1,26 +1,110 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Small-multiple waffle charts: out of every 100 dog owners and cat owners, how many gave each main reason for getting their pet; and out of every 100 people without a pet who want one, how many gave each main barrier. Animal Medicines Australia survey 2025.",
+  "description": "Waffle charts: for each of three reasons (companionship, mental health, relaxation), two 10 by 10 grids show how many of every 100 dog owners and cat owners gave that reason, Animal Medicines Australia survey 2025.",
   "padding": 5,
   "autosize": {
     "type": "fit-x",
     "contains": "padding"
   },
+  "signals": [
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Colour: the dark grey colour of small text: labels and notes. This is only a backup; the real colour comes from --color-muted in css/style.css."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Colour: the dark blue colour of chart titles and reason names. This is only a backup; the real colour comes from --color-heading in css/style.css."
+    },
+    {
+      "name": "colorBorder",
+      "value": "#a4adb8",
+      "description": "Colour: light grey, used for the empty squares. This is only a backup; the real colour comes from --color-border in css/style.css."
+    },
+    {
+      "name": "colorPetDogs",
+      "value": "#9c6500",
+      "description": "Colour: the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs in css/style.css."
+    },
+    {
+      "name": "colorPetCats",
+      "value": "#7a376b",
+      "description": "Colour: the colour for cats (plum). This is only a backup; the real colour comes from --color-pet-cats in css/style.css."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Font: the fancy title font (DM Serif Display). This is only a backup; the real font comes from --font-heading in css/style.css."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css."
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "description": "Measured by the loader from the chart card."
+    },
+    {
+      "name": "narrow",
+      "update": "width < 760",
+      "description": "True on narrow screens: the three reasons stack instead of sitting side by side."
+    },
+    {
+      "name": "groupWidth",
+      "update": "narrow ? width : width / 3",
+      "description": "Room for one reason: the whole width when stacked, one third side by side."
+    },
+    {
+      "name": "petGap",
+      "value": 24,
+      "description": "Space between the dog grid and the cat grid of one reason."
+    },
+    {
+      "name": "step",
+      "update": "clamp(floor((min(groupWidth, 380) - petGap) / 20), 8, 15)",
+      "description": "Distance from one square to the next. Two grids of ten squares must fit in each reason's room."
+    },
+    {
+      "name": "gridSize",
+      "update": "10 * step - 2",
+      "description": "Width and height of one 10 by 10 grid (squares have a 2-pixel gap)."
+    },
+    {
+      "name": "gridTop",
+      "value": 46,
+      "description": "Space above each grid for the reason name and the two pet labels."
+    },
+    {
+      "name": "rowHeight",
+      "update": "gridTop + gridSize + 28",
+      "description": "Height of one stacked reason on a narrow screen."
+    },
+    {
+      "name": "noteY",
+      "update": "narrow ? 3 * rowHeight : rowHeight",
+      "description": "Where the note starts: under the last row of grids."
+    },
+    {
+      "name": "height",
+      "update": "noteY + 36",
+      "description": "How tall the whole chart is: the grids plus the two-line note."
+    }
+  ],
   "title": {
     "text": {
-      "signal": "narrow ? ['Companionship draws people in;', 'practical limits hold them back'] : 'Companionship draws people in; practical limits hold them back'"
+      "signal": "narrow ? ['Companionship draws', 'about half of owners'] : 'Companionship draws about half of owners'"
     },
     "subtitle": {
-      "signal": "narrow ? ['Each grid is 100 people; filled squares gave', 'that answer. People could give several answers.'] : 'Each grid is 100 people; filled squares gave that answer. People could give several answers, 2025'"
+      "signal": "narrow ? ['Of every 100 owners, how many gave', 'each reason for getting their pet, 2025'] : 'Of every 100 owners, how many gave each reason for getting their pet, 2025. One square = one owner in 100.'"
     },
     "anchor": "start",
-    "offset": 18,
     "font": {
       "signal": "fontHeading"
     },
-    "fontSize": {
-      "signal": "narrow ? 19 : 24"
-    },
+    "fontSize": 20,
     "fontWeight": 400,
     "color": {
       "signal": "colorHeading"
@@ -28,113 +112,15 @@
     "subtitleFont": {
       "signal": "fontBody"
     },
-    "subtitleFontSize": 13,
+    "subtitleFontSize": 12,
     "subtitleColor": {
       "signal": "colorMuted"
     },
-    "subtitlePadding": 6
+    "offset": 24
   },
-  "signals": [
-    {
-      "name": "colorPetDogs",
-      "value": "#9c6500",
-      "description": "Theme: replaced by --color-pet-dogs."
-    },
-    {
-      "name": "colorPetCats",
-      "value": "#7a376b",
-      "description": "Theme: replaced by --color-pet-cats."
-    },
-    {
-      "name": "colorNeutral",
-      "value": "#512D22",
-      "description": "Theme: replaced by --color-neutral (barriers)."
-    },
-    {
-      "name": "colorMuted",
-      "value": "#252725",
-      "description": "Theme: replaced by --color-muted."
-    },
-    {
-      "name": "colorHeading",
-      "value": "#0b2540",
-      "description": "Theme: replaced by --color-heading."
-    },
-    {
-      "name": "colorBorder",
-      "value": "#a4adb8",
-      "description": "Theme: replaced by --color-border (unfilled squares)."
-    },
-    {
-      "name": "fontHeading",
-      "value": "DM Serif Display",
-      "description": "Theme: replaced by --font-heading."
-    },
-    {
-      "name": "fontBody",
-      "value": "Fira Sans",
-      "description": "Theme: replaced by --font-body."
-    },
-    {
-      "name": "width",
-      "init": "containerSize()[0]",
-      "on": [
-        {
-          "events": "window:resize",
-          "update": "containerSize()[0]"
-        }
-      ]
-    },
-    {
-      "name": "narrow",
-      "update": "width < 760"
-    },
-    {
-      "name": "perLine",
-      "update": "narrow ? 3 : 5",
-      "description": "Grids per line; the barrier row wraps on narrow screens."
-    },
-    {
-      "name": "gridGap",
-      "update": "narrow ? 14 : 30"
-    },
-    {
-      "name": "gridSize",
-      "update": "min(120, (width - (perLine - 1) * gridGap) / perLine)"
-    },
-    {
-      "name": "cellGap",
-      "value": 1.5
-    },
-    {
-      "name": "labelSpace",
-      "update": "narrow ? 62 : 56",
-      "description": "Room under each grid for its number and label."
-    },
-    {
-      "name": "rowHeader",
-      "value": 30
-    },
-    {
-      "name": "rowGap",
-      "value": 18
-    },
-    {
-      "name": "rowTop1",
-      "update": "rowHeader + ceil(3 / perLine) * (gridSize + labelSpace) + rowGap"
-    },
-    {
-      "name": "rowTop2",
-      "update": "2 * rowTop1"
-    },
-    {
-      "name": "height",
-      "update": "rowTop2 + rowHeader + ceil(5 / perLine) * (gridSize + labelSpace)"
-    }
-  ],
   "data": [
     {
-      "name": "reasons",
+      "name": "shares",
       "url": "data/selected/au_motivations_top5_2025.csv",
       "format": {
         "type": "csv",
@@ -146,131 +132,85 @@
       "transform": [
         {
           "type": "filter",
-          "expr": "(datum.species === 'Dogs' || datum.species === 'Cats') && indexof(['Companionship', 'Mental health', 'Relaxation'], datum.reason) >= 0"
+          "expr": "indexof(['Dogs','Cats'], datum.species) >= 0 && indexof(['Companionship','Mental health','Relaxation'], datum.reason) >= 0",
+          "description": "Keep the three reasons that dog and cat owners share."
         },
         {
           "type": "formula",
-          "as": "row",
-          "expr": "datum.species === 'Dogs' ? 0 : 1"
+          "as": "r",
+          "expr": "indexof(['Companionship','Mental health','Relaxation'], datum.reason)",
+          "description": "Which reason group (0, 1 or 2), left to right or top to bottom."
         },
         {
           "type": "formula",
-          "as": "item",
-          "expr": "indexof(['Companionship', 'Mental health', 'Relaxation'], datum.reason)"
+          "as": "s",
+          "expr": "datum.species === 'Dogs' ? 0 : 1",
+          "description": "Which grid within the group: dogs first, cats second."
         },
         {
           "type": "formula",
-          "as": "label",
-          "expr": "{'Companionship': 'Companionship', 'Mental health': 'For mental health', 'Relaxation': 'Relaxation'}[datum.reason]"
-        },
-        {
-          "type": "formula",
-          "as": "group",
-          "expr": "datum.species === 'Dogs' ? 'dog owners' : 'cat owners'"
+          "as": "petLabel",
+          "expr": "datum.percent + ' in 100 ' + (datum.species === 'Dogs' ? 'dog' : 'cat') + ' owners'",
+          "description": "Direct label, so the exact number never needs counting."
         }
-      ]
-    },
-    {
-      "name": "barriers",
-      "url": "data/selected/au_barriers_2025.csv",
-      "format": {
-        "type": "csv",
-        "parse": {
-          "percent": "number",
-          "sample_n": "number"
-        }
-      },
-      "transform": [
-        {
-          "type": "filter",
-          "expr": "datum.cohort === 'Prospective non-owners' && indexof(['Unsuitable home/lifestyle', 'Ongoing costs', 'Responsibility', 'Initial costs', 'Landlord restriction'], datum.reason) >= 0"
-        },
-        {
-          "type": "formula",
-          "as": "row",
-          "expr": "2"
-        },
-        {
-          "type": "formula",
-          "as": "item",
-          "expr": "indexof(['Unsuitable home/lifestyle', 'Ongoing costs', 'Responsibility', 'Initial costs', 'Landlord restriction'], datum.reason)"
-        },
-        {
-          "type": "formula",
-          "as": "label",
-          "expr": "{'Unsuitable home/lifestyle': 'Home or lifestyle is not suitable', 'Ongoing costs': 'Ongoing costs of keeping a pet', 'Responsibility': 'Responsibility of looking after a pet', 'Initial costs': 'Initial cost of getting a pet', 'Landlord restriction': 'Landlord does not allow pets'}[datum.reason]"
-        },
-        {
-          "type": "formula",
-          "as": "group",
-          "expr": "'people without a pet who want one'"
-        }
-      ]
-    },
-    {
-      "name": "items",
-      "source": [
-        "reasons",
-        "barriers"
       ],
-      "transform": [
-        {
-          "type": "formula",
-          "as": "colour",
-          "expr": "datum.row === 0 ? colorPetDogs : datum.row === 1 ? colorPetCats : colorNeutral"
-        },
-        {
-          "type": "formula",
-          "as": "tooltip",
-          "expr": "{'title': datum.label, 'Share': datum.percent + ' in every 100 ' + datum.group, 'Surveyed': format(datum.sample_n, ',') + ' ' + datum.group}"
-        },
-        {
-          "type": "formula",
-          "as": "lines",
-          "expr": "length(datum.label) > 18 ? [substring(datum.label, 0, lastindexof(substring(datum.label, 0, 19), ' ')), substring(datum.label, lastindexof(substring(datum.label, 0, 19), ' ') + 1)] : [datum.label]"
-        }
-      ]
+      "description": "Static layout, data or appearance for this part of the chart."
     },
     {
       "name": "cells",
-      "source": "items",
+      "source": "shares",
       "transform": [
         {
           "type": "formula",
-          "as": "cells",
-          "expr": "sequence(0, 100)"
+          "as": "units",
+          "expr": "sequence(100)",
+          "description": "One entry for each of the 100 squares in a grid."
         },
         {
           "type": "flatten",
           "fields": [
-            "cells"
+            "units"
           ],
           "as": [
-            "cell"
-          ]
+            "i"
+          ],
+          "description": "Turn each share into 100 square rows, numbered 0 to 99."
         },
         {
           "type": "formula",
           "as": "filled",
-          "expr": "datum.cell < datum.percent",
-          "description": "Squares fill row by row from the top left."
+          "expr": "datum.i < datum.percent",
+          "description": "Squares fill row by row from the top left until they reach the percentage."
         }
-      ]
+      ],
+      "description": "100 squares for each pet and reason."
     },
     {
-      "name": "rows",
-      "values": [
+      "name": "reasons",
+      "source": "shares",
+      "transform": [
         {
-          "row": 0,
-          "heading": "Of every 100 dog owners, this many got their dog for…"
+          "type": "filter",
+          "expr": "datum.s === 0",
+          "description": "One row per reason, for the group headings."
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "colour",
+      "type": "ordinal",
+      "domain": [
+        "Dogs",
+        "Cats"
+      ],
+      "range": [
+        {
+          "signal": "colorPetDogs"
         },
         {
-          "row": 1,
-          "heading": "Of every 100 cat owners, this many got their cat for…"
-        },
-        {
-          "row": 2,
-          "heading": "Of every 100 people without a pet who want one, this many are held back by…"
+          "signal": "colorPetCats"
         }
       ]
     }
@@ -278,9 +218,9 @@
   "marks": [
     {
       "type": "text",
-      "description": "Row headings.",
+      "description": "Reason name above each pair of grids.",
       "from": {
-        "data": "rows"
+        "data": "reasons"
       },
       "interactive": false,
       "encode": {
@@ -288,141 +228,148 @@
           "baseline": {
             "value": "top"
           },
+          "fontSize": {
+            "value": 14
+          },
           "fontWeight": {
             "value": 600
-          }
-        },
-        "update": {
-          "x": {
-            "value": 0
-          },
-          "y": {
-            "signal": "[0, rowTop1, rowTop2][datum.row]"
-          },
-          "text": {
-            "signal": "narrow ? ['Of every 100 dog owners', 'Of every 100 cat owners', 'Of every 100 people without a pet'][datum.row] : datum.heading"
-          },
-          "fontSize": {
-            "signal": "narrow ? 13 : 14"
           },
           "font": {
             "signal": "fontBody"
           },
           "fill": {
             "signal": "colorHeading"
+          },
+          "text": {
+            "field": "reason"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "narrow ? 0 : datum.r * groupWidth"
+          },
+          "y": {
+            "signal": "narrow ? datum.r * rowHeight : 0"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "description": "Direct label above each grid, in the pet's colour: for example '56 in 100 dog owners'.",
+      "from": {
+        "data": "shares"
+      },
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "baseline": {
+            "value": "top"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fill": {
+            "scale": "colour",
+            "field": "species"
+          },
+          "text": {
+            "field": "petLabel"
+          }
+        },
+        "update": {
+          "x": {
+            "signal": "(narrow ? 0 : datum.r * groupWidth) + datum.s * (gridSize + petGap)"
+          },
+          "y": {
+            "signal": "(narrow ? datum.r * rowHeight : 0) + 24"
           }
         }
       }
     },
     {
       "type": "rect",
-      "description": "One square per person: filled in the group's colour if they gave the answer.",
+      "name": "squares",
+      "description": "The waffle squares: coloured squares are owners who gave the reason; pale squares are owners who did not.",
       "from": {
         "data": "cells"
       },
       "encode": {
         "enter": {
-          "tooltip": {
-            "signal": "datum.tooltip"
+          "cornerRadius": {
+            "value": 1.5
           }
         },
         "update": {
           "x": {
-            "signal": "(datum.item % perLine) * (gridSize + gridGap) + (datum.cell % 10) * gridSize / 10"
+            "signal": "(narrow ? 0 : datum.r * groupWidth) + datum.s * (gridSize + petGap) + (datum.i % 10) * step"
           },
           "y": {
-            "signal": "[0, rowTop1, rowTop2][datum.row] + rowHeader + floor(datum.item / perLine) * (gridSize + labelSpace) + floor(datum.cell / 10) * gridSize / 10"
+            "signal": "(narrow ? datum.r * rowHeight : 0) + gridTop + floor(datum.i / 10) * step"
           },
           "width": {
-            "signal": "gridSize / 10 - cellGap"
+            "signal": "step - 2"
           },
           "height": {
-            "signal": "gridSize / 10 - cellGap"
+            "signal": "step - 2"
           },
           "fill": {
-            "signal": "datum.filled ? datum.colour : colorBorder"
+            "signal": "datum.filled ? scale('colour', datum.species) : colorBorder"
           },
           "fillOpacity": {
-            "signal": "datum.filled ? 1 : 0.3"
+            "signal": "datum.filled ? 1 : 0.35"
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "text",
-      "description": "Number under each grid.",
-      "from": {
-        "data": "items"
-      },
+      "description": "Reading note under the grids.",
       "interactive": false,
       "encode": {
         "enter": {
           "baseline": {
             "value": "top"
-          },
-          "fontWeight": {
-            "value": 600
-          }
-        },
-        "update": {
-          "x": {
-            "signal": "(datum.item % perLine) * (gridSize + gridGap)"
-          },
-          "y": {
-            "signal": "[0, rowTop1, rowTop2][datum.row] + rowHeader + floor(datum.item / perLine) * (gridSize + labelSpace) + gridSize + 6"
-          },
-          "text": {
-            "signal": "datum.percent + ' in 100'"
           },
           "fontSize": {
-            "signal": "narrow ? 13 : 15"
-          },
-          "font": {
-            "signal": "fontBody"
-          },
-          "fill": {
-            "signal": "datum.colour"
-          }
-        }
-      }
-    },
-    {
-      "type": "text",
-      "description": "Answer under each grid.",
-      "from": {
-        "data": "items"
-      },
-      "interactive": false,
-      "encode": {
-        "enter": {
-          "baseline": {
-            "value": "top"
+            "value": 12
           },
           "lineHeight": {
-            "value": 14
-          }
-        },
-        "update": {
-          "x": {
-            "signal": "(datum.item % perLine) * (gridSize + gridGap)"
-          },
-          "y": {
-            "signal": "[0, rowTop1, rowTop2][datum.row] + rowHeader + floor(datum.item / perLine) * (gridSize + labelSpace) + gridSize + 25"
-          },
-          "text": {
-            "signal": "datum.lines"
-          },
-          "fontSize": {
-            "signal": "narrow ? 11 : 12"
+            "value": 16
           },
           "font": {
             "signal": "fontBody"
           },
           "fill": {
             "signal": "colorMuted"
+          },
+          "x": {
+            "value": 0
+          }
+        },
+        "update": {
+          "y": {
+            "signal": "noteY"
+          },
+          "text": {
+            "signal": "narrow ? ['These answers describe hopes, not measured health benefits.', 'Owners could give several reasons, so grids do not add up.'] : ['These answers describe hopes, not measured health benefits.', 'Owners could give several reasons, so the grids do not add up to 100.']"
           }
         }
       }
     }
-  ]
+  ],
+  "usermeta": {
+    "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
+    "scales": {
+      "colour": "Pet colour, shared with every other chart: dogs amber, cats plum."
+    },
+    "projections": {}
+  }
 }

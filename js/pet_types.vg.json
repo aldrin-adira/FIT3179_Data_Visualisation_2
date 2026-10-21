@@ -1,291 +1,546 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Slopegraph comparing each pet type's share of Australian households with its share of all pet animals, Animal Medicines Australia survey 2025.",
+  "description": "Bump chart of seven pet types ranked by their estimated number of animals in each of four Animal Medicines Australia national surveys (2016, 2019, 2022 and 2025). Each line follows one pet type's rank from survey to survey.",
   "padding": 5,
-  "autosize": {"type": "fit-x", "contains": "padding"},
-
-  "title": {
-    "text": {"signal": "narrow ? ['Dogs live in the most homes,', 'but fish are the most numerous'] : 'Dogs live in the most homes, but fish are the most numerous'"},
-    "subtitle": {"signal": "narrow ? ['Each pet type as a share of Australian', 'households and as a share of all pet', 'animals, 2025'] : 'Each pet type as a share of Australian households and as a share of all pet animals, 2025'"},
-    "anchor": "start",
-    "offset": 36,
-    "font": {"signal": "fontHeading"},
-    "fontSize": {"signal": "narrow ? 19 : 24"},
-    "fontWeight": 400,
-    "color": {"signal": "colorHeading"},
-    "subtitleFont": {"signal": "fontBody"},
-    "subtitleFontSize": 13,
-    "subtitleColor": {"signal": "colorMuted"},
-    "subtitlePadding": 6
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
   },
-
+  "title": {
+    "text": {
+      "signal": "narrow ? ['Fish lead every survey;', 'cats have passed birds'] : 'Fish lead every survey; cats have passed birds'"
+    },
+    "subtitle": {
+      "signal": "narrow ? ['Pet types ranked by number of animals,', 'Australia, 2016 to 2025 · Rank 1 at the top'] : 'Pet types ranked by estimated number of animals, Australia, 2016 to 2025 · Rank 1 at the top'"
+    },
+    "anchor": "start",
+    "offset": 18,
+    "font": {
+      "signal": "fontHeading"
+    },
+    "fontSize": {
+      "signal": "narrow ? 20 : 25"
+    },
+    "fontWeight": 400,
+    "color": {
+      "signal": "colorHeading"
+    },
+    "subtitleFont": {
+      "signal": "fontBody"
+    },
+    "subtitleFontSize": 12,
+    "subtitleColor": {
+      "signal": "colorMuted"
+    },
+    "subtitlePadding": 8
+  },
   "signals": [
-    {"name": "colorMuted", "value": "#252725", "description": "Theme: replaced by --color-muted from css/style.css."},
-    {"name": "colorHeading", "value": "#0b2540", "description": "Theme: replaced by --color-heading."},
-    {"name": "colorPage", "value": "#dadfef", "description": "Theme: replaced by --color-page."},
-    {"name": "colorBorder", "value": "#a4adb8", "description": "Theme: replaced by --color-border."},
-    {"name": "colorSurface", "value": "#ffffff", "description": "Theme: replaced by --color-surface."},
-    {"name": "colorPetDogs", "value": "#9c6500", "description": "Theme: replaced by --color-pet-dogs."},
-    {"name": "colorPetCats", "value": "#7a376b", "description": "Theme: replaced by --color-pet-cats."},
-    {"name": "colorPetFish", "value": "#007f80", "description": "Theme: replaced by --color-pet-fish."},
-    {"name": "colorPetBirds", "value": "#1e6b2a", "description": "Theme: replaced by --color-pet-birds."},
-    {"name": "colorPetSmallMammals", "value": "#7759d1", "description": "Theme: replaced by --color-pet-small-mammals."},
-    {"name": "colorPetReptiles", "value": "#d6336c", "description": "Theme: replaced by --color-pet-reptiles."},
-    {"name": "colorPetOther", "value": "#555555", "description": "Theme: replaced by --color-pet-other."},
-    {"name": "fontHeading", "value": "DM Serif Display", "description": "Theme: replaced by --font-heading."},
-    {"name": "fontBody", "value": "Fira Sans", "description": "Theme: replaced by --font-body."},
+    {
+      "name": "extraHeight",
+      "value": 0,
+      "description": "Extra rank spacing set by the page so this card ends level with its paired card instead of leaving a gap."
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Colour: the dark grey colour of small text: labels, axis words and notes. This is only a backup; the real colour comes from --color-muted in css/style.css."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Colour: the dark blue colour of chart titles. This is only a backup; the real colour comes from --color-heading in css/style.css."
+    },
+    {
+      "name": "colorBorder",
+      "value": "#a4adb8",
+      "description": "Colour: light grey, used for gridlines, empty squares and places with no data. This is only a backup; the real colour comes from --color-border in css/style.css."
+    },
+    {
+      "name": "colorSurface",
+      "value": "#ffffff",
+      "description": "Colour: white, the colour of the card each chart sits on. This is only a backup; the real colour comes from --color-surface in css/style.css."
+    },
+    {
+      "name": "colorPetDogs",
+      "value": "#9c6500",
+      "description": "Colour: the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs in css/style.css."
+    },
+    {
+      "name": "colorPetCats",
+      "value": "#7a376b",
+      "description": "Colour: the colour for cats (plum). This is only a backup; the real colour comes from --color-pet-cats in css/style.css."
+    },
+    {
+      "name": "colorPetFish",
+      "value": "#007f80",
+      "description": "Colour: the colour for fish (teal). This is only a backup; the real colour comes from --color-pet-fish in css/style.css."
+    },
+    {
+      "name": "colorPetBirds",
+      "value": "#1e6b2a",
+      "description": "Colour: the colour for birds (green). This is only a backup; the real colour comes from --color-pet-birds in css/style.css."
+    },
+    {
+      "name": "colorPetSmallMammals",
+      "value": "#7759d1",
+      "description": "Colour: the colour for small mammals (violet). This is only a backup; the real colour comes from --color-pet-small-mammals in css/style.css."
+    },
+    {
+      "name": "colorPetReptiles",
+      "value": "#d6336c",
+      "description": "Colour: the colour for reptiles (raspberry). This is only a backup; the real colour comes from --color-pet-reptiles in css/style.css."
+    },
+    {
+      "name": "colorPetOther",
+      "value": "#555555",
+      "description": "Colour: the colour for other pets (grey). This is only a backup; the real colour comes from --color-pet-other in css/style.css."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Font: the fancy title font (DM Serif Display). This is only a backup; the real font comes from --font-heading in css/style.css."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css."
+    },
     {
       "name": "width",
       "init": "containerSize()[0]",
-      "on": [{"events": "window:resize", "update": "containerSize()[0]"}]
+      "description": "Measured by the loader; small-screen charts keep a compact minimum width."
     },
-    {"name": "narrow", "update": "width < 600"},
-    {"name": "plotHeight", "value": 400},
-    {"name": "height", "update": "narrow ? plotHeight + 90 : plotHeight"},
-    {"name": "leftX", "update": "narrow ? 48 : 150", "description": "Room for the household-side labels; on narrow screens these show values only."},
-    {"name": "rightX", "update": "width - (narrow ? 112 : 150)"}
+    {
+      "name": "narrow",
+      "update": "width < 540",
+      "description": "Shorter labels and a three-line note for a compact chart; no data are removed."
+    },
+    {
+      "name": "height",
+      "update": "430 + extraHeight",
+      "description": "Seven rank rows between the year labels and the note; rows spread out when the card is filled."
+    },
+    {
+      "name": "leftX",
+      "update": "narrow ? 96 : 104",
+      "description": "Where the first survey (2016) sits: leaves room for the pet names and counts on the left."
+    },
+    {
+      "name": "rightX",
+      "update": "width - (narrow ? 86 : 96)",
+      "description": "Where the last survey (2025) sits: leaves room for the pet names and counts on the right."
+    }
   ],
-
   "data": [
     {
       "name": "pets",
-      "url": "data/selected/au_pet_types_2025.csv",
-      "format": {"type": "csv", "parse": {"household_ownership_pct": "number", "owning_households_thousands": "number", "animals_per_owning_household": "number", "animals_thousands": "number"}},
-      "transform": [
-        {"type": "joinaggregate", "fields": ["animals_thousands"], "ops": ["sum"], "as": ["all_animals_thousands"]},
-        {"type": "formula", "as": "animal_share_pct", "expr": "100 * datum.animals_thousands / datum.all_animals_thousands"},
-        {"type": "formula", "as": "emphasis", "expr": "datum.species === 'Fish'"},
-        {
-          "type": "formula",
-          "as": "left_label_pct",
-          "expr": "datum.species === 'Small mammals' ? 4.6 : datum.species === 'Reptiles' ? 2.4 : datum.species === 'Other pets' ? 0.2 : datum.household_ownership_pct",
-          "description": "Label positions only: spreads the three closely spaced small values so their labels do not overlap. Points and lines use the exact values."
-        },
-        {
-          "type": "formula",
-          "as": "right_label_pct",
-          "expr": "datum.species === 'Small mammals' ? 4.4 : datum.species === 'Other pets' ? 2.2 : datum.species === 'Reptiles' ? 0.0 : datum.animal_share_pct"
-        },
-        {
-          "type": "formula",
-          "as": "tooltip",
-          "expr": "{'Type of pet': datum.species, 'Share of households owning': format(datum.household_ownership_pct, '.1f') + '%', 'Share of all pet animals': format(datum.animal_share_pct, '.1f') + '%', 'Animals kept': format(datum.animals_thousands / 1000, '.2f') + ' million', 'Average animals per owning household': format(datum.animals_per_owning_household, '.1f')}"
+      "url": "data/selected/au_pet_types_trend.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "year": "number",
+          "owning_households_thousands": "number",
+          "animals_thousands": "number",
+          "household_ownership_pct": "number",
+          "animals_per_owning_household": "number"
         }
-      ]
+      },
+      "transform": [
+        {
+          "type": "collect",
+          "sort": {
+            "field": "year"
+          },
+          "description": "Put the surveys in time order so each line is drawn from 2016 to 2025."
+        },
+        {
+          "type": "window",
+          "groupby": [
+            "year"
+          ],
+          "sort": {
+            "field": "animals_thousands",
+            "order": "descending"
+          },
+          "ops": [
+            "rank"
+          ],
+          "as": [
+            "animalRank"
+          ],
+          "description": "Within each survey, rank the seven pet types by estimated number of animals (1 = most animals)."
+        },
+        {
+          "type": "formula",
+          "as": "label",
+          "expr": "datum.species",
+          "description": "Keep the full pet type name beside the lines on every screen."
+        }
+      ],
+      "description": "Each report's pet-type table, loaded unchanged; only the ranks and labels are derived."
     },
     {
-      "name": "note",
-      "values": [
+      "name": "firstSurvey",
+      "source": "pets",
+      "transform": [
         {
-          "lines": [
-            "Fish live in only 11.5% of homes,",
-            "but those homes keep about 10 each,",
-            "so fish are 38% of all pets."
-          ]
+          "type": "filter",
+          "expr": "datum.year === 2016"
         }
-      ]
-    }
-  ],
-
-  "scales": [
-    {"name": "y", "type": "linear", "domain": [0, 52], "range": [{"signal": "plotHeight"}, 0], "zero": true},
+      ],
+      "description": "The 2016 rows, for the labels at the left end of each line."
+    },
     {
-      "name": "petColour",
-      "type": "ordinal",
-      "domain": ["Dogs", "Cats", "Fish", "Birds", "Small mammals", "Reptiles", "Other pets"],
-      "range": {"signal": "[colorPetDogs, colorPetCats, colorPetFish, colorPetBirds, colorPetSmallMammals, colorPetReptiles, colorPetOther]"}
+      "name": "lastSurvey",
+      "source": "pets",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.year === 2025"
+        }
+      ],
+      "description": "The 2025 rows, for the labels at the right end of each line."
+    },
+    {
+      "name": "years",
+      "values": [
+        2016,
+        2019,
+        2022,
+        2025
+      ],
+      "description": "The four survey years, written along the top."
     }
   ],
-
+  "scales": [
+    {
+      "name": "x",
+      "type": "point",
+      "domain": [
+        2016,
+        2019,
+        2022,
+        2025
+      ],
+      "range": {
+        "signal": "[leftX, rightX]"
+      }
+    },
+    {
+      "name": "rank",
+      "type": "linear",
+      "domain": [
+        1,
+        7
+      ],
+      "range": {
+        "signal": "[58, height - (narrow ? 92 : 74)]"
+      },
+      "zero": false
+    },
+    {
+      "name": "colour",
+      "type": "ordinal",
+      "domain": [
+        "Dogs",
+        "Cats",
+        "Fish",
+        "Birds",
+        "Small mammals",
+        "Reptiles",
+        "Other pets"
+      ],
+      "range": {
+        "signal": "[colorPetDogs,colorPetCats,colorPetFish,colorPetBirds,colorPetSmallMammals,colorPetReptiles,colorPetOther]"
+      }
+    }
+  ],
   "marks": [
     {
       "type": "rule",
-      "description": "Vertical rails for the two measures.",
+      "description": "A faint vertical guide under each survey year.",
+      "interactive": false,
+      "from": {
+        "data": "years"
+      },
       "encode": {
-        "enter": {"stroke": {"signal": "colorBorder"}, "strokeWidth": {"value": 1}},
-        "update": {"x": {"signal": "leftX"}, "y": {"value": 0}, "y2": {"signal": "plotHeight"}}
-      }
-    },
-    {
-      "type": "rule",
-      "encode": {
-        "enter": {"stroke": {"signal": "colorBorder"}, "strokeWidth": {"value": 1}},
-        "update": {"x": {"signal": "rightX"}, "y": {"value": 0}, "y2": {"signal": "plotHeight"}}
-      }
-    },
-    {
-      "type": "text",
-      "description": "Column headers.",
-      "encode": {
-        "enter": {
-          "align": {"value": "center"},
-          "baseline": {"value": "bottom"},
-          "fontSize": {"value": 13},
-          "fontWeight": {"value": 500},
-          "lineHeight": {"value": 16},
-          "font": {"signal": "fontBody"},
-          "fill": {"signal": "colorMuted"}
-        },
         "update": {
-          "x": {"signal": "leftX"},
-          "y": {"signal": "narrow ? -26 : -10"},
-          "text": {"signal": "narrow ? ['Share of', 'households'] : 'Share of households'"}
+          "x": {
+            "scale": "x",
+            "field": "data"
+          },
+          "y": {
+            "value": 34
+          },
+          "y2": {
+            "signal": "height - (narrow ? 76 : 58)"
+          },
+          "stroke": {
+            "signal": "colorBorder"
+          },
+          "strokeOpacity": {
+            "value": 0.5
+          },
+          "strokeDash": {
+            "value": [
+              2,
+              3
+            ]
+          }
         }
       }
     },
     {
       "type": "text",
+      "description": "The survey years along the top.",
+      "interactive": false,
+      "from": {
+        "data": "years"
+      },
       "encode": {
-        "enter": {
-          "align": {"value": "center"},
-          "baseline": {"value": "bottom"},
-          "fontSize": {"value": 13},
-          "fontWeight": {"value": 500},
-          "lineHeight": {"value": 16},
-          "font": {"signal": "fontBody"},
-          "fill": {"signal": "colorMuted"}
-        },
         "update": {
-          "x": {"signal": "rightX"},
-          "y": {"signal": "narrow ? -26 : -10"},
-          "text": {"signal": "narrow ? ['Share of all', 'pet animals'] : 'Share of all pet animals'"}
+          "x": {
+            "scale": "x",
+            "field": "data"
+          },
+          "y": {
+            "value": 14
+          },
+          "align": {
+            "value": "center"
+          },
+          "text": {
+            "signal": "'' + datum.data"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
         }
       }
     },
     {
-      "type": "rule",
-      "description": "One slope line per pet type.",
-      "from": {"data": "pets"},
-      "encode": {
-        "enter": {
-          "stroke": {"scale": "petColour", "field": "species"},
-          "strokeWidth": {"signal": "datum.emphasis ? 4.5 : 2.5"},
-          "strokeCap": {"value": "round"},
-          "tooltip": {"signal": "datum.tooltip"}
-        },
-        "update": {
-          "x": {"signal": "leftX"},
-          "y": {"scale": "y", "field": "household_ownership_pct"},
-          "x2": {"signal": "rightX"},
-          "y2": {"scale": "y", "field": "animal_share_pct"}
+      "type": "group",
+      "description": "One line per pet type, joining its rank in each survey. Uniform stroke width avoids suggesting a quantity.",
+      "from": {
+        "facet": {
+          "name": "series",
+          "data": "pets",
+          "groupby": "species"
         }
-      }
+      },
+      "marks": [
+        {
+          "type": "line",
+          "name": "rankLines",
+          "from": {
+            "data": "series"
+          },
+          "encode": {
+            "update": {
+              "x": {
+                "scale": "x",
+                "field": "year"
+              },
+              "y": {
+                "scale": "rank",
+                "field": "animalRank"
+              },
+              "interpolate": {
+                "value": "monotone"
+              },
+              "stroke": {
+                "scale": "colour",
+                "field": "species"
+              },
+              "strokeWidth": {
+                "value": 3
+              },
+              "strokeOpacity": {
+                "value": 0.85
+              }
+            }
+          },
+          "interactive": false
+        }
+      ]
     },
     {
       "type": "symbol",
-      "description": "End points on the household side.",
-      "from": {"data": "pets"},
+      "name": "rankPoints",
+      "description": "One dot per pet type per survey: its height shows that year's rank.",
+      "from": {
+        "data": "pets"
+      },
       "encode": {
-        "enter": {
-          "fill": {"scale": "petColour", "field": "species"},
-          "stroke": {"signal": "colorSurface"},
-          "strokeWidth": {"value": 1.5},
-          "tooltip": {"signal": "datum.tooltip"}
-        },
         "update": {
-          "x": {"signal": "leftX"},
-          "y": {"scale": "y", "field": "household_ownership_pct"},
-          "size": {"signal": "datum.emphasis ? 120 : 70"}
+          "x": {
+            "scale": "x",
+            "field": "year"
+          },
+          "y": {
+            "scale": "rank",
+            "field": "animalRank"
+          },
+          "size": {
+            "signal": "narrow ? 60 : 80"
+          },
+          "fill": {
+            "scale": "colour",
+            "field": "species"
+          },
+          "stroke": {
+            "signal": "colorSurface"
+          },
+          "strokeWidth": {
+            "value": 2
+          },
+          "opacity": {
+            "value": 1
+          }
         }
-      }
+      },
+      "interactive": false
     },
     {
-      "type": "symbol",
-      "description": "End points on the animal side.",
-      "from": {"data": "pets"},
+      "type": "text",
+      "description": "Left labels: each pet's name and its 2016 count, so colour is never the only cue.",
+      "interactive": false,
+      "from": {
+        "data": "firstSurvey"
+      },
       "encode": {
-        "enter": {
-          "fill": {"scale": "petColour", "field": "species"},
-          "stroke": {"signal": "colorSurface"},
-          "strokeWidth": {"value": 1.5},
-          "tooltip": {"signal": "datum.tooltip"}
-        },
         "update": {
-          "x": {"signal": "rightX"},
-          "y": {"scale": "y", "field": "animal_share_pct"},
-          "size": {"signal": "datum.emphasis ? 120 : 70"}
+          "x": {
+            "signal": "leftX - 12"
+          },
+          "y": {
+            "scale": "rank",
+            "field": "animalRank"
+          },
+          "align": {
+            "value": "right"
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "text": {
+            "signal": "[narrow ? datum.label : datum.species, format(datum.animals_thousands / 1000, '.1f') + ' million']"
+          },
+          "lineHeight": {
+            "value": 15
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fontWeight": {
+            "value": 400
+          },
+          "fill": {
+            "signal": "colorMuted"
+          },
+          "opacity": {
+            "value": 1
+          }
         }
       }
     },
     {
       "type": "text",
-      "description": "Labels on the household side.",
-      "from": {"data": "pets"},
+      "description": "Right labels: each pet's name and its 2025 count.",
+      "interactive": false,
+      "from": {
+        "data": "lastSurvey"
+      },
       "encode": {
-        "enter": {
-          "align": {"value": "right"},
-          "baseline": {"value": "middle"},
-          "font": {"signal": "fontBody"},
-          "fontWeight": {"signal": "datum.emphasis ? 600 : 400"},
-          "fill": {"scale": "petColour", "field": "species"}
-        },
         "update": {
-          "x": {"signal": "leftX - 10"},
-          "y": {"scale": "y", "field": "left_label_pct"},
-          "fontSize": {"signal": "narrow ? 11 : 13"},
-          "text": {"signal": "narrow ? format(datum.household_ownership_pct, '.1f') + '%' : datum.species + ' ' + format(datum.household_ownership_pct, '.1f') + '%'"}
+          "x": {
+            "signal": "rightX + 12"
+          },
+          "y": {
+            "scale": "rank",
+            "field": "animalRank"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "text": {
+            "signal": "[narrow ? datum.label : datum.species, format(datum.animals_thousands / 1000, '.1f') + ' million']"
+          },
+          "lineHeight": {
+            "value": 15
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fontWeight": {
+            "value": 400
+          },
+          "fill": {
+            "signal": "colorMuted"
+          },
+          "opacity": {
+            "value": 1
+          }
         }
       }
     },
     {
       "type": "text",
-      "description": "Labels on the animal side.",
-      "from": {"data": "pets"},
+      "description": "Reading note: ranks show order only, and close ranks are within survey error.",
+      "interactive": false,
       "encode": {
-        "enter": {
-          "align": {"value": "left"},
-          "baseline": {"value": "middle"},
-          "font": {"signal": "fontBody"},
-          "fontWeight": {"signal": "datum.emphasis ? 600 : 400"},
-          "fill": {"scale": "petColour", "field": "species"}
-        },
         "update": {
-          "x": {"signal": "rightX + 10"},
-          "y": {"scale": "y", "field": "right_label_pct"},
-          "fontSize": {"signal": "narrow ? 11 : 13"},
-          "text": {"signal": "format(datum.animal_share_pct, '.1f') + '% ' + datum.species"}
-        }
-      }
-    },
-    {
-      "type": "text",
-      "name": "noteText",
-      "from": {"data": "note"},
-      "zindex": 2,
-      "encode": {
-        "enter": {
-          "baseline": {"value": "top"},
-          "lineHeight": {"value": 17},
-          "fontSize": {"value": 12},
-          "font": {"signal": "fontBody"},
-          "fontStyle": {"value": "italic"},
-          "fill": {"signal": "colorMuted"},
-          "text": {"field": "lines"}
-        },
-        "update": {
-          "x": {"signal": "narrow ? width / 2 : rightX - 22"},
-          "y": {"signal": "narrow ? plotHeight + 24 : scale('y', 49)"},
-          "align": {"signal": "narrow ? 'center' : 'right'"}
-        }
-      }
-    },
-    {
-      "description": "Plain background sized to the note text; no outline or shadow.",
-      "type": "rect",
-      "from": {"data": "noteText"},
-      "zindex": 1,
-      "encode": {
-        "enter": {
-          "fill": {"signal": "colorPage"},
-          "cornerRadius": {"value": 4}
-        },
-        "update": {
-          "x": {"signal": "datum.bounds.x1 - 8"},
-          "x2": {"signal": "datum.bounds.x2 + 8"},
-          "y": {"signal": "datum.bounds.y1 - 6"},
-          "y2": {"signal": "datum.bounds.y2 + 6"}
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "signal": "height - (narrow ? 46 : 30)"
+          },
+          "text": {
+            "signal": "narrow ? ['Ranked by estimated animals in each survey.', 'Labels give counts. Close ranks (5 to 7)', 'may swap within survey error.'] : ['Ranked by estimated number of animals in each survey; rank 1 is the largest.', 'Labels give counts. Close ranks, such as 5 to 7, may swap within survey error.']"
+          },
+          "lineHeight": {
+            "value": 17
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
         }
       }
     }
-  ]
+  ],
+  "usermeta": {
+    "idiom": "Bump chart: one category's rank tracked across successive time points (four surveys). Kirk, Table Idioms Part 2, bump chart.",
+    "scales": {
+      "x": "Survey year on a point scale; surveys are three years apart, so equal spacing is honest.",
+      "rank": "Ordinal rank mapped to equal vertical spacing; #1 is the most animals.",
+      "colour": "Species identity only."
+    },
+    "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
+    "projections": {}
+  }
 }

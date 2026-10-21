@@ -7,15 +7,16 @@
     "contains": "padding"
   },
   "title": {
+    "description": "The big heading and the smaller line under it. On a phone the words are split into shorter lines.",
     "text": {
-      "signal": "narrow ? ['Cost holds back owners; an', 'unsuitable home holds back', 'people without a pet'] : 'Cost holds back owners; an unsuitable home holds back people without a pet'"
+      "signal": "narrow ? ['Cost stops owners; home and', 'lifestyle stop others'] : 'Cost stops owners; home and lifestyle stop others'"
     },
     "subtitle": {
       "signal": "narrow ? ['Reasons people who would like a pet do not', 'have one, by whether they already own a pet,', '2025 (several reasons could be given)'] : 'Reasons people who would like a pet do not have one, by whether they already own a pet, 2025 (several reasons could be given)'"
     },
     "anchor": "start",
     "offset": {
-      "signal": "narrow ? 46 : 32"
+      "signal": "narrow ? 46 : 48"
     },
     "font": {
       "signal": "fontHeading"
@@ -36,108 +37,103 @@
     },
     "subtitlePadding": 6
   },
+  "usermeta": {
+    "readMe": "Vega ignores this box. It holds plain-language notes for the parts of the chart that cannot carry their own \"description\".",
+    "scales": {
+      "y": "Gives each reason its own row, from top to bottom, in the order worked out above.",
+      "xLeft": "Turns a percentage into a length for the left side. 0% is in the middle and bigger numbers go further left.",
+      "xRight": "Turns a percentage into a length for the right side. 0% is in the middle and bigger numbers go further right. Both sides use the same numbers, so bar lengths can be compared fairly."
+    },
+    "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
+    "projections": {},
+    "readingNote": "Housing access can limit ownership even before budgeting begins. Affordability alone cannot remove every obstacle."
+  },
   "signals": [
     {
       "name": "colorNeutral",
-      "value": "#512D22",
-      "description": "Theme: replaced by --color-neutral from css/style.css."
+      "description": "Colour: the main brown colour, used for plain bars, lines and dots. This is only a backup; the real colour comes from --color-neutral in css/style.css.",
+      "value": "#512D22"
     },
     {
       "name": "colorAccent",
-      "value": "#005a9c",
-      "description": "Theme: replaced by --color-accent (highlighted barrier)."
+      "description": "Colour: the blue highlight colour, used for the one thing we want you to notice. This is only a backup; the real colour comes from --color-accent in css/style.css.",
+      "value": "#005a9c"
     },
     {
       "name": "colorMuted",
-      "value": "#252725",
-      "description": "Theme: replaced by --color-muted."
+      "description": "Colour: the dark grey colour of small text: labels, axis words and notes. This is only a backup; the real colour comes from --color-muted in css/style.css.",
+      "value": "#252725"
     },
     {
       "name": "colorHeading",
-      "value": "#0b2540",
-      "description": "Theme: replaced by --color-heading."
-    },
-    {
-      "name": "colorBorder",
-      "value": "#a4adb8",
-      "description": "Theme: replaced by --color-border."
-    },
-    {
-      "name": "colorPage",
-      "value": "#dadfef",
-      "description": "Theme: replaced by --color-page."
+      "description": "Colour: the dark blue colour of chart titles. This is only a backup; the real colour comes from --color-heading in css/style.css.",
+      "value": "#0b2540"
     },
     {
       "name": "fontHeading",
-      "value": "DM Serif Display",
-      "description": "Theme: replaced by --font-heading."
+      "description": "Font: the fancy title font (DM Serif Display). This is only a backup; the real font comes from --font-heading in css/style.css.",
+      "value": "DM Serif Display"
     },
     {
       "name": "fontBody",
-      "value": "Fira Sans",
-      "description": "Theme: replaced by --font-body."
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css.",
+      "value": "Fira Sans"
     },
     {
       "name": "width",
-      "init": "containerSize()[0]",
-      "on": [
-        {
-          "events": "window:resize",
-          "update": "containerSize()[0]"
-        }
-      ]
+      "description": "How wide the chart is. It starts as the width of the box on the page and updates whenever the browser window is resized.",
+      "init": "containerSize()[0]"
     },
     {
       "name": "narrow",
-      "update": "width < 760"
+      "description": "True when the chart is less than 760 pixels wide (for example on a phone). Reason names then move above each row and the headers wrap.",
+      "update": "width < 620"
     },
     {
       "name": "centreWidth",
-      "update": "narrow ? 16 : 320",
-      "description": "Desktop: centre column for reason names; narrow screens put names above each row."
+      "description": "How wide the middle column is: 320 pixels for the reason names on a computer, just a small gap on a phone (names go above the rows).",
+      "update": "narrow ? 16 : 320"
     },
     {
       "name": "leftEnd",
+      "description": "Where the left side ends: the bars for current owners grow leftwards from here.",
       "update": "(width - centreWidth) / 2"
     },
     {
       "name": "rightStart",
+      "description": "Where the right side starts: the bars for people without a pet grow rightwards from here.",
       "update": "leftEnd + centreWidth"
     },
     {
       "name": "rowHeight",
+      "description": "How tall each reason row is: taller on a phone to fit the name above the bars.",
       "update": "narrow ? 42 : 25"
     },
     {
       "name": "plotHeight",
+      "description": "How tall the area with the bars is: 17 reasons times the row height.",
       "update": "17 * rowHeight"
     },
     {
       "name": "barTop",
-      "update": "narrow ? 0.52 : 0.14",
-      "description": "Bar position within its row (fraction of the row)."
+      "description": "Where each bar starts inside its row (as a fraction of the row): near the top on a computer, under the name on a phone.",
+      "update": "narrow ? 0.52 : 0.14"
     },
     {
       "name": "barHeight",
+      "description": "How thick each bar is.",
       "update": "narrow ? 13 : 0.72 * bandwidth('y')"
     },
     {
-      "name": "noteTop",
-      "update": "plotHeight + 18"
-    },
-    {
       "name": "height",
-      "update": "plotHeight + (narrow ? 104 : 62)"
-    },
-    {
-      "name": "leaderX",
-      "update": "width - 4",
-      "description": "Leader rises along the right edge, beyond every bar except the highlighted one."
+      "description": "Bars only; the reading note wraps in HTML below the SVG.",
+      "update": "plotHeight + 8"
     }
   ],
   "data": [
     {
       "name": "barriers",
+      "description": "The survey numbers: for each reason, the share of current owners and the share of people without a pet who gave it.",
       "url": "data/selected/au_barriers_2025.csv",
       "format": {
         "type": "csv",
@@ -149,6 +145,7 @@
       "transform": [
         {
           "type": "pivot",
+          "description": "Reshape the table so each reason is one row, with both groups' percentages next to each other.",
           "field": "cohort",
           "value": "percent",
           "groupby": [
@@ -158,52 +155,33 @@
         },
         {
           "type": "formula",
+          "description": "Copy the current owners' percentage into a shorter field name, \"owners\".",
           "as": "owners",
           "expr": "datum['Prospective current owners']"
         },
         {
           "type": "formula",
+          "description": "Copy the percentage for people without a pet into a shorter field name, \"non_owners\".",
           "as": "non_owners",
           "expr": "datum['Prospective non-owners']"
         },
         {
           "type": "formula",
+          "description": "Replace short reason names from the file with full words, for example \"Ongoing costs of keeping a pet\".",
           "as": "label",
           "expr": "{'Ongoing costs': 'Ongoing costs of keeping a pet', 'Already enough pets/do not want more': 'Already have enough pets', 'Initial costs': 'Initial cost of getting a pet', 'Responsibility': 'Responsibility of looking after a pet', 'Unsuitable home/lifestyle': 'Home or lifestyle is not suitable', 'Uncertain employment/living situation': 'Work or living situation is uncertain', 'Other household members': 'Others in the household do not want one', 'Cannot work from home enough': 'Cannot work from home often enough', 'Previous pet died/not ready': 'Previous pet died, not ready for another', 'Landlord restriction': 'Landlord does not allow pets', 'Buying/adoption process too difficult': 'Buying or adopting is too difficult', 'Wait times too long': 'Wait times are too long', 'Allergies': 'Allergies in the household', 'Body corporate/strata restriction': 'Body corporate or strata does not allow pets', 'Gave away previous pet/not ready': 'Had to give away a previous pet'}[datum.reason] || datum.reason"
         },
         {
           "type": "formula",
+          "description": "Mark the one row to highlight in blue: \"Home or lifestyle is not suitable\", the row the note talks about.",
           "as": "emphasis",
-          "expr": "datum.reason === 'Unsuitable home/lifestyle'",
-          "description": "Highlighted row, matching the annotation."
+          "expr": "datum.reason === 'Unsuitable home/lifestyle'"
         },
         {
           "type": "formula",
+          "description": "Work out the row order: most common reasons first, then \"Other reasons\" and \"No particular reason\" last.",
           "as": "sort_key",
-          "expr": "datum.reason === 'Other reasons' ? 1000 : datum.reason === 'No particular reason' ? 1001 : -(datum.owners + datum.non_owners)",
-          "description": "Most common barriers first; the two catch-all answers last."
-        },
-        {
-          "type": "formula",
-          "as": "tooltip",
-          "expr": "{'Reason': datum.label, 'Current owners wanting another pet': datum.owners + '% of 1,502', 'People without a pet who want one': datum.non_owners + '% of 425'}"
-        }
-      ]
-    },
-    {
-      "name": "note",
-      "values": [
-        {
-          "lines": [
-            "For people without a pet, an unsuitable home or lifestyle (31%) is an even bigger barrier",
-            "than cost, and 16% say their landlord does not allow pets."
-          ],
-          "short": [
-            "For people without a pet, an unsuitable",
-            "home or lifestyle (31%) is an even bigger",
-            "barrier than cost, and 16% say their",
-            "landlord does not allow pets."
-          ]
+          "expr": "datum.reason === 'Other reasons' ? 1000 : datum.reason === 'No particular reason' ? 1001 : -(datum.owners + datum.non_owners)"
         }
       ]
     }
@@ -264,7 +242,7 @@
   "marks": [
     {
       "type": "text",
-      "description": "Column headers above each side.",
+      "description": "The header above the left side: current owners wanting another pet. Vega stacks a second line below the first, so the first line sits one line height (16px) higher to keep both clear of the top bar.",
       "encode": {
         "enter": {
           "baseline": {
@@ -294,16 +272,18 @@
             "signal": "leftEnd"
           },
           "y": {
-            "signal": "narrow ? -24 : -8"
+            "value": -24
           },
           "text": {
-            "signal": "narrow ? ['Current owners', 'wanting another'] : 'Current owners wanting another pet'"
+            "signal": "narrow ? ['Current owners', 'wanting another'] : ['Current owners', 'wanting another pet']"
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "text",
+      "description": "The header above the right side: people without a pet who want one.",
       "encode": {
         "enter": {
           "baseline": {
@@ -333,17 +313,18 @@
             "signal": "rightStart"
           },
           "y": {
-            "signal": "narrow ? -24 : -8"
+            "value": -24
           },
           "text": {
-            "signal": "narrow ? ['Without a pet,', 'wanting one'] : 'People without a pet who want one'"
+            "signal": "narrow ? ['Without a pet,', 'wanting one'] : ['People without a pet', 'who want one']"
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "text",
-      "description": "Reason names: centre column on desktop, above each row on narrow screens.",
+      "description": "The reason names: in the middle column on a computer, above each row on a phone. The highlighted reason is blue.",
       "from": {
         "data": "barriers"
       },
@@ -379,20 +360,17 @@
             "signal": "datum.emphasis ? colorAccent : colorMuted"
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "rect",
-      "description": "Current owners: bars grow left from the centre.",
+      "description": "The left bars (current owners), growing left from the middle. Brown, or blue for the highlighted row.",
       "from": {
         "data": "barriers"
       },
       "encode": {
-        "enter": {
-          "tooltip": {
-            "signal": "datum.tooltip"
-          }
-        },
+        "enter": {},
         "update": {
           "x": {
             "scale": "xLeft",
@@ -412,20 +390,17 @@
             "signal": "datum.emphasis ? colorAccent : colorNeutral"
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "rect",
-      "description": "People without a pet: bars grow right from the centre.",
+      "description": "The right bars (people without a pet), growing right from the middle. Brown, or blue for the highlighted row.",
       "from": {
         "data": "barriers"
       },
       "encode": {
-        "enter": {
-          "tooltip": {
-            "signal": "datum.tooltip"
-          }
-        },
+        "enter": {},
         "update": {
           "x": {
             "scale": "xRight",
@@ -445,11 +420,12 @@
             "signal": "datum.emphasis ? colorAccent : colorNeutral"
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "text",
-      "description": "Current owner values beyond each bar.",
+      "description": "The percentages at the outer end of each left bar.",
       "from": {
         "data": "barriers"
       },
@@ -487,11 +463,11 @@
             "signal": "datum.emphasis ? colorAccent : colorMuted"
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "text",
-      "description": "Values for people without a pet beyond each bar.",
       "from": {
         "data": "barriers"
       },
@@ -530,153 +506,9 @@
           }
         }
       },
-      "name": "rightValue"
-    },
-    {
-      "type": "text",
-      "name": "noteText",
-      "from": {
-        "data": "note"
-      },
-      "zindex": 2,
-      "encode": {
-        "enter": {
-          "baseline": {
-            "value": "top"
-          },
-          "lineHeight": {
-            "value": 17
-          },
-          "fontSize": {
-            "value": 12
-          },
-          "font": {
-            "signal": "fontBody"
-          },
-          "fontStyle": {
-            "value": "italic"
-          },
-          "fill": {
-            "signal": "colorMuted"
-          }
-        },
-        "update": {
-          "x": {
-            "signal": "narrow ? 8 : width - 8"
-          },
-          "y": {
-            "signal": "noteTop + 6"
-          },
-          "text": {
-            "signal": "narrow ? datum.short : datum.lines"
-          },
-          "align": {
-            "signal": "narrow ? 'left' : 'right'"
-          }
-        }
-      }
-    },
-    {
-      "description": "Plain background sized to the note text; no outline or shadow.",
-      "type": "rect",
-      "from": {
-        "data": "noteText"
-      },
-      "zindex": 1,
-      "encode": {
-        "enter": {
-          "fill": {
-            "signal": "colorPage"
-          },
-          "cornerRadius": {
-            "value": 4
-          }
-        },
-        "update": {
-          "x": {
-            "signal": "datum.bounds.x1 - 8"
-          },
-          "x2": {
-            "signal": "max(datum.bounds.x2 + 8, width)"
-          },
-          "y": {
-            "signal": "noteTop"
-          },
-          "y2": {
-            "signal": "datum.bounds.y2 + 6"
-          }
-        }
-      }
-    },
-    {
-      "type": "rule",
-      "description": "Leader from the note up the right edge to the highlighted row.",
-      "from": {
-        "data": "rightValue"
-      },
-      "interactive": false,
-      "encode": {
-        "enter": {
-          "stroke": {
-            "signal": "colorMuted"
-          },
-          "strokeWidth": {
-            "value": 1
-          }
-        },
-        "update": {
-          "x": {
-            "signal": "leaderX"
-          },
-          "x2": {
-            "signal": "leaderX"
-          },
-          "y": {
-            "signal": "noteTop"
-          },
-          "y2": {
-            "signal": "datum.y"
-          },
-          "strokeOpacity": {
-            "signal": "datum.datum.emphasis ? 1 : 0"
-          }
-        }
-      }
-    },
-    {
-      "type": "rule",
-      "description": "Leader: short segment ending just after the highlighted value.",
-      "from": {
-        "data": "rightValue"
-      },
-      "interactive": false,
-      "encode": {
-        "enter": {
-          "stroke": {
-            "signal": "colorMuted"
-          },
-          "strokeWidth": {
-            "value": 1
-          }
-        },
-        "update": {
-          "x": {
-            "signal": "leaderX"
-          },
-          "x2": {
-            "signal": "datum.bounds.x2 + 5"
-          },
-          "y": {
-            "signal": "datum.y"
-          },
-          "y2": {
-            "signal": "datum.y"
-          },
-          "strokeOpacity": {
-            "signal": "datum.datum.emphasis ? 1 : 0"
-          }
-        }
-      }
+      "name": "rightValue",
+      "description": "The percentages at the outer end of each right bar.",
+      "interactive": false
     }
   ]
 }

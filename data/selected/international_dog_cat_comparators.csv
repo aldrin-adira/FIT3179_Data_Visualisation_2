@@ -1,9 +1,0 @@
-iso3,country,data_year,species,household_ownership_pct,source_id
-AUS,Australia,2025,Dogs,49.3,AMA2025
-AUS,Australia,2025,Cats,33.6,AMA2025
-NZL,New Zealand,2024,Dogs,31,CANZ2024
-NZL,New Zealand,2024,Cats,40,CANZ2024
-GBR,United Kingdom,2026,Dogs,41,UK2026
-GBR,United Kingdom,2026,Cats,31,UK2026
-USA,United States,2024,Dogs,51,APPA2025
-USA,United States,2024,Cats,37,APPA2025

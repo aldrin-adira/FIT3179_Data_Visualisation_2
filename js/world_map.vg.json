@@ -1,17 +1,18 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "World choropleth map of the share of households owning at least one dog or cat in 43 countries with national surveys from 2024 to 2026. A control switches between dogs and cats.",
+  "description": "Static layout, data or appearance for this part of the chart.",
   "padding": 5,
   "autosize": {
     "type": "fit-x",
     "contains": "padding"
   },
   "title": {
+    "description": "The big heading and the smaller line under it. On a phone they split into shorter lines.",
     "text": {
-      "signal": "pet === 'Dogs' ? (narrow ? ['Almost half of Australian homes', 'have a dog, more than in most', 'countries compared'] : 'Almost half of Australian homes have a dog, more than in most countries compared') : (narrow ? ['A third of Australian homes', 'have a cat, more than in most', 'countries compared'] : 'A third of Australian homes have a cat, more than in most countries compared')"
+      "signal": "narrow ? ['Australia ranks fourth for', 'homes with a dog'] : 'Australia ranks fourth for homes with a dog'"
     },
     "subtitle": {
-      "signal": "narrow ? ['Share of households owning at least one ' + (pet === 'Dogs' ? 'dog' : 'cat') + ',', '43 countries with national surveys, 2024 to', '2026. Grey: no comparable survey.'] : 'Share of households owning at least one ' + (pet === 'Dogs' ? 'dog' : 'cat') + ', 43 countries with national surveys, 2024 to 2026. Grey countries have no comparable survey.'"
+      "signal": "narrow ? ['Share of households owning a dog.', '43 selected countries, 2024 to 2026.', 'Grey: no selected data.'] : ['Share of households owning a dog in 43 selected countries, 2024 to 2026.', 'Survey methods differ. Grey, including Malaysia: no data in this selection.']"
     },
     "anchor": "start",
     "offset": 30,
@@ -34,147 +35,107 @@
     },
     "subtitlePadding": 6
   },
+  "usermeta": {
+    "readMe": "Vega ignores this box. It holds plain-language notes for the parts of the chart that cannot carry their own \"description\".",
+    "scales": {
+      "steps": "Turns a colour group number (0 to 3) into a colour, from pale (low) to dark (high), in the site's red-brown sequential colours. \"lab\" mixing makes the steps look evenly spaced to the eye."
+    },
+    "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
+    "projections": {
+      "worldProjection": "equalEarth projection; camera or fit parameters control the visible geography."
+    }
+  },
   "signals": [
     {
-      "name": "colorPetDogsLight",
-      "value": "#fbe8d4",
-      "description": "Theme: replaced by --color-pet-dogs-light."
+      "name": "colorLight",
+      "description": "Colour: the palest shade of the site's sequential colours, for low values. This is only a backup; the real colour comes from --color-light in css/style.css.",
+      "value": "#F5DFD8"
     },
     {
-      "name": "colorPetDogs",
-      "value": "#9c6500",
-      "description": "Theme: replaced by --color-pet-dogs."
-    },
-    {
-      "name": "colorPetDogsDark",
-      "value": "#4b2800",
-      "description": "Theme: replaced by --color-pet-dogs-dark."
-    },
-    {
-      "name": "colorPetCatsLight",
-      "value": "#f8e6f2",
-      "description": "Theme: replaced by --color-pet-cats-light."
-    },
-    {
-      "name": "colorPetCats",
-      "value": "#7a376b",
-      "description": "Theme: replaced by --color-pet-cats."
-    },
-    {
-      "name": "colorPetCatsDark",
-      "value": "#4e1f43",
-      "description": "Theme: replaced by --color-pet-cats-dark."
+      "name": "colorDark",
+      "description": "Colour: the darkest shade of the site's sequential colours, for high values. This is only a backup; the real colour comes from --color-dark in css/style.css.",
+      "value": "#4E1A0A"
     },
     {
       "name": "colorAccent",
-      "value": "#005a9c",
-      "description": "Theme: replaced by --color-accent (Australia outline)."
+      "description": "Colour: the blue highlight colour, used for the one thing we want you to notice. This is only a backup; the real colour comes from --color-accent in css/style.css.",
+      "value": "#005a9c"
     },
     {
       "name": "colorMuted",
-      "value": "#252725",
-      "description": "Theme: replaced by --color-muted."
+      "description": "Colour: the dark grey colour of small text: labels, axis words and notes. This is only a backup; the real colour comes from --color-muted in css/style.css.",
+      "value": "#252725"
     },
     {
       "name": "colorHeading",
-      "value": "#0b2540",
-      "description": "Theme: replaced by --color-heading."
+      "description": "Colour: the dark blue colour of chart titles. This is only a backup; the real colour comes from --color-heading in css/style.css.",
+      "value": "#0b2540"
     },
     {
       "name": "colorBorder",
-      "value": "#a4adb8",
-      "description": "Theme: replaced by --color-border (no comparable survey)."
+      "description": "Colour: light grey, used for gridlines, empty squares and places with no data. This is only a backup; the real colour comes from --color-border in css/style.css.",
+      "value": "#a4adb8"
     },
     {
       "name": "colorSurface",
-      "value": "#ffffff",
-      "description": "Theme: replaced by --color-surface."
-    },
-    {
-      "name": "colorPage",
-      "value": "#dadfef",
-      "description": "Theme: replaced by --color-page."
+      "description": "Colour: white, the colour of the card each chart sits on. This is only a backup; the real colour comes from --color-surface in css/style.css.",
+      "value": "#ffffff"
     },
     {
       "name": "fontHeading",
-      "value": "DM Serif Display",
-      "description": "Theme: replaced by --font-heading."
+      "description": "Font: the fancy title font (DM Serif Display). This is only a backup; the real font comes from --font-heading in css/style.css.",
+      "value": "DM Serif Display"
     },
     {
       "name": "fontBody",
-      "value": "Fira Sans",
-      "description": "Theme: replaced by --font-body."
-    },
-    {
-      "name": "pet",
-      "value": "Dogs",
-      "bind": {
-        "input": "radio",
-        "options": [
-          "Dogs",
-          "Cats"
-        ],
-        "name": "Show "
-      }
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css.",
+      "value": "Fira Sans"
     },
     {
       "name": "width",
-      "init": "containerSize()[0]",
-      "on": [
-        {
-          "events": "window:resize",
-          "update": "containerSize()[0]"
-        }
-      ]
+      "description": "How wide the chart is. It starts as the width of the box on the page and updates whenever the browser window is resized.",
+      "init": "containerSize()[0]"
     },
     {
       "name": "narrow",
-      "update": "width < 760"
+      "description": "True when the chart is less than 760 pixels wide (for example on a phone). Other parts check it to use shorter words and a tighter layout.",
+      "update": "containerSize()[0] < 760"
     },
     {
       "name": "worldWidth",
+      "description": "How wide the world map is: the full width of the chart.",
       "update": "width"
     },
     {
       "name": "worldHeight",
-      "update": "worldWidth * 0.47",
-      "description": "Equal Earth is about twice as wide as it is tall."
+      "description": "How tall the world map is. This map shape is about twice as wide as it is tall, so the height is just under half the width.",
+      "update": "worldWidth * 0.40"
     },
     {
       "name": "legendY",
+      "description": "How far down the colour key starts: just under the map.",
       "update": "worldHeight + 18"
     },
     {
       "name": "legendWidth",
-      "update": "narrow ? width : width * 0.6"
+      "description": "How wide the colour key is: the full width on a phone, most of the width on a computer.",
+      "update": "narrow ? width : min(width, 640)"
     },
     {
       "name": "legendColumns",
-      "update": "narrow ? 2 : 3"
+      "description": "How many colour boxes sit side by side in the key: 2 on a phone, 5 (one row) on a computer.",
+      "update": "narrow ? 2 : 5"
     },
     {
       "name": "height",
-      "update": "legendY + 22 + 3 * 20"
-    },
-    {
-      "name": "hoverIso",
-      "value": null,
-      "on": [
-        {
-          "events": "shape:mouseover",
-          "update": "datum.iso"
-        },
-        {
-          "events": "shape:mouseout",
-          "update": "null"
-        }
-      ],
-      "description": "Country under the pointer, outlined on the map."
+      "description": "How tall the whole chart is: the map, then the key title, then the rows of key boxes.",
+      "update": "legendY + 22 + ceil(5 / legendColumns) * 20"
     }
   ],
   "data": [
     {
       "name": "ownership",
+      "description": "Static layout, data or appearance for this part of the chart.",
       "url": "data/selected/international_dog_cat_selected.csv",
       "format": {
         "type": "csv",
@@ -184,25 +145,54 @@
       },
       "transform": [
         {
-          "type": "filter",
-          "expr": "datum.species === pet"
+          "type": "pivot",
+          "description": "Turn the two rows per country (dogs, cats) into one row with a \"Dogs\" and a \"Cats\" column.",
+          "field": "species",
+          "value": "household_ownership_pct",
+          "groupby": [
+            "iso3",
+            "country",
+            "data_year",
+            "source_id"
+          ]
         },
         {
           "type": "formula",
+          "description": "Use one consistent measured attribute across countries: the share of households owning a dog.",
+          "as": "value",
+          "expr": "datum.Dogs"
+        },
+        {
+          "type": "formula",
+          "description": "Kosovo has the code XKX in the survey file but KOS in the map file. This makes them match.",
           "as": "iso",
-          "expr": "datum.iso3 === 'XKX' ? 'KOS' : datum.iso3",
-          "description": "Kosovo uses the user-assigned code XKX in the data and KOS in Natural Earth."
+          "expr": "datum.iso3 === 'XKX' ? 'KOS' : datum.iso3"
         },
         {
           "type": "formula",
+          "description": "Two country names are shortened in the survey file. This writes them out in full words.",
           "as": "country",
-          "expr": "{'Rep. of Moldova': 'Republic of Moldova', 'Bosnia & Herzegovina': 'Bosnia and Herzegovina'}[datum.country] || datum.country",
-          "description": "Display names in full words (the source abbreviates two)."
+          "expr": "{'Rep. of Moldova': 'Republic of Moldova', 'Bosnia & Herzegovina': 'Bosnia and Herzegovina'}[datum.country] || datum.country"
+        },
+        {
+          "type": "window",
+          "description": "Rank the countries from highest to lowest (1 = highest). Countries with the same value share a rank.",
+          "sort": {
+            "field": "value",
+            "order": "descending"
+          },
+          "ops": [
+            "rank"
+          ],
+          "as": [
+            "rank"
+          ]
         }
       ]
     },
     {
       "name": "countries",
+      "description": "The country shapes for the world map. Each shape gets its survey number glued on, if the country has one.",
       "url": "data/selected/world_countries.geojson",
       "format": {
         "type": "json",
@@ -211,24 +201,32 @@
       "transform": [
         {
           "type": "formula",
+          "description": "Copy each shape's three-letter country code into a field called \"iso\", so it can be matched with the survey numbers.",
           "as": "iso",
           "expr": "datum.properties.adm0_a3"
         },
         {
           "type": "lookup",
+          "description": "Static layout, data or appearance for this part of the chart.",
           "from": "ownership",
           "key": "iso",
           "fields": [
             "iso"
           ],
           "values": [
-            "household_ownership_pct",
+            "value",
+            "Dogs",
+            "Cats",
+            "rank",
             "data_year",
             "source_id",
             "country"
           ],
           "as": [
             "value",
+            "dogs",
+            "cats",
+            "rank",
             "year",
             "source_id",
             "country"
@@ -236,52 +234,47 @@
         },
         {
           "type": "formula",
+          "description": "Put each country into a colour group: 0 = under 25%, 1 = 25% to 34%, 2 = 35% to 44%, 3 = 45% or more, and -1 = no survey.",
           "as": "value_class",
-          "expr": "!isValid(datum.value) ? -1 : datum.value < 20 ? 0 : datum.value < 30 ? 1 : datum.value < 40 ? 2 : datum.value < 50 ? 3 : 4"
-        },
-        {
-          "type": "formula",
-          "as": "tooltip",
-          "expr": "isValid(datum.value) ? {'title': datum.country, 'Pet': pet, 'Share of households owning one': format(datum.value, '.1~f') + '%', 'Survey year': datum.year, 'Source': {'FEDIAF2026': 'European Pet Food Industry Federation, Facts and Figures 2026', 'AMA2025': 'Animal Medicines Australia, Pets in Australia 2025', 'CANZ2024': 'Companion Animals New Zealand, 2024 report', 'UK2026': 'United Kingdom Pet Food, pet population 2026', 'APPA2025': 'American Pet Products Association, 2025 report'}[datum.source_id]} : datum.iso === 'ESP' ? {'title': 'Spain', 'Note': 'Published figure held for review, so not shown'} : indexof(datum.iso, '_OUTSIDE_EUROPE') > 0 ? {'title': datum.properties.name, 'Note': 'Not covered by the European survey figure'} : {'title': datum.properties.name, 'Note': 'No comparable national household survey'}"
+          "expr": "!isValid(datum.value) ? -1 : datum.value < 25 ? 0 : datum.value < 35 ? 1 : datum.value < 45 ? 2 : 3"
         }
       ]
     },
     {
       "name": "australia",
+      "description": "Just Australia, picked out of the country shapes so it can get its own label.",
       "source": "countries",
       "transform": [
         {
           "type": "filter",
+          "description": "Keep only Australia.",
           "expr": "datum.iso === 'AUS'"
         }
       ]
     },
     {
       "name": "legend",
+      "description": "Static layout, data or appearance for this part of the chart.",
       "values": [
         {
           "i": 0,
-          "label": "Under 20%"
+          "label": "Under 25%"
         },
         {
           "i": 1,
-          "label": "20% to 29%"
+          "label": "25% to 34%"
         },
         {
           "i": 2,
-          "label": "30% to 39%"
+          "label": "35% to 44%"
         },
         {
           "i": 3,
-          "label": "40% to 49%"
+          "label": "45% or more"
         },
         {
           "i": 4,
-          "label": "50% or more"
-        },
-        {
-          "i": 5,
-          "label": "No comparable survey"
+          "label": "No selected data"
         }
       ]
     }
@@ -290,11 +283,12 @@
     {
       "name": "steps",
       "type": "linear",
-      "domain": {
-        "signal": "pet === 'Dogs' ? [0, 2.5, 4] : [0, 3.2, 4]"
-      },
+      "domain": [
+        0,
+        3
+      ],
       "range": {
-        "signal": "pet === 'Dogs' ? [colorPetDogsLight, colorPetDogs, colorPetDogsDark] : [colorPetCatsLight, colorPetCats, colorPetCatsDark]"
+        "signal": "[colorLight, colorDark]"
       },
       "interpolate": "lab"
     }
@@ -302,6 +296,7 @@
   "projections": [
     {
       "name": "worldProjection",
+      "description": "How the round Earth is flattened onto the flat screen. \"Equal Earth\" keeps every country's area fair, so big countries do not look bigger than they are. It is stretched to fill the map space.",
       "type": "equalEarth",
       "fit": {
         "signal": "{type: 'FeatureCollection', features: data('countries')}"
@@ -315,15 +310,15 @@
     {
       "type": "group",
       "name": "worldPanel",
-      "description": "World map (Equal Earth projection).",
+      "description": "The box that holds the world map. Anything outside it is cut off.",
       "clip": true,
       "encode": {
         "update": {
           "x": {
-            "signal": "0"
+            "value": 0
           },
           "y": {
-            "signal": "0"
+            "value": 0
           },
           "width": {
             "signal": "worldWidth"
@@ -337,6 +332,7 @@
         {
           "type": "shape",
           "name": "worldPanelShapes",
+          "description": "Static layout, data or appearance for this part of the chart.",
           "from": {
             "data": "countries"
           },
@@ -350,32 +346,32 @@
                 "signal": "datum.value_class < 0 ? 0.45 : 1"
               },
               "stroke": {
-                "signal": "hoverIso === datum.iso && datum.value_class >= 0 ? colorHeading : colorSurface"
+                "signal": "colorSurface"
               },
               "strokeWidth": {
-                "signal": "hoverIso === datum.iso && datum.value_class >= 0 ? 2 : 0.3"
+                "value": 0.3
               },
               "zindex": {
-                "signal": "hoverIso === datum.iso ? 1 : 0"
-              },
-              "tooltip": {
-                "signal": "datum.tooltip"
+                "value": 0
               }
             }
           },
           "transform": [
             {
               "type": "geoshape",
+              "description": "Turns each country's map coordinates into a shape on the screen, using the world projection.",
               "projection": "worldProjection"
             }
-          ]
+          ],
+          "interactive": false
         }
-      ]
+      ],
+      "interactive": false
     },
     {
       "type": "text",
       "name": "australiaLabel",
-      "description": "Label for Australia on the world map.",
+      "description": "Writes \"Australia\" and its percentage in blue, just to the left of Australia.",
       "from": {
         "data": "australia"
       },
@@ -417,7 +413,7 @@
     },
     {
       "type": "rect",
-      "description": "Plain background behind the Australia label; no outline or shadow.",
+      "description": "A plain, slightly see-through white box behind the Australia label so the map does not show through the words. It is sized from the label, so it grows or shrinks with the text.",
       "from": {
         "data": "australiaLabel"
       },
@@ -451,7 +447,7 @@
     },
     {
       "type": "text",
-      "description": "Legend title.",
+      "description": "The title of the colour key.",
       "encode": {
         "enter": {
           "fontSize": {
@@ -472,7 +468,7 @@
             "signal": "legendY"
           },
           "text": {
-            "signal": "'Households owning at least one ' + (pet === 'Dogs' ? 'dog' : 'cat')"
+            "value": "Households owning a dog"
           },
           "font": {
             "signal": "fontBody"
@@ -481,10 +477,12 @@
             "signal": "colorMuted"
           }
         }
-      }
+      },
+      "interactive": false
     },
     {
       "type": "rect",
+      "description": "The small coloured squares in the key, laid out in rows and columns.",
       "from": {
         "data": "legend"
       },
@@ -504,10 +502,10 @@
             "value": 14
           },
           "fill": {
-            "signal": "datum.i > 4 ? colorBorder : scale('steps', datum.i)"
+            "signal": "datum.i > 3 ? colorBorder : scale('steps', datum.i)"
           },
           "fillOpacity": {
-            "signal": "datum.i > 4 ? 0.45 : 1"
+            "signal": "datum.i > 3 ? 0.45 : 1"
           },
           "stroke": {
             "signal": "colorBorder"
@@ -520,6 +518,7 @@
     },
     {
       "type": "text",
+      "description": "The words next to each square in the key, for example \"25% to 34%\".",
       "from": {
         "data": "legend"
       },
