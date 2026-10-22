@@ -103,7 +103,7 @@ footer {
     min-width: 0;
 }
 /* Full-row modules (world map, beeswarm, ownership trend, household groups, spending,
-   barriers, closing chart): the
+   barriers, density scatterplot, closing chart): the
    finding splits into two text columns on the shared centre line. */
 .panels-featured .narrative {
     display: grid;

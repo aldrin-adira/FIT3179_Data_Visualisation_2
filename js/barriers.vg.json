@@ -86,7 +86,7 @@
     },
     {
       "name": "narrow",
-      "description": "True when the chart is less than 760 pixels wide (for example on a phone). Reason names then move above each row and the headers wrap.",
+      "description": "True when the chart is less than 620 pixels wide (for example on a phone). Reason names then move above each row and the headers wrap.",
       "update": "width < 620"
     },
     {

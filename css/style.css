@@ -1,6 +1,7 @@
 /* STYLE: how things LOOK (colours, fonts, text sizes, borders).
    Where things SIT (spacing, widths, columns) is in layout.css.
-   Sections: 1. Colours | 2. Type settings | 3. Base | 4. Story | 5. Charts */
+   Sections: 1. Colours | 2. Type settings | then base text, header, story
+   sections, chart cards, tooltips, buttons, footer and print rules. */
 
 /* 1. COLOUR PALETTE: change these values to recolour the whole website.
    Each colour is stored once here, with a name that says what it is for,
@@ -17,9 +18,9 @@
     --color-heading: #0b2540; /* Page, section and chart headings */
     --color-muted: #252725; /* Supporting text, captions and chart labels */
     --color-accent: #005a9c; /* Questions, links, keyboard focus and chart highlights */
-    --color-border: #a4adb8; /* Dividers, placeholder outlines and chart gridlines */
-    --color-map-water: #f4f6f7; /* Existing local-map background */
-    --color-map-land: #e9e7de; /* Existing unshaded council boundaries */
+    --color-border: #a4adb8; /* Dividers, card outlines and chart gridlines */
+    --color-map-water: #f4f6f7; /* Symbol map background, outside the council shapes */
+    --color-map-land: #e9e7de; /* Unshaded council shapes behind the symbol map's circles */
     --color-aus-orange: #e55812; /* Orange like the Australian colors */
     --color-dark: #4e1a0a; /* Chart sequential scale: high values */
     --color-light: #f5dfd8; /* Chart sequential scale: low values */
@@ -42,8 +43,8 @@
        (for example dogs per council): pale = small number, dark = big number.
        The middle of each ramp is that pet's normal colour from above. */
     --color-pet-dogs-light: #fbe8d4;
-    --color-pet-dogs-mid-light: #e5c18b; /* Existing second map class */
-    --color-pet-dogs-mid-dark: #764300; /* Existing fourth map class */
+    --color-pet-dogs-mid-light: #e5c18b; /* Second class of the dog-rate map */
+    --color-pet-dogs-mid-dark: #764300; /* Fourth class of the dog-rate map */
     --color-pet-dogs-dark: #4b2800;
     --color-pet-cats-light: #f8e6f2;
     --color-pet-cats-dark: #4e1f43;
@@ -56,7 +57,7 @@
 :root {
     --font-body: "Fira Sans", sans-serif; /* Plain font for reading */
     --font-heading: "DM Serif Display", Georgia, serif; /* Fancy font for headings */
-    --text-subheading: 1.125rem; /* Smaller headings and the subtitle */
+    --text-subheading: 1.125rem; /* Section numbers (01, 02 ...) */
 }
 
 /* BASE TYPE: title → chapter → finding → caption form the visual hierarchy. */
@@ -252,7 +253,7 @@ a:hover {
     font-size: 0.78rem;
     line-height: 1.6;
 }
-/* Map titles stay outside the geographic clipping region and never pan. */
+/* Map titles are HTML above each map, outside its clipped viewport. */
 .chart-heading {
     font: 400 1.35rem/1.25 var(--font-heading);
     letter-spacing: -0.02em;

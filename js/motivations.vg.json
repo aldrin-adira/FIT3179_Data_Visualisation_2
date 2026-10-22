@@ -40,7 +40,7 @@
     "config": "Default look for every axis in this chart: no axis line, no tick marks, no gridlines, and a small gap between the words and the squares.",
     "scales": {
       "x": "Gives each pet its own column, from left to right, after the room kept for reason names.",
-      "y": "Gives each reason its own row, sorted so the most common reason overall is at the top.",
+      "y": "Gives each reason its own row, in the fixed reading order set by \"reasonOrder\" (companionship first). Percentages from different pets are not added up to sort the rows.",
       "colour": "Turns a percentage into a colour: palest brown for 0%, darkest brown for 60%. Darker means more owners gave that reason.",
       "petColour": "Gives each pet its fixed colour, used for the pet names along the top."
     },
@@ -138,7 +138,7 @@
     },
     {
       "name": "narrow",
-      "description": "True when the chart is less than 640 pixels wide (for example on a phone). Other parts check it to use shorter words, upright pet names and a stacked key.",
+      "description": "True when the chart is less than 760 pixels wide (for example on a phone). Other parts check it to use shorter words, upright pet names and a stacked key.",
       "update": "containerSize()[0] < 760"
     },
     {

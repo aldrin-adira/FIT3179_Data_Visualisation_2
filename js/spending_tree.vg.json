@@ -83,12 +83,12 @@
     {
       "name": "narrow",
       "update": "width < 560",
-      "description": "Shorter labels, tighter rows and a three-line note on a phone; no data are removed."
+      "description": "True below 560 pixels: a narrower label column, tighter rows, thinner branches, smaller text and a shorter name for pet products. No data are removed."
     },
     {
       "name": "ringgitRate",
       "value": 2.76,
-      "description": "Static layout, data or appearance for this part of the chart."
+      "description": "Ringgit per Australian dollar (2025 average). Not used by any part of this chart; the ringgit amounts are written in the page text."
     },
     {
       "name": "rootX",
@@ -123,7 +123,7 @@
     {
       "name": "height",
       "update": "plotTop + plotHeight + 16",
-      "description": "How tall the whole chart is: headings, tree and note."
+      "description": "How tall the whole chart is: headings, tree and a small gap below. The reading note wraps in HTML below the SVG."
     }
   ],
   "data": [
@@ -445,7 +445,7 @@
   "marks": [
     {
       "type": "text",
-      "description": "Column headings: Pet, Type of cost, Category, and the amount column.",
+      "description": "Column headings: Pet, Type of cost and Category. The amount column has its own heading below.",
       "interactive": false,
       "from": {
         "data": "levels"
@@ -584,7 +584,7 @@
     },
     {
       "type": "text",
-      "description": "Labels for the pets and types of cost, set just above their split point on a white halo so branches never run through the words. A type of cost with a single category (food, products) is named once, on the right.",
+      "description": "Labels for the pets and types of cost, set just above their split point on a white halo so branches never run through the words. A type of cost with a single category (food, products, other) is named once, on the right.",
       "interactive": false,
       "from": {
         "data": "nodes"

@@ -107,7 +107,7 @@
     },
     {
       "name": "plotLeft",
-      "description": "Where the dots may start from the left. On a computer it leaves room for the words \"Dogs\" and \"Cats\" on the left; on a phone those words sit above the rows instead.",
+      "description": "Where the dots may start from the left: a 70-pixel margin on a computer, none on a phone. The words \"Dogs\" and \"Cats\" sit above their rows on every screen.",
       "update": "narrow ? 0 : 70"
     },
     {
@@ -416,7 +416,7 @@
         {
           "type": "symbol",
           "name": "dots",
-          "description": "Static layout, data or appearance for this part of the chart.",
+          "description": "One dot per country per pet: blue for Australia, grey for the others. Its left-to-right position is the country's percentage. Hover shows the values.",
           "from": {
             "data": "countries"
           },

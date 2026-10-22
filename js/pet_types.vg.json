@@ -113,7 +113,7 @@
     {
       "name": "narrow",
       "update": "width < 540",
-      "description": "Shorter labels and a three-line note for a compact chart; no data are removed."
+      "description": "True below 540 pixels: the title wraps, dots are smaller, side margins are slightly narrower and the note uses three lines. No data are removed."
     },
     {
       "name": "height",

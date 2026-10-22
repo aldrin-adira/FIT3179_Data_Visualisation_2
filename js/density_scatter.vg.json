@@ -50,7 +50,7 @@
     {
       "name": "extraHeight",
       "value": 0,
-      "description": "Extra plot height set by the page so this card ends level with its paired card instead of leaving a gap."
+      "description": "Extra plot height the page can add so a paired card ends level with its partner. This chart is not in a pair, so it stays 0."
     },
     {
       "name": "colorPetDogs",
@@ -99,12 +99,12 @@
     },
     {
       "name": "narrow",
-      "description": "True when the chart is less than 700 pixels wide (for example on a phone). Other parts check it to use smaller dots, shorter words and to move the note below the plot.",
+      "description": "True when the chart is less than 700 pixels wide (for example on a phone). Other parts check it to use smaller dots, a shorter plot, a shorter bottom-axis title, and to hide the City of Adelaide label.",
       "update": "width < 700"
     },
     {
       "name": "plotHeight",
-      "description": "How tall the area with the dots is, plus any extra height that fills a paired card.",
+      "description": "How tall the area with the dots is: 400 pixels, or 330 on a phone (plus extraHeight, which is 0 here).",
       "update": "(narrow ? 330 : 400) + extraHeight"
     },
     {
@@ -135,7 +135,7 @@
       "transform": [
         {
           "type": "formula",
-          "description": "Static layout, data or appearance for this part of the chart.",
+          "description": "Turn the council code into text. Not used by any part of this chart at present.",
           "as": "code",
           "expr": "'' + datum.lga_code_2025"
         },
@@ -403,7 +403,7 @@
       "marks": [
         {
           "type": "symbol",
-          "description": "Static layout, data or appearance for this part of the chart.",
+          "description": "One dot per council per pet, in that pet's colour. Hover shows the values.",
           "from": {
             "data": "points"
           },

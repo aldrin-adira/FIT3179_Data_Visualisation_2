@@ -205,7 +205,8 @@ function drawCharts() {
     // Section 4: what pets cost, and what stops people getting one.
     embedChart("#chart7_chart", "js/spending_tree.vg.json");
     embedChart("#chart8_chart", "js/barriers.vg.json");
-    // Section 5: dog maps compare totals with resident rates.
+    // Section 5: dog maps compare totals with resident rates, then the
+    // scatterplot relates dog and cat rates to population density.
     embedChart("#chart9_chart", "js/sa_pet_symbols.vg.json");
     embedChart("#chart10_chart", "js/sa_councils_map.vg.json");
     embedChart("#chart11_chart", "js/density_scatter.vg.json");

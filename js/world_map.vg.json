@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Static layout, data or appearance for this part of the chart.",
+  "description": "World map (Equal Earth projection) of the share of households owning a dog in 43 selected countries, 2024 to 2026, in four colour groups. Countries without selected data are grey. Australia is labelled.",
   "padding": 5,
   "autosize": {
     "type": "fit-x",
@@ -42,7 +42,7 @@
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {
-      "worldProjection": "equalEarth projection; camera or fit parameters control the visible geography."
+      "worldProjection": "Equal Earth projection, fitted so every country shape fills the map box."
     }
   },
   "signals": [
@@ -108,7 +108,7 @@
     },
     {
       "name": "worldHeight",
-      "description": "How tall the world map is. This map shape is about twice as wide as it is tall, so the height is just under half the width.",
+      "description": "How tall the world map is: 40% of its width, which suits the world without Antarctica (the map file leaves Antarctica out).",
       "update": "worldWidth * 0.40"
     },
     {
@@ -118,7 +118,7 @@
     },
     {
       "name": "legendWidth",
-      "description": "How wide the colour key is: the full width on a phone, most of the width on a computer.",
+      "description": "How wide the colour key is: the full width on a phone, at most 640 pixels on a computer.",
       "update": "narrow ? width : min(width, 640)"
     },
     {
@@ -135,7 +135,7 @@
   "data": [
     {
       "name": "ownership",
-      "description": "Static layout, data or appearance for this part of the chart.",
+      "description": "The survey numbers: one row per country per pet, with the share of households owning that pet.",
       "url": "data/selected/international_dog_cat_selected.csv",
       "format": {
         "type": "csv",
@@ -207,7 +207,7 @@
         },
         {
           "type": "lookup",
-          "description": "Static layout, data or appearance for this part of the chart.",
+          "description": "Find each shape's survey numbers by its country code. Countries with no survey get empty values (not zero).",
           "from": "ownership",
           "key": "iso",
           "fields": [
@@ -254,7 +254,7 @@
     },
     {
       "name": "legend",
-      "description": "Static layout, data or appearance for this part of the chart.",
+      "description": "The five entries in the colour key: four colour groups and \"No selected data\".",
       "values": [
         {
           "i": 0,
@@ -332,7 +332,7 @@
         {
           "type": "shape",
           "name": "worldPanelShapes",
-          "description": "Static layout, data or appearance for this part of the chart.",
+          "description": "The country shapes, coloured by their colour group. Countries with no selected data are see-through grey. Hover shows the values.",
           "from": {
             "data": "countries"
           },

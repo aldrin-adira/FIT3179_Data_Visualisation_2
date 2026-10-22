@@ -35,7 +35,7 @@
     {
       "name": "narrow",
       "update": "width < 540",
-      "description": "Short labels for a compact chart; no data are removed."
+      "description": "True below 540 pixels: the largest circle is smaller (see maxSymbolArea). No data are removed."
     },
     {
       "name": "cameraLon",
@@ -111,13 +111,13 @@
           "type": "formula",
           "as": "code",
           "expr": "'' + datum.lga_code_2025",
-          "description": "formula: code using '' + datum.lga_code_2025"
+          "description": "Turn the council code into text, so it matches the code in the shapes file."
         }
       ]
     },
     {
       "name": "councils",
-      "description": "Council shapes, each with the chosen species' numbers attached.",
+      "description": "Council shapes, each with its dog numbers attached.",
       "url": "data/selected/sa_council_boundaries_2025.geojson",
       "format": {
         "type": "json",
@@ -128,13 +128,13 @@
           "type": "formula",
           "as": "code",
           "expr": "'' + datum.properties.lga_code_2025",
-          "description": "formula: code using '' + datum.properties.lga_code_2025"
+          "description": "Turn each shape's council code into text, so it matches the numbers file."
         },
         {
           "type": "formula",
           "as": "name",
           "expr": "replace(datum.properties.lga_name_2025, ' (SA)', '')",
-          "description": "formula: name using replace(datum.properties.lga_name_2025, ' (SA)', '')"
+          "description": "Tidy the council name by removing \" (SA)\" from the end."
         },
         {
           "type": "lookup",
@@ -153,7 +153,7 @@
             "rate",
             "residents"
           ],
-          "description": "lookup transform derives fields for councils; field/as name the input/output columns."
+          "description": "Match each shape to its numbers by council code and copy across the dogs recorded, the rate per 1,000 residents and residents."
         }
       ]
     },
@@ -221,8 +221,7 @@
         }
       ],
       "zero": true,
-      "nice": false,
-      "description": "Map dog totals linearly to symbol area, not radius. Twice the total produces twice the area."
+      "nice": false
     }
   ],
   "projections": [
@@ -458,6 +457,9 @@
   ],
   "usermeta": {
     "method": "One circle per council, placed at its projected geographic centroid. A zero-based linear scale maps recorded-at-home dog totals to circle area. Largest circles draw first; transparency and outlines reveal overlap. The map shows the settled south; all 68 councils remain in the underlying dataset.",
+    "scales": {
+      "symbolArea": "Map dog totals linearly to symbol area, not radius. Twice the total produces twice the area. (Kept here because Vega does not accept a description on a scale.)"
+    },
     "pageTitle": "Where dogs are recorded",
     "codeGuide": "Data lookup joins totals to council boundaries. geoCentroid places symbols. symbolArea maps totals to area. The councilSymbols tooltip expression supplies hover values; hover changes outline and opacity without changing size."
   }

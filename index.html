@@ -34,7 +34,7 @@
             rel="stylesheet"
         />
 
-        <!-- The name shown on the browser tab. -->
+        <!-- A short summary of the page for search engines, then the name shown on the browser tab. -->
         <meta
             name="description"
             content="A nation of companions: an illustrated data story about pet ownership, motivations, costs and local circumstances in Australia."
@@ -85,7 +85,7 @@
             </aside>
         </header>
 
-        <!-- MAIN STORY: six sections, one after another. Each section has a header (number, heading, question and short text), one or more charts, and a sentence leading into the next section. Each chart box has an id like "chart1_chart"; js/vega_lite_vis.js finds the box by that id and draws the chart inside it. Under each chart, the figcaption says where the numbers come from. -->
+        <!-- MAIN STORY: six sections, one after another. Each section has a header (number, heading and a one-line summary), one or more findings with their charts, and (except the last) a sentence leading into the next section. Each chart box has an id like "chart1_chart"; js/vega_lite_vis.js finds the box by that id and draws the chart inside it. Under each chart, the figcaption says where the numbers come from. -->
 
         <main class="sections" id="story">
             <noscript>
@@ -355,7 +355,7 @@
                 </div>
                 <p class="section-transition">Local conditions add another layer to the national picture.</p>
             </section>
-            <!-- CHAPTER 5: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
+            <!-- CHAPTER 5: title → introduction → paired maps → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
 
             <section class="section-5" aria-labelledby="section-5-title">
                 <div class="section-title">
@@ -377,7 +377,7 @@
                     </p>
                 </div>
 
-                <!-- Totals (proportional symbols) and rates (choropleth) side by side, each half the row. -->
+                <!-- Totals (proportional symbols) and rates (choropleth): side by side on wide screens, stacked below 1,100 pixels. -->
                 <div class="map-pair">
                     <figure class="chart-container chart-figure">
                         <!-- Map heading is outside the clipped geographic viewport. -->

@@ -82,7 +82,7 @@
     },
     {
       "name": "narrow",
-      "description": "True below 640 pixels of available width. Group names move above the benchmark dots; wider charts keep a 300-pixel label column.",
+      "description": "True below 640 pixels of available width. Group names move above each lollipop; wider charts keep a 300-pixel label column.",
       "update": "width < 640"
     },
     {
@@ -93,7 +93,7 @@
     {
       "name": "highlight",
       "value": "Household",
-      "description": "Which comparison is coloured blue to match the note: \"Household\" (household make-up)."
+      "description": "Which comparison is coloured blue: \"Household\" (household make-up)."
     },
     {
       "name": "labelWidth",

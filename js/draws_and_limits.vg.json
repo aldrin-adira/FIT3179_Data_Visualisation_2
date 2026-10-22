@@ -80,7 +80,7 @@
     {
       "name": "rowHeight",
       "update": "gridTop + gridSize + 28",
-      "description": "Height of one stacked reason on a narrow screen."
+      "description": "Height of one row of grids: one reason when stacked on a narrow screen, all three reasons side by side otherwise."
     },
     {
       "name": "noteY",
@@ -154,7 +154,7 @@
           "description": "Direct label, so the exact number never needs counting."
         }
       ],
-      "description": "Static layout, data or appearance for this part of the chart."
+      "description": "The published shares of dog owners and cat owners who gave each of the three reasons."
     },
     {
       "name": "cells",

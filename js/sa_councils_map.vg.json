@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Static layout, data or appearance for this part of the chart.",
+  "description": "Choropleth map of dogs recorded at home per 1,000 residents in South Australian councils, 2025, in five classes. The map shows the settled south. Hover for exact council values.",
   "padding": 5,
   "autosize": {
     "type": "fit-x",
@@ -45,7 +45,7 @@
     {
       "name": "narrow",
       "update": "width < 540",
-      "description": "Short labels for a compact chart; no data are removed."
+      "description": "True below 540 pixels. Not used by any part of this map at present."
     },
     {
       "name": "plotHeight",
@@ -55,7 +55,7 @@
     {
       "name": "height",
       "value": 410,
-      "description": "Viewport plus a small fixed legend area."
+      "description": "The map's height. The colour key below the map adds its own room on top of this."
     },
     {
       "name": "breaks",
@@ -122,7 +122,7 @@
     },
     {
       "name": "councils",
-      "description": "Council shapes, each with the chosen species' numbers attached.",
+      "description": "Council shapes, each with its dog numbers attached.",
       "url": "data/selected/sa_council_boundaries_2025.geojson",
       "format": {
         "type": "json",
@@ -162,7 +162,7 @@
         },
         {
           "type": "formula",
-          "description": "Mark whether each council is one of the 18 in Greater Adelaide (listed by name).",
+          "description": "Mark whether each council is one of the 18 in Greater Adelaide (listed by name). Not used by any part of this map at present.",
           "as": "metro",
           "expr": "indexof(['Adelaide', 'Burnside', 'Campbelltown (SA)', 'Charles Sturt', 'Gawler', 'Holdfast Bay', 'Marion', 'Mitcham', 'Norwood Payneham and St Peters', 'Onkaparinga', 'Playford', 'Port Adelaide Enfield', 'Prospect', 'Salisbury', 'Tea Tree Gully', 'Unley', 'Walkerville', 'West Torrens'], datum.properties.lga_name_2025) >= 0"
         }
@@ -183,10 +183,10 @@
             "field": "animals",
             "order": "descending"
           },
-          "description": "collect transform derives fields for points; field/as name the input/output columns."
+          "description": "Sort the councils from most dogs to fewest."
         }
       ],
-      "description": "Derive points from councils."
+      "description": "Councils with a record, most dogs first. Not used by any part of this map at present."
     },
     {
       "name": "mappedCouncils",
@@ -239,7 +239,7 @@
   "marks": [
     {
       "type": "group",
-      "description": "Static layout, data or appearance for this part of the chart.",
+      "description": "The map box: a pale background, with anything outside the box cut off.",
       "clip": true,
       "encode": {
         "update": {
@@ -258,7 +258,7 @@
         {
           "type": "shape",
           "name": "councilAreas",
-          "description": "Static layout, data or appearance for this part of the chart.",
+          "description": "The council shapes, coloured by their dog-rate class. Hover shows the values.",
           "from": {
             "data": "mappedCouncils"
           },
@@ -332,13 +332,13 @@
     }
   ],
   "usermeta": {
-    "camera": "Conic equal-area; same projection, centre, span and viewport height as the dot map.",
+    "camera": "Conic equal-area; same projection, centre, span and viewport height as the symbol map.",
     "scales": {
       "rateColour": "Five fixed dog-rate classes with boundaries at 100, 200, 300 and 400 dogs per 1,000 residents. Colours come from the dog ramp in the stylesheet."
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {
-      "map": "conicEqualArea projection; camera or fit parameters control the visible geography."
+      "map": "Conic equal-area projection. The camera signals (cameraLon, cameraLat, cameraSpan) choose the visible area."
     },
     "pageTitle": "Where dogs are more common"
   }
