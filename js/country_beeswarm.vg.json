@@ -448,6 +448,9 @@
               "fx": {
                 "scale": "x",
                 "field": "value"
+              },
+              "tooltip": {
+                "signal": "{'Country': datum.country, 'Pet type': datum.species, 'Households owning this pet': format(datum.value, ',') + '%', 'Survey data year': datum.data_year, 'Rank among selected countries': datum.rank}"
               }
             }
           },
@@ -476,7 +479,7 @@
               "restart": true
             }
           ],
-          "interactive": false
+          "interactive": true
         },
         {
           "type": "text",
@@ -521,7 +524,7 @@
           }
         }
       ],
-      "interactive": false
+      "interactive": true
     },
     {
       "type": "text",

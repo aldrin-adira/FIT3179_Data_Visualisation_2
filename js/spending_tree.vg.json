@@ -537,10 +537,13 @@
           },
           "strokeOpacity": {
             "value": 0.55
+          },
+          "tooltip": {
+            "signal": "datum.target.kind === 'root' ? {'Hierarchy': 'Pet spending', 'Note': 'Dog and cat averages have separate household denominators and are not added together'} : {'Pet type': datum.target.species, 'Category or cost group': datum.target.name, 'Average annual spending': format(datum.target.amount, ',.0f') + ' Australian dollars per owning household', 'Level': datum.target.kind === 'pet' ? 'Sum of displayed categories' : datum.target.kind === 'group' ? 'Editorial cost group' : 'Reported category', 'Rounding note': datum.target.kind === 'pet' && datum.target.species === 'Dogs' ? 'Displayed categories sum to 2,521 Australian dollars; published total is 2,520 because of rounding' : 'Category averages are rounded in the report'}"
           }
         }
       },
-      "interactive": false
+      "interactive": true
     },
     {
       "type": "symbol",
@@ -571,10 +574,13 @@
           },
           "opacity": {
             "value": 1
+          },
+          "tooltip": {
+            "signal": "datum.kind === 'root' ? {'Hierarchy': 'Pet spending', 'Note': 'Dog and cat averages have separate household denominators and are not added together'} : {'Pet type': datum.species, 'Category or cost group': datum.name, 'Average annual spending': format(datum.amount, ',.0f') + ' Australian dollars per owning household', 'Level': datum.kind === 'pet' ? 'Sum of displayed categories' : datum.kind === 'group' ? 'Editorial cost group' : 'Reported category', 'Rounding note': datum.kind === 'pet' && datum.species === 'Dogs' ? 'Displayed categories sum to 2,521 Australian dollars; published total is 2,520 because of rounding' : 'Category averages are rounded in the report'}"
           }
         }
       },
-      "interactive": false
+      "interactive": true
     },
     {
       "type": "text",
@@ -630,7 +636,7 @@
     {
       "type": "text",
       "description": "The same labels drawn again without the halo, on top, so the words stay crisp.",
-      "interactive": false,
+      "interactive": true,
       "from": {
         "data": "nodes"
       },
@@ -665,6 +671,9 @@
           },
           "opacity": {
             "value": 1
+          },
+          "tooltip": {
+            "signal": "datum.kind === 'root' ? {'Hierarchy': 'Pet spending', 'Note': 'Dog and cat averages have separate household denominators and are not added together'} : {'Pet type': datum.species, 'Category or cost group': datum.name, 'Average annual spending': format(datum.amount, ',.0f') + ' Australian dollars per owning household', 'Level': datum.kind === 'pet' ? 'Sum of displayed categories' : datum.kind === 'group' ? 'Editorial cost group' : 'Reported category', 'Rounding note': datum.kind === 'pet' && datum.species === 'Dogs' ? 'Displayed categories sum to 2,521 Australian dollars; published total is 2,520 because of rounding' : 'Category averages are rounded in the report'}"
           }
         }
       }
@@ -704,15 +713,18 @@
           },
           "opacity": {
             "value": 1
+          },
+          "tooltip": {
+            "signal": "datum.kind === 'root' ? {'Hierarchy': 'Pet spending', 'Note': 'Dog and cat averages have separate household denominators and are not added together'} : {'Pet type': datum.species, 'Category or cost group': datum.name, 'Average annual spending': format(datum.amount, ',.0f') + ' Australian dollars per owning household', 'Level': datum.kind === 'pet' ? 'Sum of displayed categories' : datum.kind === 'group' ? 'Editorial cost group' : 'Reported category', 'Rounding note': datum.kind === 'pet' && datum.species === 'Dogs' ? 'Displayed categories sum to 2,521 Australian dollars; published total is 2,520 because of rounding' : 'Category averages are rounded in the report'}"
           }
         }
       },
-      "interactive": false
+      "interactive": true
     },
     {
       "type": "text",
       "description": "Each category's average yearly amount, right-aligned like a table column.",
-      "interactive": false,
+      "interactive": true,
       "from": {
         "data": "nodes"
       },
@@ -747,6 +759,9 @@
           },
           "opacity": {
             "value": 1
+          },
+          "tooltip": {
+            "signal": "datum.kind === 'root' ? {'Hierarchy': 'Pet spending', 'Note': 'Dog and cat averages have separate household denominators and are not added together'} : {'Pet type': datum.species, 'Category or cost group': datum.name, 'Average annual spending': format(datum.amount, ',.0f') + ' Australian dollars per owning household', 'Level': datum.kind === 'pet' ? 'Sum of displayed categories' : datum.kind === 'group' ? 'Editorial cost group' : 'Reported category', 'Rounding note': datum.kind === 'pet' && datum.species === 'Dogs' ? 'Displayed categories sum to 2,521 Australian dollars; published total is 2,520 because of rounding' : 'Category averages are rounded in the report'}"
           }
         }
       }

@@ -486,10 +486,14 @@
               },
               "fill": {
                 "signal": "datum.emphasis ? colorAccent : colorMuted"
+              },
+              "tooltip": {
+                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"
               }
             }
           },
-          "interactive": false
+          "interactive": true,
+          "name": "householdLabels"
         },
         {
           "type": "rule",
@@ -520,10 +524,14 @@
               },
               "stroke": {
                 "signal": "datum.emphasis ? colorAccent : colorNeutral"
+              },
+              "tooltip": {
+                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"
               }
             }
           },
-          "interactive": false
+          "interactive": true,
+          "name": "householdSticks"
         },
         {
           "type": "symbol",
@@ -546,10 +554,14 @@
               },
               "fill": {
                 "signal": "datum.emphasis ? colorAccent : colorNeutral"
+              },
+              "tooltip": {
+                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"
               }
             }
           },
-          "interactive": false
+          "interactive": true,
+          "name": "householdPoints"
         },
         {
           "type": "text",
@@ -592,13 +604,16 @@
               },
               "fill": {
                 "signal": "datum.emphasis ? colorAccent : colorMuted"
+              },
+              "tooltip": {
+                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"
               }
             }
           },
-          "interactive": false
+          "interactive": true
         }
       ],
-      "interactive": false
+      "interactive": true
     }
   ]
 }

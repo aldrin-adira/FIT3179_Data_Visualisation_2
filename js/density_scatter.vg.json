@@ -437,10 +437,14 @@
               },
               "zindex": {
                 "value": 0
+              },
+              "tooltip": {
+                "signal": "{'Council': datum.name, 'Pet type': datum.pet, 'Recorded-at-home animals': format(datum.recorded_at_home_animals, ',.0f'), 'Animals per 1,000 residents': format(datum.rate, '.1f'), 'Population density': format(datum.density, ',.2f') + ' residents per square kilometre', 'Residents': format(datum.residents_2025, ',.0f')}"
               }
             }
           },
-          "interactive": false
+          "interactive": true,
+          "name": "councilPoints"
         },
         {
           "type": "group",
@@ -480,7 +484,8 @@
                 }
               }
             }
-          ]
+          ],
+          "interactive": false
         },
         {
           "type": "text",
@@ -529,7 +534,7 @@
           "from": {
             "data": "callouts"
           },
-          "interactive": false,
+          "interactive": true,
           "encode": {
             "enter": {
               "fontSize": {
@@ -560,6 +565,9 @@
               },
               "opacity": {
                 "signal": "narrow && datum.name === 'Adelaide' ? 0 : 1"
+              },
+              "tooltip": {
+                "signal": "{'Council': datum.name, 'Pet type': datum.pet, 'Recorded-at-home animals': format(datum.recorded_at_home_animals, ',.0f'), 'Animals per 1,000 residents': format(datum.rate, '.1f'), 'Population density': format(datum.density, ',.2f') + ' residents per square kilometre', 'Residents': format(datum.residents_2025, ',.0f')}"
               }
             }
           },
@@ -602,7 +610,7 @@
           }
         }
       ],
-      "interactive": false
+      "interactive": true
     }
   ]
 }

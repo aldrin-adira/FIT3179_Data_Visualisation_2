@@ -7,7 +7,8 @@
 // - actions: false hides the little "..." menu in the chart's corner.
 // - renderer: "svg" draws the charts as sharp shapes and real text,
 //   so the text can use the web fonts once they have loaded.
-var embedOptions = {actions: false, renderer: "svg", tooltip: false};
+// - tooltip: true shows hover details on marks that define tooltip content.
+var embedOptions = {actions: false, renderer: "svg", tooltip: true};
 // Keep the finished views so they can be released before a responsive redraw.
 var chartViews = {};
 var chartJobs = [];
@@ -49,6 +50,8 @@ var themeSignals = {
     colorPage: "--color-page",
     colorSurface: "--color-surface",
     colorBorder: "--color-border",
+    colorMapWater: "--color-map-water",
+    colorMapLand: "--color-map-land",
     colorPetDogs: "--color-pet-dogs",
     colorPetCats: "--color-pet-cats",
     colorPetFish: "--color-pet-fish",
@@ -203,7 +206,7 @@ function drawCharts() {
     embedChart("#chart7_chart", "js/spending_tree.vg.json");
     embedChart("#chart8_chart", "js/barriers.vg.json");
     // Section 5: dog maps compare totals with resident rates.
-    embedChart("#chart9_chart", "js/sa_pet_density.vg.json");
+    embedChart("#chart9_chart", "js/sa_pet_symbols.vg.json");
     embedChart("#chart10_chart", "js/sa_councils_map.vg.json");
     embedChart("#chart11_chart", "js/density_scatter.vg.json");
     // Section 6: waffle charts compare three dog/cat motivations.

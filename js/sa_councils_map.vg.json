@@ -50,7 +50,7 @@
     {
       "name": "plotHeight",
       "value": 410,
-      "description": "Identical viewport height to the dot map beside it, so places line up."
+      "description": "Identical viewport height to the symbol map beside it, so places line up."
     },
     {
       "name": "height",
@@ -282,13 +282,16 @@
               },
               "fillOpacity": {
                 "value": 1
+              },
+              "tooltip": {
+                "signal": "{'Council': datum.name, 'Dogs recorded at home': format(datum.animals, ',.0f'), 'Residents': format(datum.residents, ',.0f'), 'Dogs per 1,000 residents': format(datum.rate, '.1f')}"
               }
             }
           },
-          "interactive": false
+          "interactive": true
         }
       ],
-      "interactive": false
+      "interactive": true
     }
   ],
   "legends": [

@@ -1,6 +1,6 @@
 # Data inventory
 
-`selected/` contains the eleven data files requested by the active chart specifications.
+`selected/` contains the ten data files requested by the active chart specifications.
 
 Original downloads, supporting validation tables and development tools are kept locally and excluded from version control. The website loads only `selected/`.
 
@@ -8,22 +8,23 @@ Original downloads, supporting validation tables and development tools are kept 
 
 | File in `selected/` | Used by |
 |---|---|
-| `international_dog_cat_selected.csv` | World map, country beeswarm and country controls; 43 selected countries, 86 species-country observations. |
+| `international_dog_cat_selected.csv` | World map and country beeswarm; 43 selected countries, 86 species-country observations. |
 | `world_countries.geojson` | World map geometry. |
-| `au_ownership_trend.csv` | Four national ownership surveys and replay. |
+| `au_ownership_trend.csv` | Four national ownership surveys. |
 | `au_selected_demographics_2025.csv` | Household comparisons. |
 | `au_pet_types_trend.csv` | Pet-type ranks across four surveys. |
 | `au_motivations_top5_2025.csv` | Motivation heatmap and closing waffle charts. |
 | `au_household_spending_2025.csv` | Spending dendrogram. |
 | `au_barriers_2025.csv` | Barrier comparisons. |
-| `sa_council_animals_per_1000_residents_2025.csv` | Both local maps, density scatterplot and council controls. |
-| `sa_council_boundaries_2025.geojson` | Local map geometry and council camera extents. |
-| `sa_pet_display_dots.json` | Illustrative dog/cat dot-density positions. |
+| `sa_council_animals_per_1000_residents_2025.csv` | Local proportional-symbol map, council rate map and density scatterplot. |
+| `sa_council_boundaries_2025.geojson` | Local map geometry and council centroids for symbol placement. |
 
 Source IDs, dates and report-page fields remain in the supplied CSVs. Full source citations and methodological limits are in the website's sources footer.
 
-## Generated display data
+## Proportional-symbol map
 
-`selected/sa_pet_display_dots.json` contains illustrative positions generated from the council counts and boundaries. Fixed seeds reproduce the positions. Each dot represents about 250 animals, independently rounded per council and species, with at most 125 animals of display rounding error.
+`js/sa_pet_symbols.vg.json` joins recorded-at-home dog totals to council boundaries by council code. One circle represents each council, positioned at its projected geographic centroid. A zero-based linear scale maps the raw dog total to symbol area: twice the number of dogs produces twice the circle area. The same scale draws the size legend. The map shows the settled south; all 68 municipal councils remain in its underlying dataset.
 
-Dots are illustrative positions inside council boundaries, not animal addresses or neighbourhood observations. Factual inputs are preserved separately from these generated marks.
+Hovering over a circle shows the council name, dog total, resident population and dogs per 1,000 residents. Transparency, outlines and drawing larger circles first help distinguish overlaps. Hover changes the outline and opacity without changing symbol area.
+
+The circle centres represent councils, not animal addresses or neighbourhood observations. The source table contains both dogs and cats; the current local maps show dogs. No dot-position file or custom placement helper is needed.

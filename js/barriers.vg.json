@@ -358,10 +358,14 @@
           },
           "fill": {
             "signal": "datum.emphasis ? colorAccent : colorMuted"
+          },
+          "tooltip": {
+            "signal": "{'Reason': datum.label, 'Current owners wanting another pet': datum.owners + '%', 'People without a pet who want one': datum.non_owners + '%'}"
           }
         }
       },
-      "interactive": false
+      "interactive": true,
+      "name": "barrierReasons"
     },
     {
       "type": "rect",
@@ -388,10 +392,14 @@
           },
           "fill": {
             "signal": "datum.emphasis ? colorAccent : colorNeutral"
+          },
+          "tooltip": {
+            "signal": "{'Reason': datum.label, 'Respondent group': 'Current owners wanting another pet', 'Share reporting this reason': datum.owners + '%'}"
           }
         }
       },
-      "interactive": false
+      "interactive": true,
+      "name": "ownerBars"
     },
     {
       "type": "rect",
@@ -418,10 +426,14 @@
           },
           "fill": {
             "signal": "datum.emphasis ? colorAccent : colorNeutral"
+          },
+          "tooltip": {
+            "signal": "{'Reason': datum.label, 'Respondent group': 'People without a pet who want one', 'Share reporting this reason': datum.non_owners + '%'}"
           }
         }
       },
-      "interactive": false
+      "interactive": true,
+      "name": "nonOwnerBars"
     },
     {
       "type": "text",
@@ -461,10 +473,14 @@
           },
           "fill": {
             "signal": "datum.emphasis ? colorAccent : colorMuted"
+          },
+          "tooltip": {
+            "signal": "{'Reason': datum.label, 'Respondent group': 'Current owners wanting another pet', 'Share reporting this reason': datum.owners + '%'}"
           }
         }
       },
-      "interactive": false
+      "interactive": true,
+      "name": "ownerValues"
     },
     {
       "type": "text",
@@ -503,12 +519,15 @@
           },
           "fill": {
             "signal": "datum.emphasis ? colorAccent : colorMuted"
+          },
+          "tooltip": {
+            "signal": "{'Reason': datum.label, 'Respondent group': 'People without a pet who want one', 'Share reporting this reason': datum.non_owners + '%'}"
           }
         }
       },
       "name": "rightValue",
       "description": "The percentages at the outer end of each right bar.",
-      "interactive": false
+      "interactive": true
     }
   ]
 }

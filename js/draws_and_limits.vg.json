@@ -260,7 +260,7 @@
       "from": {
         "data": "shares"
       },
-      "interactive": false,
+      "interactive": true,
       "encode": {
         "enter": {
           "baseline": {
@@ -289,9 +289,13 @@
           },
           "y": {
             "signal": "(narrow ? datum.r * rowHeight : 0) + 24"
+          },
+          "tooltip": {
+            "signal": "{'Pet type': datum.species, 'Reason': datum.reason, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Each square': 'One percentage point', 'Survey year': 2025}"
           }
         }
-      }
+      },
+      "name": "waffleLabels"
     },
     {
       "type": "rect",
@@ -324,10 +328,13 @@
           },
           "fillOpacity": {
             "signal": "datum.filled ? 1 : 0.35"
+          },
+          "tooltip": {
+            "signal": "{'Pet type': datum.species, 'Reason': datum.reason, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Each square': 'One percentage point', 'Survey year': 2025}"
           }
         }
       },
-      "interactive": false
+      "interactive": true
     },
     {
       "type": "text",

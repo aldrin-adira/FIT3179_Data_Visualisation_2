@@ -548,10 +548,14 @@
           },
           "opacity": {
             "value": 1
+          },
+          "tooltip": {
+            "signal": "datum.published_cell ? {'Pet type': datum.species, 'Reason': datum.label, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Survey year': 2025} : {'Pet type': datum.species, 'Reason': datum.label, 'Value': 'Not published: outside this pet\\'s top five reasons', 'Interpretation': 'An unpublished value is not zero'}"
           }
         }
       },
-      "interactive": false
+      "interactive": true,
+      "name": "motivationCells"
     },
     {
       "type": "rule",
@@ -738,7 +742,7 @@
       "from": {
         "data": "cells"
       },
-      "interactive": false,
+      "interactive": true,
       "encode": {
         "update": {
           "x": {
@@ -771,9 +775,13 @@
           },
           "fill": {
             "signal": "datum.percent>=35 ? colorSurface : colorHeading"
+          },
+          "tooltip": {
+            "signal": "datum.published_cell ? {'Pet type': datum.species, 'Reason': datum.label, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Survey year': 2025} : {'Pet type': datum.species, 'Reason': datum.label, 'Value': 'Not published: outside this pet\\'s top five reasons', 'Interpretation': 'An unpublished value is not zero'}"
           }
         }
-      }
+      },
+      "name": "motivationValues"
     }
   ]
 }

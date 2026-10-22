@@ -1,17 +1,22 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="en">
     <head>
         <!-- Basic page settings: the letter set (UTF-8), and "viewport" makes the page fit phone screens instead of showing a tiny desktop page. -->
-        <meta charset="UTF-8">
-        <link rel="icon" href="data:,">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <link rel="icon" href="data:," />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <!-- Style sheets (how the page looks). Pure CSS is a ready-made tool for tidy defaults and columns ("pure-g" rows and "pure-u" boxes). Our own files come last so their rules win: layout.css (where things sit) and style.css (colours and fonts). -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css">
-        <link rel="stylesheet" href="css/layout.css">
-        <link rel="stylesheet" href="css/style.css">
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+            integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css" />
+        <link rel="stylesheet" href="css/layout.css" />
+        <link rel="stylesheet" href="css/style.css" />
 
         <!-- Chart tools are version-pinned for reproducible rendering. Deferred local scripts load the charts and open source references. -->
         <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
@@ -22,12 +27,18 @@
         <script src="js/page-sources.js" defer></script>
 
         <!-- Fonts from Google Fonts: DM Serif Display for headings and Fira Sans for everything else. "preconnect" starts the connection early so the fonts arrive sooner. -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+            rel="stylesheet"
+        />
 
         <!-- The name shown on the browser tab. -->
-        <meta name="description" content="A nation of companions: an illustrated data story about pet ownership, motivations, costs and local circumstances in Australia.">
+        <meta
+            name="description"
+            content="A nation of companions: an illustrated data story about pet ownership, motivations, costs and local circumstances in Australia."
+        />
         <title>A nation of companions | Pet ownership in Australia</title>
     </head>
     <body>
@@ -35,506 +46,599 @@
 
         <!-- PAGE HEADER: the big title and subtitle, with the headline figures centred underneath. -->
 
-<header class="header" id="top">
+        <header class="header" id="top">
+            <div class="main-title">
+                <h1>
+                    Pet Ownership<br />
+                    in <span>Australia</span><svg class="title-paw" viewBox="0 0 100 100" aria-hidden="true">
+                        <ellipse cx="23" cy="35" rx="11" ry="15" transform="rotate(-25 23 35)" />
+                        <ellipse cx="43" cy="22" rx="11" ry="15" />
+                        <ellipse cx="66" cy="25" rx="11" ry="15" transform="rotate(15 66 25)" />
+                        <ellipse cx="83" cy="43" rx="10" ry="14" transform="rotate(30 83 43)" />
+                        <path d="M30 61Q50 30 70 63Q89 88 65 88Q51 79 38 87Q13 91 30 61Z" />
+                    </svg>
+                </h1>
 
-<div class="main-title">
+                <p class="subtitle">Why Australians welcome pets into their homes.</p>
+            </div>
 
-<h1>Pet Ownership<br> in <span>Australia</span><svg class="title-paw" viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="23" cy="35" rx="11" ry="15" transform="rotate(-25 23 35)"/><ellipse cx="43" cy="22" rx="11" ry="15"/><ellipse cx="66" cy="25" rx="11" ry="15" transform="rotate(15 66 25)"/><ellipse cx="83" cy="43" rx="10" ry="14" transform="rotate(30 83 43)"/><path d="M30 61Q50 30 70 63Q89 88 65 88Q51 79 38 87Q13 91 30 61Z"/></svg>
-</h1>
+            <aside class="hero-stats" aria-label="Australia in 2025, Animal Medicines Australia">
+                <div class="stat-card">
+                    <strong>73<span>%</span></strong>
+                    <p>of Australian homes<br />have a pet</p>
+                    <small>Up from 62% in 2016</small>
+                </div>
 
-<p class="subtitle">Why Australians welcome pets into their homes.
-</p>
+                <div class="stat-card">
+                    <strong>7.7<span class="stat-unit"> million</span></strong>
+                    <p>pet-owning<br />households</p>
+                    <small>Across Australia</small>
+                </div>
 
-</div>
+                <div class="stat-card">
+                    <strong>31.6<span class="stat-unit"> million</span></strong>
+                    <p>pets sharing<br />our lives</p>
+                    <small>Estimated in 2025</small>
+                </div>
 
-<aside class="hero-stats" aria-label="Australia in 2025, Animal Medicines Australia">
-
-<div class="stat-card"><strong>73<span>%</span></strong>
-<p>of Australian homes<br>have a pet
-</p><small>Up from 62% in 2016</small>
-</div>
-
-<div class="stat-card"><strong>7.7<span class="stat-unit"> million</span></strong>
-<p>pet-owning<br>households
-</p><small>Across Australia</small>
-</div>
-
-<div class="stat-card"><strong>31.6<span class="stat-unit"> million</span></strong>
-<p>pets sharing<br>our lives
-</p><small>Estimated in 2025</small>
-</div>
-
-<p class="stats-source">2025 estimates &middot; <a href="#source-ama">Animal Medicines Australia</a>
-</p>
-
-</aside>
-
-</header>
+                <p class="stats-source">2025 estimates &middot; <a href="#source-ama">Animal Medicines Australia</a></p>
+            </aside>
+        </header>
 
         <!-- MAIN STORY: six sections, one after another. Each section has a header (number, heading, question and short text), one or more charts, and a sentence leading into the next section. Each chart box has an id like "chart1_chart"; js/vega_lite_vis.js finds the box by that id and draws the chart inside it. Under each chart, the figcaption says where the numbers come from. -->
 
-<main class="sections" id="story"><noscript>
-<p class="chart-status">Enable JavaScript to view the charts. Findings and full sources remain readable below.
-</p></noscript>
-<!-- CHAPTER 1: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
+        <main class="sections" id="story">
+            <noscript>
+                <p class="chart-status">
+                    Enable JavaScript to view the charts. Findings and full sources remain readable below.
+                </p>
+            </noscript>
+            <!-- CHAPTER 1: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
 
-<section class="section-1" aria-labelledby="section-1-title">
-<div class="section-title"><span class="section-number" aria-hidden="true">01</span>
-<h2 id="section-1-title">A worldwide bond
-</h2>
-<p class="section-deck">Australia in a selected international comparison.
-</p>
-</div>
-<div class="chapter-panels panels-featured">
-<div class="story-row">
-<aside class="narrative">
-<h3>A shared bond, different surveys
-</h3>
-<p>These surveys cover 43 countries, mostly in Europe. Australia has one of the highest reported shares of homes with a dog. Each country is shaded by its reported percentage of <strong>households owning a dog</strong>.
-</p>
-<p class="method-note">The map compares the same measure in every country. The dot rows below compare dogs and cats separately; their percentages cannot be added because some homes have both. Survey years and methods differ. Malaysia is not part of this selection, so it appears grey.
-</p>
-</aside><!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+            <section class="section-1" aria-labelledby="section-1-title">
+                <div class="section-title">
+                    <span class="section-number" aria-hidden="true">01</span>
+                    <h2 id="section-1-title">A worldwide bond</h2>
+                    <p class="section-deck">Australia in a selected international comparison.</p>
+                </div>
+                <div class="chapter-panels panels-featured">
+                    <div class="story-row">
+                        <aside class="narrative">
+                            <h3>A shared bond, different surveys</h3>
+                            <p>
+                                These surveys cover 43 countries, mostly in Europe. Australia has one of the highest
+                                reported shares of homes with a dog. Each country is shaded by its reported percentage
+                                of <strong>households owning a dog</strong>.
+                            </p>
+                            <p class="method-note">
+                                The map compares the same measure in every country. The dot rows below compare dogs and
+                                cats separately; their percentages cannot be added because some homes have both. Survey
+                                years and methods differ. Malaysia is not part of this selection, so it appears grey.
+                            </p>
+                        </aside>
+                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
-<figure class="chart-container chart-figure">
-<div id="chart1_chart">
-</div>
-<figcaption class="chart-source">Sources: <a href="#source-international">European Pet Food Industry Federation (2026)</a>; <a href="#source-ama">Animal Medicines Australia (2025)</a>; Companion Animals New Zealand (2024); United Kingdom Pet Food (2026); American Pet Products Association (2025). Boundaries: Natural Earth.
-</figcaption>
-</figure>
-</div>
-<div class="story-row">
-<aside class="narrative">
-<h3>A strong position in this selection
-</h3>
-<p>Australia ranks fourth for dog ownership in this selection, and eighth for cats. These are selected-country rankings, not world rankings.
-</p>
-<p class="section-callout"><strong>49%</strong><span>of Australian homes own a dog.</span>
-</p>
-</aside><!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+                        <figure class="chart-container chart-figure">
+                            <div id="chart1_chart"></div>
+                            <figcaption class="chart-source">
+                                Sources:
+                                <a href="#source-international">European Pet Food Industry Federation (2026)</a>;
+                                <a href="#source-ama">Animal Medicines Australia (2025)</a>; Companion Animals New
+                                Zealand (2024); United Kingdom Pet Food (2026); American Pet Products Association
+                                (2025). Boundaries: Natural Earth.
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <div class="story-row">
+                        <aside class="narrative">
+                            <h3>A strong position in this selection</h3>
+                            <p>
+                                Australia ranks fourth for dog ownership in this selection, and eighth for cats. These
+                                are selected-country rankings, not world rankings.
+                            </p>
+                            <p class="section-callout">
+                                <strong>49%</strong><span>of Australian homes own a dog.</span>
+                            </p>
+                        </aside>
+                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
-<figure class="chart-container chart-figure">
-<div id="chart2_chart">
-</div>
-<p class="method-note chart-reading-note">Australia stands further above the typical country for dogs than cats. Different survey methods limit close country comparisons.</p>
-<figcaption class="chart-source">Sources: <a href="#source-international">European Pet Food Industry Federation (2026)</a>; <a href="#source-ama">Animal Medicines Australia (2025)</a>; Companion Animals New Zealand (2024); United Kingdom Pet Food (2026); American Pet Products Association (2025).
-</figcaption>
-</figure>
-</div>
-</div>
-<p class="section-transition">From international context to the homes behind Australia’s growth.
-</p>
-</section>
-<!-- CHAPTER 2: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
+                        <figure class="chart-container chart-figure">
+                            <div id="chart2_chart"></div>
+                            <p class="method-note chart-reading-note">
+                                Australia stands further above the typical country for dogs than cats. Different survey
+                                methods limit close country comparisons.
+                            </p>
+                            <figcaption class="chart-source">
+                                Sources:
+                                <a href="#source-international">European Pet Food Industry Federation (2026)</a>;
+                                <a href="#source-ama">Animal Medicines Australia (2025)</a>; Companion Animals New
+                                Zealand (2024); United Kingdom Pet Food (2026); American Pet Products Association
+                                (2025).
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <p class="section-transition">From international context to the homes behind Australia’s growth.</p>
+            </section>
+            <!-- CHAPTER 2: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
 
-<section class="section-2" aria-labelledby="section-2-title">
-<div class="section-title"><span class="section-number" aria-hidden="true">02</span>
-<h2 id="section-2-title">More homes, more companions
-</h2>
-<p class="section-deck">Growth in ownership meets the realities of housing.
-</p>
-</div>
-<div class="chapter-panels panels-featured">
-<div class="story-row">
-<aside class="narrative">
-<h3>More households; a higher share
-</h3>
-<p>Pet ownership rose from 62% in 2016 to 73% in 2025. Pet-owning households grew from 5.7 million to 7.7 million. Both the share of homes and the number of homes matter.
-</p>
-<p class="section-callout"><strong>+11</strong><span>more homes in every 100 have a pet: from 62 to 73.</span>
-</p>
-</aside><!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+            <section class="section-2" aria-labelledby="section-2-title">
+                <div class="section-title">
+                    <span class="section-number" aria-hidden="true">02</span>
+                    <h2 id="section-2-title">More homes, more companions</h2>
+                    <p class="section-deck">Growth in ownership meets the realities of housing.</p>
+                </div>
+                <div class="chapter-panels panels-featured">
+                    <div class="story-row">
+                        <aside class="narrative">
+                            <h3>More households; a higher share</h3>
+                            <p>
+                                Pet ownership rose from 62% in 2016 to 73% in 2025. Pet-owning households grew from 5.7
+                                million to 7.7 million. Both the share of homes and the number of homes matter.
+                            </p>
+                            <p class="section-callout">
+                                <strong>+11</strong><span>more homes in every 100 have a pet: from 62 to 73.</span>
+                            </p>
+                        </aside>
+                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
-<figure class="chart-container chart-figure">
-<div id="chart3_chart">
-</div>
-<p class="method-note chart-reading-note">As Australia gains households, pet-owning homes can increase even when the share with a pet falls.</p>
-<figcaption class="chart-source">Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 6.
-</figcaption>
-</figure>
-</div>
-<div class="story-row">
-<aside class="narrative">
-<h3>Housing shapes what is possible
-</h3>
-<p>Families with children at home and mortgage holders each report 85% ownership. Apartment households report 57%: the closest comparison for Malaysians living in flats and condominiums. These are differences between groups; they do not prove that housing causes ownership.
-</p>
-<p class="section-callout"><strong>73%</strong><span>The national benchmark helps put each group in context.</span>
-</p>
-</aside><!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+                        <figure class="chart-container chart-figure">
+                            <div id="chart3_chart"></div>
+                            <p class="method-note chart-reading-note">
+                                As Australia gains households, pet-owning homes can increase even when the share with a
+                                pet falls.
+                            </p>
+                            <figcaption class="chart-source">
+                                Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 6.
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <div class="story-row">
+                        <aside class="narrative">
+                            <h3>Housing shapes what is possible</h3>
+                            <p>
+                                Families with children at home and mortgage holders each report 85% ownership. Apartment
+                                households report 57%: the closest comparison for Malaysians living in flats and
+                                condominiums. These are differences between groups; they do not prove that housing
+                                causes ownership.
+                            </p>
+                            <p class="section-callout">
+                                <strong>73%</strong><span>The national benchmark helps put each group in context.</span>
+                            </p>
+                        </aside>
+                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
-<figure class="chart-container chart-figure">
-<div id="chart4_chart">
-</div>
-<p class="method-note chart-reading-note">Household circumstances may shape the feasibility of pet care. These comparisons cannot establish what causes ownership.</p>
-<figcaption class="chart-source">Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, pages 8, 31.
-</figcaption>
-</figure>
-</div>
-</div>
-<p class="section-transition">Different homes also make room for different kinds of pet.
-</p>
-</section>
-<!-- CHAPTER 3: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
+                        <figure class="chart-container chart-figure">
+                            <div id="chart4_chart"></div>
+                            <p class="method-note chart-reading-note">
+                                Household circumstances may shape the feasibility of pet care. These comparisons cannot
+                                establish what causes ownership.
+                            </p>
+                            <figcaption class="chart-source">
+                                Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, pages 8, 31.
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <p class="section-transition">Different homes also make room for different kinds of pet.</p>
+            </section>
+            <!-- CHAPTER 3: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
 
-<section class="section-3" aria-labelledby="section-3-title">
-<div class="section-title"><span class="section-number" aria-hidden="true">03</span>
-<h2 id="section-3-title">A companion that fits
-</h2>
-<p class="section-deck">The most common pet is not the most numerous.
-</p>
-</div>
-<div class="chapter-panels panels-even">
-<div class="story-row">
-<aside class="narrative">
-<h3>One dog, or a tank of fish
-</h3>
-<p>Dogs reach the most homes, yet fish have led the animal count in every survey since 2016: about 12.1 million fish compared with 7.4 million dogs in 2025. Below them, birds briefly passed dogs in 2019, then slipped to fourth as cats moved up. Follow a line to trace one pet's rank.
-</p>
-<p class="method-note">Four national surveys, 2016 to 2025. Equal rank gaps do not mean equal differences in quantity.
-</p>
-</aside><!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+            <section class="section-3" aria-labelledby="section-3-title">
+                <div class="section-title">
+                    <span class="section-number" aria-hidden="true">03</span>
+                    <h2 id="section-3-title">A companion that fits</h2>
+                    <p class="section-deck">The most common pet is not the most numerous.</p>
+                </div>
+                <div class="chapter-panels panels-even">
+                    <div class="story-row">
+                        <aside class="narrative">
+                            <h3>One dog, or a tank of fish</h3>
+                            <p>
+                                Dogs reach the most homes, yet fish have led the animal count in every survey since
+                                2016: about 12.1 million fish compared with 7.4 million dogs in 2025. Below them, birds
+                                briefly passed dogs in 2019, then slipped to fourth as cats moved up. Follow a line to
+                                trace one pet's rank.
+                            </p>
+                            <p class="method-note">
+                                Four national surveys, 2016 to 2025. Equal rank gaps do not mean equal differences in
+                                quantity.
+                            </p>
+                        </aside>
+                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
-<figure class="chart-container chart-figure">
-<div id="chart5_chart" data-fill-height>
-</div>
-<figcaption class="chart-source">Sources: <a href="#source-ama-earlier">Animal Medicines Australia (2016, page 9; 2019, page 6; 2022, page 6)</a>; <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 7.
-</figcaption>
-</figure>
-</div>
-<div class="story-row">
-<aside class="narrative">
-<h3>Different expectations
-</h3>
-<p>Companionship is the leading published reason for dogs, cats, birds and small mammals. Fish owners favour relaxation; reptile owners favour lower maintenance. Read down each pet's column to compare its published reasons.
-</p>
-<p class="method-note">Hatching means outside the published top five, not zero. Owners could give several reasons.
-</p>
-</aside><!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+                        <figure class="chart-container chart-figure">
+                            <div id="chart5_chart" data-fill-height></div>
+                            <figcaption class="chart-source">
+                                Sources:
+                                <a href="#source-ama-earlier">Animal Medicines Australia (2016, page 9; 2019, page 6; 2022, page 6)</a>; <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 7.
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <div class="story-row">
+                        <aside class="narrative">
+                            <h3>Different expectations</h3>
+                            <p>
+                                Companionship is the leading published reason for dogs, cats, birds and small mammals.
+                                Fish owners favour relaxation; reptile owners favour lower maintenance. Read down each
+                                pet's column to compare its published reasons.
+                            </p>
+                            <p class="method-note">
+                                Hatching means outside the published top five, not zero. Owners could give several
+                                reasons.
+                            </p>
+                        </aside>
+                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
-<figure class="chart-container chart-figure">
-<div id="chart6_chart">
-</div>
-<figcaption class="chart-source">Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 22.
-</figcaption>
-</figure>
-</div>
-</div>
-<p class="section-transition">A suitable companion also needs affordable, ongoing care.
-</p>
-</section>
-<!-- CHAPTER 4: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
+                        <figure class="chart-container chart-figure">
+                            <div id="chart6_chart"></div>
+                            <figcaption class="chart-source">
+                                Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 22.
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <p class="section-transition">A suitable companion also needs affordable, ongoing care.</p>
+            </section>
+            <!-- CHAPTER 4: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
 
-<section class="section-4" aria-labelledby="section-4-title">
-<div class="section-title"><span class="section-number" aria-hidden="true">04</span>
-<h2 id="section-4-title">The price of companionship
-</h2>
-<p class="section-deck">Day-to-day care is part of the decision.
-</p>
-</div>
-<div class="chapter-panels panels-featured">
-<div class="story-row">
-<aside class="narrative">
-<h3>Food takes the largest share
-</h3>
-<p>A dog-owning home spends about 2,520 Australian dollars a year on its dogs (about 6,960 ringgit); a cat-owning home about 1,656 Australian dollars (about 4,570 ringgit). Food is the largest single cost, 1,090 Australian dollars for dogs and 884 Australian dollars for cats, but health care comes next: 745 Australian dollars for dogs and 490 Australian dollars for cats once veterinary visits, medicines, parasite treatments, supplements and insurance are added together.
-</p>
-<p class="method-note">Follow each pet through broad cost groups to the reported categories. Branch width shows dollars on one scale; labels retain even the smallest costs. The dog categories sum to 2,521 Australian dollars, one Australian dollar above the published total because of rounding. Ringgit figures convert Australian prices at the 2025 average rate of 2.76 ringgit per Australian dollar (<a href="#source-bnm">Bank Negara Malaysia</a>); they are not Malaysian prices.
-</p>
-</aside><!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+            <section class="section-4" aria-labelledby="section-4-title">
+                <div class="section-title">
+                    <span class="section-number" aria-hidden="true">04</span>
+                    <h2 id="section-4-title">The price of companionship</h2>
+                    <p class="section-deck">Day-to-day care is part of the decision.</p>
+                </div>
+                <div class="chapter-panels panels-featured">
+                    <div class="story-row">
+                        <aside class="narrative">
+                            <h3>Food takes the largest share</h3>
+                            <p>
+                                A dog-owning home spends about 2,520 Australian dollars a year on its dogs (about 6,960
+                                ringgit); a cat-owning home about 1,656 Australian dollars (about 4,570 ringgit). Food
+                                is the largest single cost, 1,090 Australian dollars for dogs and 884 Australian dollars
+                                for cats, but health care comes next: 745 Australian dollars for dogs and 490 Australian
+                                dollars for cats once veterinary visits, medicines, parasite treatments, supplements and
+                                insurance are added together.
+                            </p>
+                            <p class="method-note">
+                                Follow each pet through broad cost groups to the reported categories. Branch width shows
+                                dollars on one scale; labels retain even the smallest costs. The dog categories sum to
+                                2,521 Australian dollars, one Australian dollar above the published total because of
+                                rounding. Ringgit figures convert Australian prices at the 2025 average rate of 2.76
+                                ringgit per Australian dollar (<a href="#source-bnm">Bank Negara Malaysia</a>); they are
+                                not Malaysian prices.
+                            </p>
+                        </aside>
+                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
-<figure class="chart-container chart-figure">
-<div id="chart7_chart">
-</div>
-<p class="method-note chart-reading-note">All reported categories are included. Dog items sum to 2,521 Australian dollars; the published 2,520 Australian dollars total differs by one Australian dollar from rounding. Averages include owners who spent nothing in a category. A source dash is missing, not zero.</p>
-<figcaption class="chart-source">Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 42.
-</figcaption>
-</figure>
-</div>
-<div class="story-row">
-<aside class="narrative">
-<h3>Wanting a pet is only the start
-</h3>
-<p>Housing restrictions, cost and responsibility can stand between wanting a pet and getting one. Compare reasons within each side: the two sides ask different groups of people.
-</p>
-<p class="method-note">These are reasons people gave, not measured causes. Malaysia has a similar housing question: strata by-laws let condominium residents keep pets unless an animal causes nuisance or danger, though management can add rules by special resolution (<a href="#source-strata">The Star, 2026</a>).
-</p>
-</aside><!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+                        <figure class="chart-container chart-figure">
+                            <div id="chart7_chart"></div>
+                            <p class="method-note chart-reading-note">
+                                All reported categories are included. Dog items sum to 2,521 Australian dollars; the
+                                published 2,520 Australian dollars total differs by one Australian dollar from rounding.
+                                Averages include owners who spent nothing in a category. A source dash is missing, not
+                                zero.
+                            </p>
+                            <figcaption class="chart-source">
+                                Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 42.
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <div class="story-row">
+                        <aside class="narrative">
+                            <h3>Wanting a pet is only the start</h3>
+                            <p>
+                                Housing restrictions, cost and responsibility can stand between wanting a pet and
+                                getting one. Compare reasons within each side: the two sides ask different groups of
+                                people.
+                            </p>
+                            <p class="method-note">
+                                These are reasons people gave, not measured causes. Malaysia has a similar housing
+                                question: strata by-laws let condominium residents keep pets unless an animal causes
+                                nuisance or danger, though management can add rules by special resolution (<a
+                                    href="#source-strata">The Star, 2026</a>).
+                            </p>
+                        </aside>
+                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
-<figure class="chart-container chart-figure">
-<div id="chart8_chart">
-</div>
-<p class="method-note chart-reading-note">Housing access can limit ownership even before budgeting begins. Affordability alone cannot remove every obstacle.</p>
-<figcaption class="chart-source">Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 33.
-</figcaption>
-</figure>
-</div>
-</div>
-<p class="section-transition">Local conditions add another layer to the national picture.
-</p>
-</section>
-<!-- CHAPTER 5: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
+                        <figure class="chart-container chart-figure">
+                            <div id="chart8_chart"></div>
+                            <p class="method-note chart-reading-note">
+                                Housing access can limit ownership even before budgeting begins. Affordability alone
+                                cannot remove every obstacle.
+                            </p>
+                            <figcaption class="chart-source">
+                                Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 33.
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <p class="section-transition">Local conditions add another layer to the national picture.</p>
+            </section>
+            <!-- CHAPTER 5: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
 
-<section class="section-5" aria-labelledby="section-5-title">
-<div class="section-title"><span class="section-number" aria-hidden="true">05</span>
-<h2 id="section-5-title">One country, different local lives
-</h2>
-<p class="section-deck">South Australia shows why totals and rates tell different stories.
-</p>
-</div>
-<div class="section-brief">
-<p>Large populations can produce large pet totals. A rate divides by residents to make council comparisons fairer. The left map distributes council totals as illustrative dots; the right map shows how common recorded animals are for the number of people. Both maps show dogs over the same area, so places line up.
-</p>
-<p class="method-note">68 municipal councils · Animal records: 30 May 2025 · Population: 30 June 2025. Recorded animals are not a household ownership estimate. The maps show the settled south. Coober Pedy and Roxby Downs lie outside this view; the scatterplot includes all 68 councils.
-</p>
-</div>
+            <section class="section-5" aria-labelledby="section-5-title">
+                <div class="section-title">
+                    <span class="section-number" aria-hidden="true">05</span>
+                    <h2 id="section-5-title">One country, different local lives</h2>
+                    <p class="section-deck">South Australia shows why totals and rates tell different stories.</p>
+                </div>
+                <div class="section-brief">
+                    <p>
+                        Large populations can produce large pet totals. A rate divides by residents to make council
+                        comparisons fairer. The left map sizes one circle by each council’s dog total; the right map
+                        shows how common recorded animals are for the number of people. Both maps show dogs over the
+                        same area, so places line up.
+                    </p>
+                    <p class="method-note">
+                        68 municipal councils · Animal records: 30 May 2025 · Population: 30 June 2025. Recorded animals
+                        are not a household ownership estimate. The maps show the settled south. Coober Pedy and Roxby
+                        Downs lie outside this view; the scatterplot includes all 68 councils.
+                    </p>
+                </div>
 
-<!-- Totals (dot density) and rates (choropleth) side by side, each half the row. -->
-<div class="map-pair">
-<figure class="chart-container chart-figure"><!-- Map heading is outside the clipped geographic viewport. -->
+                <!-- Totals (proportional symbols) and rates (choropleth) side by side, each half the row. -->
+                <div class="map-pair">
+                    <figure class="chart-container chart-figure">
+                        <!-- Map heading is outside the clipped geographic viewport. -->
 
-<h3 class="chart-heading">Where dogs are recorded
-</h3>
-<p class="chart-subtitle">1 dot ≈ 250 dogs recorded at home · 2025
-</p>
-<div id="chart9_chart">
-</div>
-<p class="method-note map-note">Each equal-size dot represents about 250 dogs. Counts round to the nearest dot; very small totals may produce none. Positions are random within council boundaries, not addresses or neighbourhood hotspots.
-</p>
-<figcaption class="chart-source">Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>; <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
-</figcaption>
-</figure>
-<figure class="chart-container chart-figure"><!-- Map heading is outside the clipped geographic viewport. -->
+                        <h3 class="chart-heading">Where dogs are recorded</h3>
+                        <p class="chart-subtitle">Circle area shows dogs recorded at home · 2025</p>
+                        <div id="chart9_chart"></div>
+                        <p class="method-note map-note">
+                            Each circle represents one council. Its area is proportional to the dog total. Hover over a
+                            circle for exact values. Circle centres represent councils, not animal addresses.
+                        </p>
+                        <figcaption class="chart-source">
+                            Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
+                            <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
+                        </figcaption>
+                    </figure>
+                    <figure class="chart-container chart-figure">
+                        <!-- Map heading is outside the clipped geographic viewport. -->
 
-<h3 class="chart-heading">Where dogs are more common
-</h3>
-<p class="chart-subtitle">Dogs per 1,000 residents · 2025
-</p>
-<div id="chart10_chart">
-</div>
-<figcaption class="chart-source">Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>; <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
-</figcaption>
-</figure>
-</div>
-<p class="method-note map-note">Municipal council records only. Blank areas lie outside the council dataset. The rate colours show dogs per 1,000 residents in steps of 100.
-</p>
-<div class="chapter-panels panels-featured local-panels">
-<div class="story-row">
-<aside class="narrative">
-<h3>Settlement patterns matter
-</h3>
-<p>Councils where people live closer together tend to record fewer dogs per resident. Cats show a weaker pattern.
-</p>
-<p class="method-note">Each step along the bottom axis is ten times more crowded. The lines show the overall trend; they do not prove that crowding causes fewer dogs.
-</p>
-</aside><!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+                        <h3 class="chart-heading">Where dogs are more common</h3>
+                        <p class="chart-subtitle">Dogs per 1,000 residents · 2025</p>
+                        <div id="chart10_chart"></div>
+                        <figcaption class="chart-source">
+                            Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
+                            <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
+                        </figcaption>
+                    </figure>
+                </div>
+                <p class="method-note map-note">
+                    Municipal council records only. Blank areas lie outside the council dataset. The rate colours show
+                    dogs per 1,000 residents in steps of 100.
+                </p>
+                <div class="chapter-panels panels-featured local-panels">
+                    <div class="story-row">
+                        <aside class="narrative">
+                            <h3>Settlement patterns matter</h3>
+                            <p>
+                                Councils where people live closer together tend to record fewer dogs per resident. Cats
+                                show a weaker pattern.
+                            </p>
+                            <p class="method-note">
+                                Each step along the bottom axis is ten times more crowded. The lines show the overall
+                                trend; they do not prove that crowding causes fewer dogs.
+                            </p>
+                        </aside>
+                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
-<figure class="chart-container chart-figure">
-<div id="chart11_chart">
-</div>
-<p class="method-note chart-reading-note">Density may reflect housing constraints and different lifestyles. Recording practices also affect these observed relationships.</p>
-<figcaption class="chart-source">Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>; <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
-</figcaption>
-</figure>
-</div>
-</div>
-<p class="section-transition">Behind these differences is a shared motivation: companionship.
-</p>
-</section>
-<!-- CHAPTER 6: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
+                        <figure class="chart-container chart-figure">
+                            <div id="chart11_chart"></div>
+                            <p class="method-note chart-reading-note">
+                                Density may reflect housing constraints and different lifestyles. Recording practices
+                                also affect these observed relationships.
+                            </p>
+                            <figcaption class="chart-source">
+                                Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
+                                <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <p class="section-transition">Behind these differences is a shared motivation: companionship.</p>
+            </section>
+            <!-- CHAPTER 6: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
 
-<section class="section-6" aria-labelledby="section-6-title">
-<div class="section-title"><span class="section-number" aria-hidden="true">06</span>
-<h2 id="section-6-title">A pet-loving nation
-</h2>
-<p class="section-deck">The reward is emotional. The commitment is practical.
-</p>
-</div>
-<div class="chapter-panels panels-featured">
-<div class="story-row">
-<aside class="narrative">
-<h3>Why the bond endures
-</h3>
-<p>About half of dog and cat owners name companionship; about one in four name mental health or relaxation. These answers describe expectations; they are not evidence that owning a pet improves health.
-</p>
-<p class="section-conclusion">Whether in Sydney or Kuala Lumpur, lasting companionship takes a suitable home, affordable care and time. Matching those commitments to the household helps the bond last.
-</p>
-</aside><!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+            <section class="section-6" aria-labelledby="section-6-title">
+                <div class="section-title">
+                    <span class="section-number" aria-hidden="true">06</span>
+                    <h2 id="section-6-title">A pet-loving nation</h2>
+                    <p class="section-deck">The reward is emotional. The commitment is practical.</p>
+                </div>
+                <div class="chapter-panels panels-featured">
+                    <div class="story-row">
+                        <aside class="narrative">
+                            <h3>Why the bond endures</h3>
+                            <p>
+                                About half of dog and cat owners name companionship; about one in four name mental
+                                health or relaxation. These answers describe expectations; they are not evidence that
+                                owning a pet improves health.
+                            </p>
+                            <p class="section-conclusion">
+                                Whether in Sydney or Kuala Lumpur, lasting companionship takes a suitable home,
+                                affordable care and time. Matching those commitments to the household helps the bond
+                                last.
+                            </p>
+                        </aside>
+                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
-<figure class="chart-container chart-figure">
-<div id="chart12_chart">
-</div>
-<figcaption class="chart-source">Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 22.
-</figcaption>
-</figure>
-</div>
-</div>
-</section>
-
-</main>
+                        <figure class="chart-container chart-figure">
+                            <div id="chart12_chart"></div>
+                            <figcaption class="chart-source">
+                                Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 22.
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </section>
+        </main>
 
         <!-- FOOTER: who made the page, when it was published, every data source, notes on the numbers, and how artificial intelligence was used. Two columns on a computer, one on a phone. -->
 
-<footer id="sources">
-<!-- Collapsed by default; source links automatically reveal their target. -->
+        <footer id="sources">
+            <!-- Collapsed by default; source links automatically reveal their target. -->
 
-<div class="footer-toggle-row">
-<div>
-<p class="footer-eyebrow">Behind the story
-</p>
-<h2>Sources, methods and authorship
-</h2>
-</div>
-<button id="footer-toggle" type="button" aria-expanded="false" aria-controls="footer-content">View full sources and methods <span aria-hidden="true">+</span>
-</button>
-</div>
+            <div class="footer-toggle-row">
+                <div>
+                    <p class="footer-eyebrow">Behind the story</p>
+                    <h2>Sources, methods and authorship</h2>
+                </div>
+                <button id="footer-toggle" type="button" aria-expanded="false" aria-controls="footer-content">
+                    View full sources and methods <span aria-hidden="true">+</span>
+                </button>
+            </div>
 
-<div id="footer-content" hidden>
+            <div id="footer-content" hidden>
+                <div class="pure-g sources-grid">
+                    <div class="pure-u-1 pure-u-md-1-2 source-column">
+                        <p>
+                            <strong>Created and designed by:</strong>
+                            <a href="https://github.com/aldrin-adira">Aldrin Maqyl Bin Adira</a><br />
+                            <strong>FIT3179 – Monash University Malaysia</strong><br />
+                            <!-- This date describes this edition, not an unrelated repository commit. -->
+                            Updated <time id="published-date" datetime="2026-10-21">21 October 2026</time><br />
+                            <a href="https://github.com/aldrin-adira/FIT3179_Data_Visualisation_2">Project repository</a>
+                            and
+                            <a href="https://github.com/aldrin-adira/FIT3179_Data_Visualisation_2/tree/main/data">project data files</a>
+                        </p>
 
-<div class="pure-g sources-grid">
+                        <!-- One paragraph per source: who published it, a link to it, what it covers, its licence (where known) and which sections use it. -->
 
-<div class="pure-u-1 pure-u-md-1-2 source-column">
+                        <h3>Sources</h3>
 
-<p>
-                        <strong>Created and designed by:</strong>
-                        <a href="https://github.com/aldrin-adira">Aldrin Maqyl Bin Adira</a><br>
-                        <strong>FIT3179 – Monash University Malaysia</strong><br>
-                        <!-- This date describes this edition, not an unrelated repository commit. -->
-                        Updated <time id="published-date" datetime="2026-10-21">21 October 2026</time><br>
-                        <a href="https://github.com/aldrin-adira/FIT3179_Data_Visualisation_2">Project repository</a>
-                        and <a href="https://github.com/aldrin-adira/FIT3179_Data_Visualisation_2/tree/main/data">project data files</a>
+                        <p id="source-ama">
+                            Animal Medicines Australia,
+                            <a
+                                href="https://animalmedicinesaustralia.org.au/wp-content/uploads/2025/09/SNR-2403006-Pet-Ownership-Study-2025-Designed_F3.pdf">Pets in Australia: A national survey of pets and people, 2025</a>. Online survey by SEC Newgate Research of 2,450 adults, 25 February to 10 March 2025,
+                            weighted to Australian Bureau of Statistics Census data. Used in Sections 1 to 4 and 6.
+                        </p>
 
-</p>
+                        <p id="source-ama-earlier">
+                            Animal Medicines Australia, earlier national surveys:
+                            <a
+                                href="https://animalmedicinesaustralia.org.au/wp-content/uploads/2016/12/AMA_Pet-Ownership-in-Australia-2016-Report_sml.pdf">Pet Ownership in Australia 2016</a>
+                            (2,022 adults);
+                            <a
+                                href="https://animalmedicinesaustralia.org.au/wp-content/uploads/2019/10/ANIM001-Pet-Survey-Report19_v1.7_WEB_low-res.pdf">Pets in Australia, 2019</a>
+                            (2,013 adults);
+                            <a
+                                href="https://animalmedicinesaustralia.org.au/wp-content/uploads/2022/11/AMAU008-Pet-Ownership22-Report_v1.6_WEB.pdf">Pets in Australia, 2022</a>
+                            (2,453 adults). Pet-type tables of owning households and animal numbers. Used in Section 3.
+                        </p>
 
-                    <!-- One paragraph per source: who published it, a link to it, what it covers, its licence (where known) and which sections use it. -->
+                        <p id="source-international">
+                            European Pet Food Industry Federation,
+                            <a href="https://europeanpetfood.org/about/statistics/">Facts and Figures 2026</a>, 39
+                            European countries, mostly 2024 data. Used in Section 1.
+                        </p>
 
-<h3>Sources
-</h3>
+                        <p>
+                            Companion Animals New Zealand,
+                            <a href="https://www.companionanimals.nz/2024-nz-pet-data-report">2024 Pet Data Report</a>.
+                            Used in Section 1.
+                        </p>
 
-<p id="source-ama">
-                        Animal Medicines Australia,
-                        <a href="https://animalmedicinesaustralia.org.au/wp-content/uploads/2025/09/SNR-2403006-Pet-Ownership-Study-2025-Designed_F3.pdf">Pets in Australia: A national survey of pets and people, 2025</a>.
-                        Online survey by SEC Newgate Research of 2,450 adults, 25 February to 10 March 2025, weighted to Australian Bureau of Statistics Census data. Used in Sections 1 to 4 and 6.
+                        <p>
+                            United Kingdom Pet Food,
+                            <a href="https://www.ukpetfood.org/industry-hub/data-statistics-/uk-pet-population-.html">Pet Population Data</a>, 2026. Used in Section 1.
+                        </p>
 
-</p>
+                        <p>
+                            American Pet Products Association,
+                            <a
+                                href="https://americanpetproducts.org/news/the-american-pet-products-association-appa-releases-2025-state-of-the-industry-report-archive">2025 State of the Industry Report</a>
+                            , 2024 data. Used in Section 1. The international figures come from separate national
+                            surveys with different methods.
+                        </p>
 
-<p id="source-ama-earlier">
-                        Animal Medicines Australia, earlier national surveys:
-                        <a href="https://animalmedicinesaustralia.org.au/wp-content/uploads/2016/12/AMA_Pet-Ownership-in-Australia-2016-Report_sml.pdf">Pet Ownership in Australia 2016</a> (2,022 adults);
-                        <a href="https://animalmedicinesaustralia.org.au/wp-content/uploads/2019/10/ANIM001-Pet-Survey-Report19_v1.7_WEB_low-res.pdf">Pets in Australia, 2019</a> (2,013 adults);
-                        <a href="https://animalmedicinesaustralia.org.au/wp-content/uploads/2022/11/AMAU008-Pet-Ownership22-Report_v1.6_WEB.pdf">Pets in Australia, 2022</a> (2,453 adults).
-                        Pet-type tables of owning households and animal numbers. Used in Section 3.
+                        <p>
+                            Natural Earth,
+                            <a href="https://www.naturalearthdata.com/">Country boundaries, 1:10 million scale</a>,
+                            simplified for this project. Public domain. Used in Section 1.
+                        </p>
 
-</p>
+                        <p id="source-daco">
+                            Department for Environment and Water, Government of South Australia,
+                            <a href="https://data.sa.gov.au/data/dataset/dogs-and-cats-online-data-2024-2025">Dogs and Cats Online data 2024 to 2025</a>, dogs and cats recorded at home in each council, snapshot of 30 May 2025.
+                            <a href="http://creativecommons.org/licenses/by/4.0">Creative Commons Attribution 4.0</a>.
+                            Used in Section 5.
+                        </p>
 
-<p id="source-international">
-                        European Pet Food Industry Federation,
-                        <a href="https://europeanpetfood.org/about/statistics/">Facts and Figures 2026</a>, 39 European countries, mostly 2024 data. Used in Section 1.
+                        <p id="source-abs">
+                            Australian Bureau of Statistics,
+                            <a href="https://www.abs.gov.au/statistics/people/population/regional-population/2024-25">Regional Population, 2025</a>, estimated resident population and boundaries of South Australian local government areas,
+                            30 June 2025. Creative Commons Attribution 4.0. Used in Section 5.
+                        </p>
 
-</p>
+                        <p id="source-bnm">
+                            Bank Negara Malaysia, monthly exchange rates (middle rate at 12:00), published by the
+                            Department of Statistics Malaysia as
+                            <a href="https://open.dosm.gov.my/data-catalogue/exchangerates">Exchange rates</a>. The
+                            average of the twelve 2025 monthly averages, 2.76 ringgit per Australian dollar, converts
+                            costs for Malaysian readers in Section 4.
+                        </p>
 
-<p>
-                        Companion Animals New Zealand,
-                        <a href="https://www.companionanimals.nz/2024-nz-pet-data-report">2024 Pet Data Report</a>.
-                        Used in Section 1.
+                        <p id="source-strata">
+                            N. Albakri,
+                            <a
+                                href="https://www.thestar.com.my/news/true-or-not/2026/07/29/quickcheck-can-your-condo-management-stop-you-from-keeping-a-pet">Pet rules in strata housing</a>, The Star, 29 July 2026, on By-Law 14, Third Schedule, Strata Management (Maintenance and
+                            Management) Regulations 2015. Used in Section 4.
+                        </p>
+                    </div>
 
-</p>
+                    <div class="pure-u-1 pure-u-md-1-2 source-column">
+                        <h3>Notes</h3>
 
-<p>
-                        United Kingdom Pet Food,
-                        <a href="https://www.ukpetfood.org/industry-hub/data-statistics-/uk-pet-population-.html">Pet Population Data</a>, 2026.
-                        Used in Section 1.
+                        <p>
+                            The local dataset includes all animals marked “At Home”, across registration statuses.
+                            Conflicting registration-year notes prevent a registered-only interpretation. Interstate and
+                            Outback Communities Authority records are excluded from the 68 municipal councils. The
+                            animal snapshot and population reference dates differ by one month.
+                        </p>
 
-</p>
+                        <p>
+                            Sections 1 to 4 and 6 use estimates from household surveys, not counts. In Section 1, each
+                            country's figure comes from its own national survey, with different methods and years. For
+                            its full sample, the Animal Medicines Australia report gives a maximum error margin of plus
+                            or minus 2.0 percentage points at the 95% confidence level; the margin is larger for smaller
+                            groups, such as small mammal and reptile owners. Percentages may not add to 100 because
+                            households can keep several types of pet, owners could give several reasons, and values are
+                            rounded. Every number can be checked against the project data files. Section 5 uses council
+                            records instead, which count only the animals owners have recorded, so differences between
+                            councils partly reflect how fully owners comply. Ringgit amounts are currency conversions of
+                            Australian prices, not estimates of what pet care costs in Malaysia.
+                        </p>
 
-<p>
-                        American Pet Products Association,
-                        <a href="https://americanpetproducts.org/news/the-american-pet-products-association-appa-releases-2025-state-of-the-industry-report-archive">2025 State of the Industry Report</a> ,
-                        2024 data. Used in Section 1. The international figures come from separate national surveys with different methods.
+                        <h3>Artificial Intelligence Acknowledgment</h3>
 
-</p>
+                        <p>
+                            Generative artificial intelligence (OpenAI Codex and Anthropic Claude) was used to assist in
+                            extracting tables from the source reports, verifying and preparing data, drafting and
+                            debugging chart code, and revising the text for this visualisation.
+                        </p>
+                    </div>
+                </div>
 
-<p>
-                        Natural Earth,
-                        <a href="https://www.naturalearthdata.com/">Country boundaries, 1:10 million scale</a>,
-                        simplified for this project. Public domain. Used in Section 1.
+                <!-- Colophon: the tools and fonts used to make the page. -->
 
-</p>
-
-<p id="source-daco">
-                        Department for Environment and Water, Government of South Australia,
-                        <a href="https://data.sa.gov.au/data/dataset/dogs-and-cats-online-data-2024-2025">Dogs and Cats Online data 2024 to 2025</a>,
-                        dogs and cats recorded at home in each council, snapshot of 30 May 2025.
-                        <a href="http://creativecommons.org/licenses/by/4.0">Creative Commons Attribution 4.0</a>. Used in Section 5.
-
-</p>
-
-<p id="source-abs">
-                        Australian Bureau of Statistics,
-                        <a href="https://www.abs.gov.au/statistics/people/population/regional-population/2024-25">Regional Population, 2025</a>,
-                        estimated resident population and boundaries of South Australian local government areas,
-                        30 June 2025. Creative Commons Attribution 4.0. Used in Section 5.
-
-</p>
-
-<p id="source-bnm">
-                        Bank Negara Malaysia, monthly exchange rates (middle rate at 12:00), published by the Department of Statistics Malaysia as
-                        <a href="https://open.dosm.gov.my/data-catalogue/exchangerates">Exchange rates</a>.
-                        The average of the twelve 2025 monthly averages, 2.76 ringgit per Australian dollar, converts costs for Malaysian readers in Section 4.
-
-</p>
-
-<p id="source-strata">
-                        N. Albakri,
-                        <a href="https://www.thestar.com.my/news/true-or-not/2026/07/29/quickcheck-can-your-condo-management-stop-you-from-keeping-a-pet">Pet rules in strata housing</a>,
-                        The Star, 29 July 2026, on By-Law 14, Third Schedule, Strata Management (Maintenance and Management) Regulations 2015. Used in Section 4.
-
-</p>
-
-</div>
-
-<div class="pure-u-1 pure-u-md-1-2 source-column">
-
-<h3>Notes
-</h3>
-
-<p>The local dataset includes all animals marked “At Home”, across registration statuses. Conflicting registration-year notes prevent a registered-only interpretation. Interstate and Outback Communities Authority records are excluded from the 68 municipal councils. The animal snapshot and population reference dates differ by one month.
-</p>
-
-<p>
-                        Sections 1 to 4 and 6 use estimates from household surveys, not counts. In Section 1, each country's figure comes from its own national survey, with different methods and years. For its full sample, the Animal Medicines Australia
-                        report gives a maximum error margin of plus or minus 2.0 percentage points at the 95%
-                        confidence level; the margin is larger for smaller groups, such as small mammal and
-                        reptile owners. Percentages may not add to 100 because households can keep several types of pet, owners could give several reasons, and values are rounded. Every number can be
-                        checked against the project data files. Section 5 uses council records instead, which count only the animals owners have recorded, so differences between councils partly reflect how fully owners comply. Ringgit amounts are currency conversions of Australian prices, not estimates of what pet care costs in Malaysia.
-
-</p>
-
-<h3>Artificial Intelligence Acknowledgment
-</h3>
-
-<p>
-                        Generative artificial intelligence (OpenAI Codex and Anthropic Claude) was used to assist in extracting
-                        tables from the source reports, verifying and preparing data, drafting and
-                        debugging chart code, and revising the text for this visualisation.
-
-</p>
-
-</div>
-
-</div>
-
-            <!-- Colophon: the tools and fonts used to make the page. -->
-
-<p class="colophon">
-                Pet Ownership in Australia · Charts made with Vega · Layout with
-                Pure.css · Type set in DM Serif Display and Fira Sans.
-
-</p>
-
-</div>
-<noscript><style>#footer-content[hidden] { display: block !important; } #footer-toggle { display: none; }</style></noscript>
-
-</footer>
+                <p class="colophon">
+                    Pet Ownership in Australia · Charts made with Vega · Layout with Pure.css · Type set in DM Serif
+                    Display and Fira Sans.
+                </p>
+            </div>
+            <noscript>
+                <style>
+                    #footer-content[hidden] {
+                        display: block !important;
+                    }
+                    #footer-toggle {
+                        display: none;
+                    }
+                </style>
+            </noscript>
+        </footer>
     </body>
 </html>

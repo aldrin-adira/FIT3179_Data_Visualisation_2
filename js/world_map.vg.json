@@ -353,6 +353,9 @@
               },
               "zindex": {
                 "value": 0
+              },
+              "tooltip": {
+                "signal": "isValid(datum.value) ? {'Country': datum.country || ({'Hong Kong S.A.R.': 'Hong Kong Special Administrative Region', 'Macao S.A.R': 'Macao Special Administrative Region', 'Bajo Nuevo Bank (Petrel Is.)': 'Bajo Nuevo Bank (Petrel Island)'}[datum.properties.name] || datum.properties.name), 'Households owning a dog': format(datum.value, ',') + '%', 'Survey data year': datum.year, 'Rank among selected countries': datum.rank} : {'Country': datum.country || ({'Hong Kong S.A.R.': 'Hong Kong Special Administrative Region', 'Macao S.A.R': 'Macao Special Administrative Region', 'Bajo Nuevo Bank (Petrel Is.)': 'Bajo Nuevo Bank (Petrel Island)'}[datum.properties.name] || datum.properties.name), 'Data availability': 'No selected data'}"
               }
             }
           },
@@ -363,10 +366,10 @@
               "projection": "worldProjection"
             }
           ],
-          "interactive": false
+          "interactive": true
         }
       ],
-      "interactive": false
+      "interactive": true
     },
     {
       "type": "text",

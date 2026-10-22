@@ -371,7 +371,8 @@
           },
           "interactive": false
         }
-      ]
+      ],
+      "interactive": false
     },
     {
       "type": "symbol",
@@ -405,15 +406,18 @@
           },
           "opacity": {
             "value": 1
+          },
+          "tooltip": {
+            "signal": "{'Pet type': datum.species, 'Survey year': datum.year, 'Rank by number of animals': datum.animalRank, 'Estimated animals': format(datum.animals_thousands * 1000, ',.0f'), 'Owning households': format(datum.owning_households_thousands * 1000, ',.0f'), 'Households owning this pet': format(datum.household_ownership_pct, ',') + '%', 'Animals per owning household': format(datum.animals_per_owning_household, ',')}"
           }
         }
       },
-      "interactive": false
+      "interactive": true
     },
     {
       "type": "text",
       "description": "Left labels: each pet's name and its 2016 count, so colour is never the only cue.",
-      "interactive": false,
+      "interactive": true,
       "from": {
         "data": "firstSurvey"
       },
@@ -452,14 +456,18 @@
           },
           "opacity": {
             "value": 1
+          },
+          "tooltip": {
+            "signal": "{'Pet type': datum.species, 'Survey year': datum.year, 'Rank by number of animals': datum.animalRank, 'Estimated animals': format(datum.animals_thousands * 1000, ',.0f'), 'Owning households': format(datum.owning_households_thousands * 1000, ',.0f'), 'Households owning this pet': format(datum.household_ownership_pct, ',') + '%', 'Animals per owning household': format(datum.animals_per_owning_household, ',')}"
           }
         }
-      }
+      },
+      "name": "firstSurveyLabels"
     },
     {
       "type": "text",
       "description": "Right labels: each pet's name and its 2025 count.",
-      "interactive": false,
+      "interactive": true,
       "from": {
         "data": "lastSurvey"
       },
@@ -498,9 +506,13 @@
           },
           "opacity": {
             "value": 1
+          },
+          "tooltip": {
+            "signal": "{'Pet type': datum.species, 'Survey year': datum.year, 'Rank by number of animals': datum.animalRank, 'Estimated animals': format(datum.animals_thousands * 1000, ',.0f'), 'Owning households': format(datum.owning_households_thousands * 1000, ',.0f'), 'Households owning this pet': format(datum.household_ownership_pct, ',') + '%', 'Animals per owning household': format(datum.animals_per_owning_household, ',')}"
           }
         }
-      }
+      },
+      "name": "lastSurveyLabels"
     },
     {
       "type": "text",

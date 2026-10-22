@@ -385,10 +385,14 @@
           "y": {
             "scale": "y",
             "field": "pet_households_millions_rounded"
+          },
+          "tooltip": {
+            "signal": "{'Survey year': datum.year, 'Households owning pets': format(datum.household_ownership_pct, ',') + '%', 'Pet-owning households': format(datum.pet_households_millions_rounded, '.1f') + ' million', 'Adults surveyed': format(datum.sample_n, ',.0f')}"
           }
         }
       },
-      "interactive": false
+      "interactive": true,
+      "name": "surveyPoints"
     },
     {
       "type": "text",
@@ -438,10 +442,14 @@
           },
           "text": {
             "signal": "(narrow && !datum.highlight) ? '' + datum.year : [datum.year, datum.detail]"
+          },
+          "tooltip": {
+            "signal": "{'Survey year': datum.year, 'Households owning pets': format(datum.household_ownership_pct, ',') + '%', 'Pet-owning households': format(datum.pet_households_millions_rounded, '.1f') + ' million', 'Adults surveyed': format(datum.sample_n, ',.0f')}"
           }
         }
       },
-      "interactive": false
+      "interactive": true,
+      "name": "surveyLabels"
     }
   ]
 }

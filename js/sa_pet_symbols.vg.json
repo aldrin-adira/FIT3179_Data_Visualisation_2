@@ -1,0 +1,464 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Proportional-symbol map of dogs recorded at home in South Australian councils, 2025. One circle represents one council; circle area is proportional to its dog total. Hover for exact council values.",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "signals": [
+    {
+      "name": "colorSurface",
+      "value": "#ffffff",
+      "description": "Colour: white, the colour of the card each chart sits on. This is only a backup; the real colour comes from --color-surface in css/style.css."
+    },
+    {
+      "name": "colorPetDogs",
+      "value": "#9c6500",
+      "description": "Colour: the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs in css/style.css."
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display",
+      "description": "Font: the fancy title font (DM Serif Display). This is only a backup; the real font comes from --font-heading in css/style.css."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css."
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "description": "Measured by the loader; small-screen charts keep a compact minimum width."
+    },
+    {
+      "name": "narrow",
+      "update": "width < 540",
+      "description": "Short labels for a compact chart; no data are removed."
+    },
+    {
+      "name": "cameraLon",
+      "value": 137.1,
+      "description": "Longitude at the centre of the fixed map view."
+    },
+    {
+      "name": "cameraLat",
+      "value": -34.9,
+      "description": "Latitude at the centre of the fixed map view."
+    },
+    {
+      "name": "cameraSpan",
+      "value": 0.132,
+      "description": "Vertical extent of the fixed view over the settled south."
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Theme value supplied by css/style.css through the shared loader."
+    },
+    {
+      "name": "colorMapWater",
+      "value": "#f4f6f7",
+      "description": "Theme value supplied by css/style.css through the shared loader."
+    },
+    {
+      "name": "colorMapLand",
+      "value": "#e9e7de",
+      "description": "Theme value supplied by css/style.css through the shared loader."
+    },
+    {
+      "name": "colorPetDogsDark",
+      "value": "#4b2800",
+      "description": "Theme value supplied by css/style.css through the shared loader."
+    },
+    {
+      "name": "plotHeight",
+      "value": 410,
+      "description": "The same geographic viewport height and camera as the rate map beside it."
+    },
+    {
+      "name": "height",
+      "update": "plotHeight + 100",
+      "description": "Reserve a separate strip below the map for the circle-size legend."
+    },
+    {
+      "name": "maxSymbolArea",
+      "update": "narrow ? 1000 : 1600",
+      "description": "Maximum symbol size in square pixels. The linear scale starts at zero, preserving area ratios at each screen width."
+    }
+  ],
+  "data": [
+    {
+      "name": "rates",
+      "description": "Dog totals, residents and dog rates for the 68 councils; the maps show the settled south.",
+      "url": "data/selected/sa_council_animals_per_1000_residents_2025.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "recorded_animals_per_1000_residents": "number",
+          "recorded_at_home_animals": "number",
+          "residents_2025": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.species === \"Dog\"",
+          "description": "Show dogs; cats remain in the source table and the density scatterplot."
+        },
+        {
+          "type": "formula",
+          "as": "code",
+          "expr": "'' + datum.lga_code_2025",
+          "description": "formula: code using '' + datum.lga_code_2025"
+        }
+      ]
+    },
+    {
+      "name": "councils",
+      "description": "Council shapes, each with the chosen species' numbers attached.",
+      "url": "data/selected/sa_council_boundaries_2025.geojson",
+      "format": {
+        "type": "json",
+        "property": "features"
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "code",
+          "expr": "'' + datum.properties.lga_code_2025",
+          "description": "formula: code using '' + datum.properties.lga_code_2025"
+        },
+        {
+          "type": "formula",
+          "as": "name",
+          "expr": "replace(datum.properties.lga_name_2025, ' (SA)', '')",
+          "description": "formula: name using replace(datum.properties.lga_name_2025, ' (SA)', '')"
+        },
+        {
+          "type": "lookup",
+          "from": "rates",
+          "key": "code",
+          "fields": [
+            "code"
+          ],
+          "values": [
+            "recorded_at_home_animals",
+            "recorded_animals_per_1000_residents",
+            "residents_2025"
+          ],
+          "as": [
+            "animals",
+            "rate",
+            "residents"
+          ],
+          "description": "lookup transform derives fields for councils; field/as name the input/output columns."
+        }
+      ]
+    },
+    {
+      "name": "mappedCouncils",
+      "source": "councils",
+      "description": "Draw the 68 councils with an animal record; other geometries are outside dataset coverage.",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum.animals)",
+          "description": "Exclude unincorporated and non-municipal geometries rather than imply an observed zero."
+        }
+      ]
+    },
+    {
+      "name": "points",
+      "source": "mappedCouncils",
+      "description": "One record per council. Draw the largest circles first so smaller circles remain visible above them.",
+      "transform": [
+        {
+          "type": "collect",
+          "sort": {
+            "field": "animals",
+            "order": "descending"
+          }
+        }
+      ]
+    },
+    {
+      "name": "sizeLegend",
+      "values": [
+        {
+          "animals": 1000,
+          "i": 0
+        },
+        {
+          "animals": 5000,
+          "i": 1
+        },
+        {
+          "animals": 10000,
+          "i": 2
+        },
+        {
+          "animals": 20000,
+          "i": 3
+        }
+      ],
+      "description": "Reference circles use exactly the same area scale as the council symbols."
+    }
+  ],
+  "scales": [
+    {
+      "name": "symbolArea",
+      "type": "linear",
+      "domain": {
+        "data": "points",
+        "field": "animals"
+      },
+      "range": [
+        0,
+        {
+          "signal": "maxSymbolArea"
+        }
+      ],
+      "zero": true,
+      "nice": false,
+      "description": "Map dog totals linearly to symbol area, not radius. Twice the total produces twice the area."
+    }
+  ],
+  "projections": [
+    {
+      "name": "map",
+      "type": "conicEqualArea",
+      "parallels": [
+        -28,
+        -36
+      ],
+      "rotate": [
+        -135,
+        0
+      ],
+      "center": {
+        "signal": "[cameraLon-135,cameraLat]"
+      },
+      "scale": {
+        "signal": "min(width / (cameraSpan*1.15),plotHeight/cameraSpan)"
+      },
+      "translate": {
+        "signal": "[width/2,plotHeight/2]"
+      }
+    }
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "name": "mapViewport",
+      "clip": true,
+      "interactive": true,
+      "encode": {
+        "update": {
+          "width": {
+            "signal": "width"
+          },
+          "height": {
+            "signal": "plotHeight"
+          },
+          "fill": {
+            "signal": "colorMapWater"
+          }
+        }
+      },
+      "marks": [
+        {
+          "type": "shape",
+          "name": "councilAreas",
+          "from": {
+            "data": "mappedCouncils"
+          },
+          "interactive": false,
+          "transform": [
+            {
+              "type": "geoshape",
+              "projection": "map"
+            }
+          ],
+          "encode": {
+            "update": {
+              "fill": {
+                "signal": "colorMapLand"
+              },
+              "stroke": {
+                "signal": "colorSurface"
+              },
+              "strokeWidth": {
+                "value": 0.8
+              }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "name": "councilSymbols",
+          "from": {
+            "data": "points"
+          },
+          "interactive": true,
+          "description": "One circle at each council geographic centroid. Circle area shows the raw dog total; the centre represents the council, not an animal address.",
+          "encode": {
+            "enter": {
+              "shape": {
+                "value": "circle"
+              }
+            },
+            "update": {
+              "x": {
+                "signal": "geoCentroid('map', datum)[0]"
+              },
+              "y": {
+                "signal": "geoCentroid('map', datum)[1]"
+              },
+              "size": {
+                "scale": "symbolArea",
+                "field": "animals"
+              },
+              "fill": {
+                "signal": "colorPetDogs"
+              },
+              "fillOpacity": {
+                "value": 0.6
+              },
+              "stroke": {
+                "signal": "colorPetDogsDark"
+              },
+              "strokeWidth": {
+                "value": 0.8
+              },
+              "zindex": {
+                "value": 0
+              },
+              "tooltip": {
+                "signal": "{'Council': datum.name, 'Dogs recorded at home': format(datum.animals, ',.0f'), 'Residents': format(datum.residents, ',.0f'), 'Dogs per 1,000 residents': format(datum.rate, '.1f')}"
+              },
+              "description": {
+                "signal": "datum.name + ': ' + format(datum.animals, ',.0f') + ' dogs recorded at home.'"
+              }
+            },
+            "hover": {
+              "fillOpacity": {
+                "value": 0.9
+              },
+              "strokeWidth": {
+                "value": 2
+              },
+              "zindex": {
+                "value": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "signal": "plotHeight + 18"
+          },
+          "text": {
+            "value": "Dogs recorded at home"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "symbol",
+      "name": "sizeLegendSymbols",
+      "from": {
+        "data": "sizeLegend"
+      },
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "(datum.i + 0.5) * width / 4"
+          },
+          "y": {
+            "signal": "plotHeight + 52"
+          },
+          "size": {
+            "scale": "symbolArea",
+            "field": "animals"
+          },
+          "shape": {
+            "value": "circle"
+          },
+          "fill": {
+            "signal": "colorPetDogs"
+          },
+          "fillOpacity": {
+            "value": 0.6
+          },
+          "stroke": {
+            "signal": "colorPetDogsDark"
+          },
+          "strokeWidth": {
+            "value": 0.8
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {
+        "data": "sizeLegend"
+      },
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "(datum.i + 0.5) * width / 4"
+          },
+          "y": {
+            "signal": "plotHeight + 89"
+          },
+          "text": {
+            "signal": "format(datum.animals, ',.0f')"
+          },
+          "align": {
+            "value": "center"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 11
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    }
+  ],
+  "usermeta": {
+    "method": "One circle per council, placed at its projected geographic centroid. A zero-based linear scale maps recorded-at-home dog totals to circle area. Largest circles draw first; transparency and outlines reveal overlap. The map shows the settled south; all 68 councils remain in the underlying dataset.",
+    "pageTitle": "Where dogs are recorded",
+    "codeGuide": "Data lookup joins totals to council boundaries. geoCentroid places symbols. symbolArea maps totals to area. The councilSymbols tooltip expression supplies hover values; hover changes outline and opacity without changing size."
+  }
+}
