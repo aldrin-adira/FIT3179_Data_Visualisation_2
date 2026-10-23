@@ -118,7 +118,7 @@
     {
       "name": "height",
       "update": "plotTop + plotHeight + 16",
-      "description": "How tall the whole chart is: headings, tree and a small gap below. The reading note wraps in HTML below the SVG."
+      "description": "How tall the whole chart is: headings, tree and a small gap below."
     },
     {
       "name": "hoverKey",
@@ -807,7 +807,6 @@
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
     "courseBasis": "W06 Network and Trees, slide 7, and Network idioms (Kirk), PDF page 2, explicitly allow line width for quantitative attributes in a dendrogram. The root groups the two species for navigation; it is not a summed household budget.",
-    "readingNote": "All reported categories are included. Dog items sum to 2,521 Australian dollars; the published 2,520 Australian dollars total differs by one Australian dollar from rounding. Averages include owners who spent nothing in a category. A source dash is missing, not zero.",
     "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   }
 }
