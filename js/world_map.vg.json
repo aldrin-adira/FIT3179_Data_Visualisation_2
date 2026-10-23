@@ -9,10 +9,10 @@
   "title": {
     "description": "The big heading and the smaller line under it. On a phone they split into shorter lines.",
     "text": {
-      "signal": "narrow ? ['Australia ranks fourth for', 'homes with a dog'] : 'Australia ranks fourth for homes with a dog'"
+      "signal": "'Households owning a dog by country'"
     },
     "subtitle": {
-      "signal": "narrow ? ['Share of households owning a dog.', '43 selected countries, 2024 to 2026.', 'Grey: no selected data.'] : ['Share of households owning a dog in 43 selected countries, 2024 to 2026.', 'Survey methods differ. Grey, including Malaysia: no data in this selection.']"
+      "signal": "['Share of households owning a dog in 43 selected countries, 2024 to 2026.', 'Survey methods differ. Grey, including Malaysia: no data in this selection.']"
     },
     "anchor": "start",
     "offset": 30,
@@ -47,6 +47,11 @@
     "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
+    {
+      "name": "colorChartPanel",
+      "value": "#f4f6f7",
+      "description": "Colour: the light grey chart background, used where outlines, halos or label boxes should blend into it. This is only a backup; the real colour comes from --color-chart-panel in css/style.css."
+    },
     {
       "name": "colorPetDogsLight",
       "description": "Colour: the palest shade of the site's sequential colours, for low values. This is only a backup; the real colour comes from --color-light in css/style.css.",
@@ -468,7 +473,7 @@
             "signal": "datum.bounds.y2 + 2"
           },
           "fill": {
-            "signal": "colorSurface"
+            "signal": "colorChartPanel"
           },
           "fillOpacity": {
             "value": 0.85

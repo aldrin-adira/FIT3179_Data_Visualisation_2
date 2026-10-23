@@ -54,12 +54,12 @@
     },
     {
       "name": "housingType",
-      "value": "Separate houses",
+      "value": "Detached houses",
       "bind": {
         "input": "select",
         "options": [
-          "Separate houses",
-          "Flats or apartments",
+          "Detached houses",
+          "Apartments or flats",
           "All occupied homes"
         ],
         "name": "Home type: "
@@ -147,7 +147,7 @@
         {
           "type": "formula",
           "as": "count",
-          "expr": "housingType === 'Separate houses' ? datum.properties.houses : housingType === 'Flats or apartments' ? datum.properties.apartments : datum.properties.total"
+          "expr": "housingType === 'Detached houses' ? datum.properties.houses : housingType === 'Apartments or flats' ? datum.properties.apartments : datum.properties.total"
         },
         {
           "type": "formula",
@@ -265,7 +265,7 @@
                 "signal": "focusCode === datum.code ? 1.5 : 0.3"
               },
               "tooltip": {
-                "signal": "{'Region': datum.name, 'Home type': housingType, 'Occupied homes': format(datum.count, ',.0f'), 'Census year': 2021, 'Each dot represents': 'About 2,000 homes', 'Dot locations': 'Illustrative within statistical regions, not home addresses'}"
+                "signal": "{'Region': datum.name, 'Home type': housingType, 'Occupied homes': format(datum.count, ',.0f'), 'Census year': 2021, 'Each dot represents': 'About 2,000 homes', 'Dot locations': 'Placed at random inside each region, not at real addresses'}"
               }
             }
           }
@@ -289,13 +289,13 @@
                 "value": 9
               },
               "fill": {
-                "signal": "focusCode === datum.code ? colorAccent : colorBorder"
+                "signal": "focusCode === datum.code ? colorAccent : colorAccent"
               },
               "opacity": {
                 "signal": "focusCode && focusCode !== datum.code ? 0.22 : 0.8"
               },
               "tooltip": {
-                "signal": "{'Region': datum.name, 'Home type': housingType, 'Occupied homes': format(datum.count, ',.0f'), 'Census year': 2021, 'Each dot represents': 'About 2,000 homes', 'Dot locations': 'Illustrative within statistical regions, not home addresses'}"
+                "signal": "{'Region': datum.name, 'Home type': housingType, 'Occupied homes': format(datum.count, ',.0f'), 'Census year': 2021, 'Each dot represents': 'About 2,000 homes', 'Dot locations': 'Placed at random inside each region, not at real addresses'}"
               }
             }
           }

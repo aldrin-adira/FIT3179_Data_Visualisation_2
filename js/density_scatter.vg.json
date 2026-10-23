@@ -9,10 +9,10 @@
   "title": {
     "description": "The big heading and the smaller line under it. On a phone the words are split into shorter lines.",
     "text": {
-      "signal": "narrow ? ['Denser councils, fewer dogs;', 'cats hold steady'] : 'Denser councils, fewer dogs; cats hold steady'"
+      "signal": "'Pets per resident versus population density'"
     },
     "subtitle": {
-      "signal": "narrow ? ['Animals recorded at home per 1,000 residents', 'against population density, 68 South', 'Australian councils, 2025'] : 'Animals recorded at home per 1,000 residents against population density, 68 South Australian councils, 2025'"
+      "signal": "'Animals on council records per 1,000 residents, 68 South Australian councils, 2025'"
     },
     "anchor": "start",
     "offset": 16,
@@ -44,10 +44,15 @@
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
-    "readingNote": "Density may reflect housing constraints and different lifestyles. Recording practices also affect these observed relationships.",
+    "readingNote": "Crowded areas may have smaller homes and different lifestyles. How fully owners record pets also varies between councils.",
     "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
+    {
+      "name": "colorChartPanel",
+      "value": "#f4f6f7",
+      "description": "Colour: the light grey chart background, used where outlines, halos or label boxes should blend into it. This is only a backup; the real colour comes from --color-chart-panel in css/style.css."
+    },
     {
       "name": "extraHeight",
       "value": 0,
@@ -160,7 +165,7 @@
     },
     {
       "name": "readingLines",
-      "update": "wrapChartText(['Density may reflect housing constraints', 'and different lifestyles. Recording practices', 'also affect these observed relationships.'], readingWidth, 12, fontBody)",
+      "update": "wrapChartText(['Crowded areas may have smaller homes', 'and different lifestyles. How fully owners', 'record pets also varies between councils.'], readingWidth, 12, fontBody)",
       "description": "Original reading note wraps into short lines within the chart."
     }
   ],
@@ -456,7 +461,7 @@
           "encode": {
             "enter": {
               "stroke": {
-                "signal": "colorSurface"
+                "signal": "colorChartPanel"
               },
               "strokeWidth": {
                 "value": 0.8
@@ -485,7 +490,7 @@
                 "signal": "focusCode === datum.code ? 1 : 0"
               },
               "tooltip": {
-                "signal": "{'Council': datum.name, 'Pet type': datum.pet, 'Recorded-at-home animals': format(datum.recorded_at_home_animals, ',.0f'), 'Animals per 1,000 residents': format(datum.rate, '.1f'), 'Population density': format(datum.density, ',.2f') + ' residents per square kilometre', 'Residents': format(datum.residents_2025, ',.0f')}"
+                "signal": "{'Council': datum.name, 'Pet type': datum.pet, 'Animals on council records': format(datum.recorded_at_home_animals, ',.0f'), 'Animals per 1,000 residents': format(datum.rate, '.1f'), 'Population density': format(datum.density, ',.2f') + ' residents per square kilometre', 'Residents': format(datum.residents_2025, ',.0f')}"
               }
             }
           },
@@ -613,7 +618,7 @@
                 "signal": "narrow && datum.name === 'Adelaide' ? 0 : 1"
               },
               "tooltip": {
-                "signal": "{'Council': datum.name, 'Pet type': datum.pet, 'Recorded-at-home animals': format(datum.recorded_at_home_animals, ',.0f'), 'Animals per 1,000 residents': format(datum.rate, '.1f'), 'Population density': format(datum.density, ',.2f') + ' residents per square kilometre', 'Residents': format(datum.residents_2025, ',.0f')}"
+                "signal": "{'Council': datum.name, 'Pet type': datum.pet, 'Animals on council records': format(datum.recorded_at_home_animals, ',.0f'), 'Animals per 1,000 residents': format(datum.rate, '.1f'), 'Population density': format(datum.density, ',.2f') + ' residents per square kilometre', 'Residents': format(datum.residents_2025, ',.0f')}"
               }
             }
           },

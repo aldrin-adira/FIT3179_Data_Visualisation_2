@@ -8,10 +8,10 @@
   },
   "title": {
     "text": {
-      "signal": "narrow ? ['Fish lead every survey;', 'cats have passed birds'] : 'Fish lead every survey; cats have passed birds'"
+      "signal": "'Pet types ranked by number of animals'"
     },
     "subtitle": {
-      "signal": "narrow ? ['Pet types ranked by number of animals,', 'Australia, 2016 to 2025 · Rank 1 at the top'] : 'Pet types ranked by estimated number of animals, Australia, 2016 to 2025 · Rank 1 at the top'"
+      "signal": "'Estimated number of animals, Australia, 2016 to 2025 · Rank 1 at the top'"
     },
     "anchor": "start",
     "offset": 18,
@@ -35,6 +35,11 @@
     "subtitlePadding": 8
   },
   "signals": [
+    {
+      "name": "colorChartPanel",
+      "value": "#f4f6f7",
+      "description": "Colour: the light grey chart background, used where outlines, halos or label boxes should blend into it. This is only a backup; the real colour comes from --color-chart-panel in css/style.css."
+    },
     {
       "name": "extraHeight",
       "value": 0,
@@ -429,7 +434,7 @@
             "field": "species"
           },
           "stroke": {
-            "signal": "colorSurface"
+            "signal": "colorChartPanel"
           },
           "strokeWidth": {
             "value": 2
@@ -557,7 +562,7 @@
             "signal": "height - (narrow ? 46 : 30)"
           },
           "text": {
-            "signal": "narrow ? ['Ranked by estimated animals in each survey.', 'Labels give counts. Close ranks (5 to 7)', 'may swap within survey error.'] : ['Ranked by estimated number of animals in each survey; rank 1 is the largest.', 'Labels give counts. Close ranks, such as 5 to 7, may swap within survey error.']"
+            "signal": "narrow ? ['Ranked by estimated animals in each survey.', 'Labels give counts. Close ranks (5 to 7)', 'may swap, as surveys are estimates.'] : ['Ranked by estimated number of animals in each survey; rank 1 is the largest.', 'Labels give counts. Close ranks, such as 5 to 7, may swap places, as surveys are estimates.']"
           },
           "lineHeight": {
             "value": 17

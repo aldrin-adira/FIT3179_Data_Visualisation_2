@@ -136,7 +136,7 @@
                             </figcaption>
                         </figure>
                     </div>
-                    <div class="story-row">
+                    <div class="story-row row-side">
                         <aside class="narrative">
                             <h3>A strong position in this selection</h3>
                             <p>
@@ -164,7 +164,7 @@
                 </div>
                 <p class="section-transition">From international context to the homes behind Australia’s growth.</p>
             </section>
-            <!-- CHAPTER 2: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
+            <!-- CHAPTER 2: title → finding → related chart. On wide screens each finding sits in one third beside its chart, alternating sides (side rows); narrower screens stack it above the chart. -->
 
             <section class="section-2" aria-labelledby="section-2-title">
                 <div class="section-title">
@@ -173,7 +173,7 @@
                     <p class="section-deck">Growth in ownership meets the realities of housing.</p>
                 </div>
                 <div class="chapter-panels panels-featured">
-                    <div class="story-row">
+                    <div class="story-row row-side row-side-right">
                         <aside class="narrative">
                             <h3>More households; a higher share</h3>
                             <p>
@@ -193,11 +193,12 @@
                             </figcaption>
                         </figure>
                     </div>
-                    <div class="story-row">
+                    <div class="story-row row-side">
                         <aside class="narrative">
                             <h3>Housing shapes what is possible</h3>
                             <p>
-                                Families with children at home and mortgage holders each report 85% ownership. Apartment
+                                Families with children at home and households paying off a housing loan each report 85%
+                                ownership. Apartment
                                 households report 57%: the closest comparison for Malaysians living in flats and
                                 condominiums. These are differences between groups; they do not prove that housing
                                 causes ownership.
@@ -215,35 +216,33 @@
                             </figcaption>
                         </figure>
                     </div>
-                </div>
-                <div class="chapter-panels panels-featured">
-                    <div class="story-row">
+                    <div class="story-row row-side row-side-right">
                         <aside class="narrative">
                             <h3>Different homes across Australia</h3>
                             <p>
                                 The previous chart shows lower pet ownership among apartment households. This map adds
-                                the housing context: compare where separate houses and flats or apartments were counted
+                                the housing context: compare where detached houses and apartments or flats were counted
                                 across Australia in the 2021 Census.
                             </p>
                             <p class="method-note">
                                 Each dot represents about 2,000 occupied homes. These are housing counts; the pet
-                                ownership comparisons come from a separate 2025 survey. Dot positions are illustrative
-                                within statistical regions, rather than actual home addresses.
+                                ownership comparisons come from a separate 2025 survey. Dots are placed at random inside
+                                each Census region, not at real home addresses.
                             </p>
                         </aside>
                         <figure class="chart-container chart-figure">
-                            <h3 class="chart-heading">The homes behind the national picture</h3>
+                            <h3 class="chart-heading">Occupied homes by type across Australia</h3>
                             <p class="chart-subtitle">Australia · 2021 Census · Each dot represents about 2,000 occupied homes</p>
                             <div id="chart5_chart"></div>
                             <p class="method-note">
                                 Choose a home type below the map. Hover for regional counts; click to hold a highlight.
-                                All occupied homes also includes townhouses and other dwelling types. Counts are rounded
+                                All occupied homes also includes terrace houses, townhouses and other home types. Counts are rounded
                                 separately by region. Mainland Australia and Tasmania are shown; Christmas Island,
                                 the Cocos (Keeling) Islands and Norfolk Island are omitted.
                             </p>
                             <figcaption class="chart-source">
                                 Source: <a href="#source-housing">Australian Bureau of Statistics, 2021 Census</a>,
-                                dwelling structure by statistical region.
+                                type of home by Census region.
                             </figcaption>
                         </figure>
                     </div>
@@ -318,7 +317,7 @@
                     <p class="section-deck">Day-to-day care is part of the decision.</p>
                 </div>
                 <div class="chapter-panels panels-featured">
-                    <div class="story-row">
+                    <div class="story-row row-side">
                         <aside class="narrative">
                             <h3>Food takes the largest share</h3>
                             <p>
@@ -347,13 +346,14 @@
                             </figcaption>
                         </figure>
                     </div>
-                    <div class="story-row">
+                    <div class="story-row row-side row-side-right">
                         <aside class="narrative">
                             <h3>Wanting a pet is only the start</h3>
                             <p>
                                 Housing restrictions, cost and responsibility can stand between wanting a pet and
-                                getting one. Compare reasons within each side: the two sides ask different groups of
-                                people.
+                                getting one. Current owners most often name ongoing costs (26%); people without a pet
+                                most often say their home or lifestyle is not suitable (31%). Compare reasons within
+                                each side: the two sides ask different groups of people.
                             </p>
                             <p class="method-note">
                                 These are reasons people gave, not measured causes. Malaysia has a similar housing
@@ -382,89 +382,92 @@
                     <h2 id="section-5-title">One country, different local lives</h2>
                     <p class="section-deck">South Australia shows why totals and rates tell different stories.</p>
                 </div>
-                <div class="section-brief">
-                    <p>
-                        Large populations can produce large pet totals. A rate divides by residents to make council
-                        comparisons fairer. The left map sizes one circle by each council’s animal total; the right map
-                        shows how common recorded animals are for the number of people. Both maps show the same species
-                        and area, so places line up.
-                    </p>
-                    <p class="method-note">
-                        68 municipal councils · Animal records: 30 May 2025 · Population: 30 June 2025. Recorded animals
-                        are not a household ownership estimate. The maps start over the settled south. Choose All
-                        councils to include Coober Pedy and Roxby Downs; the scatterplot includes all 68 councils.
-                    </p>
-                </div>
-
-                <!-- Shared species, region and council controls for both maps. -->
-                <div class="map-explorer">
-                    <div class="map-toolbar">
-                        <div class="map-controls-left">
-                            <div class="region-buttons" role="group" aria-label="Animal shown on both maps">
-                                <button type="button" data-map-species="Dog" aria-pressed="true">Dogs</button>
-                                <button type="button" data-map-species="Cat" aria-pressed="false">Cats</button>
-                            </div>
-                            <div class="region-buttons" role="group" aria-label="Map region">
-                                <button type="button" data-map-region="south" data-map-scope="sa" aria-pressed="true">Settled south</button>
-                                <button type="button" data-map-region="metro" data-map-scope="sa" aria-pressed="false">Adelaide</button>
-                                <button type="button" data-map-region="all" data-map-scope="sa" aria-pressed="false">All councils</button>
-                            </div>
-                        </div>
-                        <label class="council-field" for="council-select">Find a council
-                            <select id="council-select">
-                                <option value="">All councils</option>
-                            </select>
-                        </label>
-                    </div>
-                    <p class="map-actions">
-                        <span>
-                            Switch between dogs and cats, choose a view, or drag to pan and use Shift + scroll to zoom.
-                            A view button resets both maps.
-                        </span>
-                    </p>
-                    <p id="council-readout" class="selection-readout" role="status" aria-live="polite">
-                        Choose a council for its total, rate and population.
-                    </p>
-                </div>
-
-                <!-- Totals (proportional symbols) and rates (choropleth): side by side on wide screens, stacked below 1,100 pixels. -->
-                <div class="map-pair">
-                    <figure class="chart-container chart-figure">
-                        <!-- Map heading is outside the clipped geographic viewport. -->
-
-                        <h3 class="chart-heading">Where <span data-species-label>dogs</span> are recorded</h3>
-                        <p class="chart-subtitle">Circle area shows <span data-species-label>dogs</span> recorded at home · 2025</p>
-                        <div id="chart10_chart"></div>
-                        <p class="method-note map-note">
-                            Each circle represents one council. Its area is proportional to the selected animal total,
-                            on one scale for dogs and cats. Hover over a circle for exact values. Circle centres
-                            represent councils, not animal addresses.
+                <!-- Introduction, shared controls and both maps share one frame. -->
+                <div class="story-frame">
+                    <div class="section-brief">
+                        <p>
+                            Large populations can produce large pet totals. A rate divides by residents to make council
+                            comparisons fairer. The left map sizes one circle by each council’s animal total; the right map
+                            shows how common recorded animals are for the number of people. Both maps show the same species
+                            and area, so places line up.
                         </p>
-                        <figcaption class="chart-source">
-                            Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
-                            <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
-                        </figcaption>
-                    </figure>
-                    <figure class="chart-container chart-figure">
-                        <!-- Map heading is outside the clipped geographic viewport. -->
+                        <p class="method-note">
+                            68 local councils · Animal records: 30 May 2025 · Population: 30 June 2025. Recorded animals
+                            are not a household ownership estimate. The maps start over the populated south. Choose All
+                            councils to include Coober Pedy and Roxby Downs; the scatterplot includes all 68 councils.
+                        </p>
+                    </div>
 
-                        <h3 class="chart-heading">Where <span data-species-label>dogs</span> are more common</h3>
-                        <p class="chart-subtitle"><span data-species-word>Dogs</span> per 1,000 residents · 2025</p>
-                        <div id="chart11_chart"></div>
-                        <figcaption class="chart-source">
-                            Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
-                            <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
-                        </figcaption>
-                    </figure>
+                    <!-- Shared species, region and council controls for both maps. -->
+                    <div class="map-explorer">
+                        <div class="map-toolbar">
+                            <div class="map-controls-left">
+                                <div class="region-buttons" role="group" aria-label="Animal shown on both maps">
+                                    <button type="button" data-map-species="Dog" aria-pressed="true">Dogs</button>
+                                    <button type="button" data-map-species="Cat" aria-pressed="false">Cats</button>
+                                </div>
+                                <div class="region-buttons" role="group" aria-label="Map region">
+                                    <button type="button" data-map-region="south" data-map-scope="sa" aria-pressed="true">Populated south</button>
+                                    <button type="button" data-map-region="metro" data-map-scope="sa" aria-pressed="false">Adelaide</button>
+                                    <button type="button" data-map-region="all" data-map-scope="sa" aria-pressed="false">All councils</button>
+                                </div>
+                            </div>
+                            <label class="council-field" for="council-select">Find a council
+                                <select id="council-select">
+                                    <option value="">All councils</option>
+                                </select>
+                            </label>
+                        </div>
+                        <p class="map-actions">
+                            <span>
+                                Switch between dogs and cats, choose a view, or drag to pan and use Shift + scroll to zoom.
+                                A view button resets both maps.
+                            </span>
+                        </p>
+                        <p id="council-readout" class="selection-readout" role="status" aria-live="polite">
+                            Choose a council for its total, rate and population.
+                        </p>
+                    </div>
+
+                    <!-- Totals (proportional symbols) and rates (choropleth): side by side on wide screens, stacked below 1,100 pixels. -->
+                    <div class="map-pair">
+                        <figure class="chart-container chart-figure">
+                            <!-- Map heading is outside the clipped geographic viewport. -->
+
+                            <h3 class="chart-heading">Total <span data-species-label>dogs</span> per council</h3>
+                            <p class="chart-subtitle">Circle area shows <span data-species-label>dogs</span> on council records · 2025</p>
+                            <div id="chart10_chart"></div>
+                            <p class="method-note map-note">
+                                Each circle represents one council. Its area is proportional to the selected animal total,
+                                on one scale for dogs and cats. Hover over a circle for exact values. Circle centres
+                                represent councils, not animal addresses.
+                            </p>
+                            <figcaption class="chart-source">
+                                Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
+                                <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
+                            </figcaption>
+                        </figure>
+                        <figure class="chart-container chart-figure">
+                            <!-- Map heading is outside the clipped geographic viewport. -->
+
+                            <h3 class="chart-heading"><span data-species-word>Dogs</span> per 1,000 residents by council</h3>
+                            <p class="chart-subtitle">Council records compared with resident population · 2025</p>
+                            <div id="chart11_chart"></div>
+                            <figcaption class="chart-source">
+                                Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
+                                <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <p class="method-note map-note">
+                        Local council records only. Blank areas have no local council (mostly outback). The rate colours use different steps for cats (25 per 1,000) than for dogs (100 per 1,000),
+                        because cats are recorded at about a quarter of the dog rate.
+                    </p>
                 </div>
-                <p class="method-note map-note">
-                    Municipal council records only. Blank areas lie outside the council dataset. The rate colours use different steps for cats (25 per 1,000) than for dogs (100 per 1,000),
-                    because cats are recorded at about a quarter of the dog rate.
-                </p>
                 <div class="chapter-panels panels-featured local-panels">
-                    <div class="story-row">
+                    <div class="story-row row-side">
                         <aside class="narrative">
-                            <h3>Settlement patterns matter</h3>
+                            <h3>Crowding makes a difference</h3>
                             <p>
                                 Councils where people live closer together tend to record fewer dogs per resident. Cats
                                 show a weaker pattern.
@@ -560,8 +563,9 @@
                             <strong>Australian housing:</strong> Australian Bureau of Statistics,
                             <a href="https://www.abs.gov.au/census/find-census-data/quickstats/2021/AUS">2021 Census</a>,
                             <a href="https://services1.arcgis.com/v8Kimc579yljmjSP/ArcGIS/rest/services/ABS_2021_Census_G37_Beta/FeatureServer/3">General Community Profile table G37: tenure and landlord type by dwelling structure</a>.
-                            Occupied private dwellings, excluding visitor-only and other non-classifiable households,
-                            for Statistical Areas Level 3. Simplified 2021 boundaries; downloaded 23 October 2026.
+                            Occupied private dwellings (homes people were living in on Census night), excluding
+                            visitor-only and other non-classifiable households, for Statistical Areas Level 3 (Census
+                            regions of roughly 30,000 to 130,000 people). Simplified 2021 boundaries; downloaded 23 October 2026.
                             Privacy adjustments can cause regional sums to differ slightly from national totals.
                             Dot placement is illustrative within each region. Three offshore territories and records
                             without geographic boundaries are excluded. Data used under the
@@ -620,14 +624,14 @@
 
                         <p id="source-daco">
                             Department for Environment and Water, Government of South Australia,
-                            <a href="https://data.sa.gov.au/data/dataset/dogs-and-cats-online-data-2024-2025">Dogs and Cats Online data 2024 to 2025</a>, dogs and cats recorded at home in each council, snapshot of 30 May 2025.
+                            <a href="https://data.sa.gov.au/data/dataset/dogs-and-cats-online-data-2024-2025">Dogs and Cats Online data 2024 to 2025</a>, dogs and cats listed as living at home in each council's records, snapshot of 30 May 2025.
                             <a href="http://creativecommons.org/licenses/by/4.0">Creative Commons Attribution 4.0</a>.
                             Used in Section 5.
                         </p>
 
                         <p id="source-abs">
                             Australian Bureau of Statistics,
-                            <a href="https://www.abs.gov.au/statistics/people/population/regional-population/2024-25">Regional Population, 2025</a>, estimated resident population and boundaries of South Australian local government areas,
+                            <a href="https://www.abs.gov.au/statistics/people/population/regional-population/2024-25">Regional Population, 2025</a>, estimated resident population and boundaries of South Australian local government areas (local council areas),
                             30 June 2025. Creative Commons Attribution 4.0. Used in Section 5.
                         </p>
 
@@ -652,8 +656,9 @@
 
                         <p>
                             The local dataset includes all animals marked “At Home”, across registration statuses.
-                            Conflicting registration-year notes prevent a registered-only interpretation. Interstate and
-                            Outback Communities Authority records are excluded from the 68 municipal councils. The
+                            Conflicting registration-year notes prevent a registered-only interpretation. Records from
+                            other states, and from the Outback Communities Authority (outback areas with no local
+                            council), are excluded from the 68 local councils. The
                             animal snapshot and population reference dates differ by one month.
                         </p>
 

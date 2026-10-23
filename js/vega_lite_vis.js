@@ -26,16 +26,32 @@ var measurementContext = document.createElement("canvas").getContext("2d");
 vega.expressionFunction("wrapChartText", function(input, maxWidth, fontSize, fontFamily) {
     measurementContext.font = fontSize + "px " + fontFamily;
     var lines = [];
+    var fits = function(text) { return measurementContext.measureText(text).width <= maxWidth - 8; };
     (Array.isArray(input) ? input : [input]).forEach(function(line) {
+        var wrapped = [];
         var current = "";
         String(line).split(/\s+/).forEach(function(word) {
             var next = current ? current + " " + word : word;
-            if (current && measurementContext.measureText(next).width > maxWidth - 8) {
-                lines.push(current);
+            if (current && !fits(next)) {
+                wrapped.push(current);
                 current = word;
             } else current = next;
         });
-        if (current) lines.push(current);
+        if (current) wrapped.push(current);
+        // Avoid a single orphaned word on the last line: move one word down
+        // from the line above when both lines still fit.
+        var last = wrapped.length - 1;
+        if (last > 0 && !/\s/.test(wrapped[last])) {
+            var words = wrapped[last - 1].split(" ");
+            if (words.length > 2) {
+                var moved = words.pop() + " " + wrapped[last];
+                if (fits(moved)) {
+                    wrapped[last - 1] = words.join(" ");
+                    wrapped[last] = moved;
+                }
+            }
+        }
+        lines = lines.concat(wrapped);
     });
     return lines;
 });
@@ -54,6 +70,7 @@ var themeSignals = {
     colorPage: "--color-page",
     colorSurface: "--color-surface",
     colorBorder: "--color-border",
+    colorChartPanel: "--color-chart-panel",
     colorMapWater: "--color-map-water",
     colorMapLand: "--color-map-land",
     colorPetDogs: "--color-pet-dogs",
@@ -79,7 +96,7 @@ var themeSignals = {
 // It looks at every setting (signal) in the chart. If the setting's name is
 // in the list above, it reads the matching value from style.css and puts it
 // in place of the backup value written in the chart file.
-function applyTheme(spec) {
+function applyTheme(spec, hostWidth) {
     // Read all the colour and font values that style.css has set on the page.
     var styles = getComputedStyle(document.documentElement);
     (spec.signals || []).forEach(function (signal) {
@@ -107,6 +124,17 @@ function applyTheme(spec) {
     // Vega expressions run after layout, so wrapping uses the final plot width.
     if (spec.title) {
         var title = spec.title;
+        // One title size and one subtitle size for every chart, from style.css,
+        // so similar text matches across the page whatever the chart's width.
+        var titleSize = parseFloat(styles.getPropertyValue("--chart-title-size")) || 22;
+        var subtitleSize = parseFloat(styles.getPropertyValue("--chart-subtitle-size")) || 13;
+        // Charts narrower than 344 pixels are drawn at 344 and scaled down to
+        // fit; enlarge their titles by the same factor so they appear equal.
+        var shrink = hostWidth > 0 ? Math.min(1, hostWidth / 344) : 1;
+        titleSize /= shrink;
+        subtitleSize /= shrink;
+        title.fontSize = titleSize;
+        title.subtitleFontSize = subtitleSize;
         // Serif glyphs extend beyond Vega's font-metric title box. Keep a
         // small top inset and an explicit title/subtitle gap at every width.
         var padding = spec.padding;
@@ -124,8 +152,8 @@ function applyTheme(spec) {
             var sizeExpression = size && size.signal ? size.signal : (size || 13);
             title[key] = {signal: "wrapChartText((" + original + "), width, (" + sizeExpression + "), " + font + ")"};
         });
-        title.lineHeight = {signal: (spec.signals.some(function(s) { return s.name === "narrow"; }) ? "narrow" : "stacked") + " ? 24 : 29"};
-        title.subtitleLineHeight = 17;
+        title.lineHeight = Math.round(titleSize * 1.25);
+        title.subtitleLineHeight = Math.round(subtitleSize * 1.3);
     }
     return spec;
 }
@@ -155,7 +183,23 @@ function embedChart(container, specUrl) {
             });
             host.setAttribute("aria-label", spec.description || "Data chart");
             return document.fonts.ready.then(function() {
-                return vegaEmbed(container, applyTheme(spec), embedOptions);
+                return vegaEmbed(container, applyTheme(spec, host.getBoundingClientRect().width), embedOptions);
+            }).then(function(result) {
+                // Titles wrap to the fitted width, which is only known after the
+                // first layout. If that adds a line, more layout passes make room
+                // for it, so the title is never pushed above the chart. Repeat
+                // until the chart's size stops changing (at most three passes).
+                function settle(passesLeft) {
+                    var before = result.view.width() + "x" + result.view.height() + "@" + result.view.origin();
+                    return result.view.resize().runAsync().then(function(view) {
+                        var after = view.width() + "x" + view.height() + "@" + view.origin();
+                        var svg = document.querySelector(container + " svg");
+                        var title = svg && svg.querySelector(".role-title");
+                        var titleInside = !title || title.getBoundingClientRect().top >= svg.getBoundingClientRect().top - 1;
+                        return (after === before && titleInside) || passesLeft <= 1 ? result : settle(passesLeft - 1);
+                    });
+                }
+                return settle(3);
             });
         })
         .then(function (result) {
@@ -254,14 +298,68 @@ function fillPairedCards() {
         var extra = view.signal("extraHeight");
         // Grow into this card's gap; shrink back if the partner now has one.
         var next = Math.max(0, Math.round(extra + freeSpace(figure) - partnerFree));
-        if (Math.abs(next - extra) > 1) view.signal("extraHeight", next).runAsync();
+        // Vega's resize resets the SVG's inline style, so repaint its panel after.
+        if (Math.abs(next - extra) > 1) view.signal("extraHeight", next).runAsync().then(function() {
+            requestAnimationFrame(function() { alignSideText(); paintChartPanels(); });
+        });
+    });
+}
+// Side rows: the finding beside a chart starts level with the top of the
+// chart's content (its plot, map or tree), below the chart title, so the
+// title heads the chart alone. Titles differ in height and wrap with width,
+// so the offset is measured after drawing. Stacked rows need no offset.
+var sideLayout = window.matchMedia("(min-width: 1101px)");
+function chartContentTop(figure) {
+    var svg = figure.querySelector("svg");
+    if (!svg) return null;
+    // A chart with an HTML title (the housing map) starts where its SVG starts.
+    if (!svg.querySelector(".role-title")) return svg.getBoundingClientRect().top;
+    var top = Infinity;
+    svg.querySelectorAll("path, text, line, rect, circle").forEach(function(shape) {
+        if (shape.closest(".role-title") || shape.closest(".background")) return;
+        var box = shape.getBoundingClientRect();
+        if (box.width > 0 && box.height > 0) top = Math.min(top, box.top);
+    });
+    return isFinite(top) ? top : null;
+}
+function alignSideText() {
+    document.querySelectorAll(".row-side").forEach(function(row) {
+        var narrative = row.querySelector(".narrative");
+        var figure = row.querySelector(".chart-figure");
+        var top = sideLayout.matches && figure ? chartContentTop(figure) : null;
+        narrative.style.paddingTop = top === null ? "" :
+            Math.max(0, Math.round(top - figure.getBoundingClientRect().top)) + "px";
+    });
+}
+// Chart panels: every chart sits on the same light grey as the maps, but the
+// grey starts just above the chart's content, so its title and subtitle stay
+// on the white card (as the maps' HTML titles do). It is a CSS background on
+// the chart's own SVG, so hover redraws inside the chart keep it.
+function paintChartPanels() {
+    document.querySelectorAll(".chart-figure svg").forEach(function(svg) {
+        var box = svg.getBoundingClientRect();
+        var title = svg.querySelector(".role-title");
+        var start = 0;
+        if (title) {
+            var content = chartContentTop(svg.closest(".chart-figure"));
+            start = Math.max(title.getBoundingClientRect().bottom + 4,
+                (content === null ? box.top : content) - 12) - box.top;
+        }
+        start = Math.max(0, Math.round(start));
+        svg.style.background = "linear-gradient(to bottom, transparent " + start +
+            "px, var(--color-chart-panel) " + start + "px)";
     });
 }
 var fillFrame;
 function scheduleFill() {
     cancelAnimationFrame(fillFrame);
-    fillFrame = requestAnimationFrame(fillPairedCards);
+    fillFrame = requestAnimationFrame(function() {
+        fillPairedCards();
+        alignSideText();
+        paintChartPanels();
+    });
 }
+if (sideLayout.addEventListener) sideLayout.addEventListener("change", scheduleFill);
 window.addEventListener("charts-ready", scheduleFill);
 // A paired chart can change height after fonts and layout have settled.
 if (window.ResizeObserver) {

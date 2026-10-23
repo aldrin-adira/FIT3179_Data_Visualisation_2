@@ -418,7 +418,7 @@
                 "signal": "focusCode && focusCode!==datum.code ? 0.5 : 1"
               },
               "tooltip": {
-                "signal": "{'Council': datum.name, 'Pet type': speciesWord, 'Recorded at home': format(datum.animals, ',.0f'), 'Residents': format(datum.residents, ',.0f'), 'Recorded animals per 1,000 residents': format(datum.rate, '.1f')}"
+                "signal": "{'Council': datum.name, 'Pet type': speciesWord, 'On council records': format(datum.animals, ',.0f'), 'Residents': format(datum.residents, ',.0f'), 'Recorded animals per 1,000 residents': format(datum.rate, '.1f')}"
               }
             }
           },

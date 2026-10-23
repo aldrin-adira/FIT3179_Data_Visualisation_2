@@ -19,7 +19,8 @@
     --color-muted: #252725; /* Supporting text, captions and chart labels */
     --color-accent: #005a9c; /* Questions, links, keyboard focus and chart highlights */
     --color-border: #868d96; /* Dividers, gridlines and baseline chart marks */
-    --color-map-water: #f4f6f7; /* Symbol map background, outside the council shapes */
+    --color-chart-panel: #f4f6f7; /* Light grey background of every chart */
+    --color-map-water: var(--color-chart-panel); /* Map background, outside the land shapes */
     --color-map-land: #e9e7de; /* Unshaded council shapes behind the symbol map's circles */
     --color-aus-orange: #e55812; /* Orange like the Australian colors */
     --color-dark: #4e1a0a; /* Chart sequential scale: high values */
@@ -61,6 +62,10 @@
     --font-body: "Fira Sans", sans-serif; /* Plain font for reading */
     --font-heading: "DM Serif Display", Georgia, serif; /* Fancy font for headings */
     --text-subheading: 1.125rem; /* Section numbers (01, 02 ...) */
+    /* Every chart title and subtitle, in the charts and the HTML map headings.
+       Pixels, because the chart loader passes them straight to Vega. */
+    --chart-title-size: 22px;
+    --chart-subtitle-size: 13px;
 }
 
 /* BASE TYPE: title → chapter → finding → caption form the visual hierarchy. */
@@ -178,12 +183,14 @@ a:hover {
     font-size: 1rem;
     color: var(--color-muted);
 }
+/* Body text sizes: large enough that a paragraph capped at 60 characters per
+   line (--measure in layout.css) still fills most of its column. */
 .narrative {
-    font-size: 0.94rem;
+    font-size: 1rem;
 }
 .method-note {
     color: var(--color-muted);
-    font-size: 0.82rem;
+    font-size: 0.88rem;
     line-height: 1.65;
 }
 .section-callout {
@@ -203,15 +210,20 @@ a:hover {
 .section-transition {
     border-top: 1px solid var(--color-border);
     color: var(--color-muted);
-    font-size: 0.82rem;
+    font-size: 0.94rem;
 }
 .section-conclusion {
     border-top: 3px solid var(--color-aus-orange);
     color: var(--color-heading);
     font-weight: 500;
 }
-/* Chart cards separate analytical content from surrounding prose. */
-.chart-figure {
+/* Frames: each finding and its chart share one card, so the text and the
+   chart it explains read as one unit. Charts have no frame of their own.
+   Linked chart pairs with a shared control (section 3, and section 5's two
+   maps) share one frame with their introduction. */
+.panels-featured > .story-row,
+.shared-pet-panels,
+.story-frame {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 5px;
@@ -258,12 +270,12 @@ a:hover {
 }
 /* Map titles are HTML above each map, outside its clipped viewport. */
 .chart-heading {
-    font: 400 1.35rem/1.25 var(--font-heading);
+    font: 400 var(--chart-title-size)/1.25 var(--font-heading);
     letter-spacing: -0.02em;
 }
 .chart-subtitle {
     margin: 6px 0 14px;
-    font-size: 0.78rem;
+    font-size: var(--chart-subtitle-size);
     color: var(--color-muted);
 }
 .map-note {
@@ -279,7 +291,7 @@ a:hover {
 }
 .chart-toolbar span, .map-actions span {
     color: var(--color-muted);
-    font-size: .74rem;
+    font-size: .82rem;
 }
 .map-explorer {
     border-top: 1px solid var(--color-border);
@@ -331,7 +343,7 @@ button:disabled {
 footer {
     border-top: 1px solid var(--color-border);
     color: var(--color-muted);
-    font-size: 0.84rem;
+    font-size: 0.94rem;
 }
 .footer-eyebrow {
     color: var(--color-accent);
@@ -350,7 +362,7 @@ footer a {
 }
 .colophon {
     border-top: 1px solid var(--color-border);
-    font-size: 0.76rem;
+    font-size: 0.82rem;
 }
 .skip-link {
     position: absolute;

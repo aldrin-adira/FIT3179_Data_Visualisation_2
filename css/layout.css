@@ -1,5 +1,6 @@
-/* LAYOUT CONTROL: one column system. Full rows and halves share the same
-   outer edges and a single centre line, because every two-column split uses
+/* LAYOUT CONTROL: one column system. Full rows, halves and side rows share
+   the same outer edges. Halves add a centre line; side rows (text 30%, chart
+   70%, alternating sides) add lines at 30% and 70%. Every split uses
    --column-gap. Colour and type rules are in style.css. */
 :root {
     --content-width: 1200px; /* Keep charts readable on wide screens. */
@@ -9,6 +10,14 @@
     --row-space: clamp(24px, 2.5vw, 32px); /* Between modules within a chapter. */
     --stack-gap: 16px; /* Between a finding and its chart card. */
     --card-padding: clamp(14px, 1.7vw, 24px);
+    /* Longest line for every paragraph: at most 60 characters. "ch" follows
+       each paragraph's own font size, so one value suits small and large text. */
+    --measure: 44ch;
+    /* Side-row split, text then chart: 3:7 keeps text lines at about 43 to 50
+       characters while giving every chart its full desktop layout from about
+       1,180 pixels. A narrower text share makes lines too short to read well. */
+    --side-text: 3fr;
+    --side-chart: 7fr;
 }
 /* Include padding in widths so nested chart cards cannot overflow. */
 *,
@@ -34,14 +43,24 @@ p + p {
 footer {
     padding-inline: max(var(--page-gutter), calc((100% - var(--content-width)) / 2));
 }
-/* Header: one centred column, the title above the figures, both on the
-   same centre line as the charts below. */
+/* Header: the title is left-aligned on the page's outer edge. On wide screens
+   the headline figures sit to its right, split on the same centre line as
+   the paired charts below; narrower screens stack the figures underneath. */
 .header {
     display: grid;
-    justify-items: center;
-    gap: 28px;
+    justify-items: start;
+    align-items: center;
+    gap: 28px var(--column-gap);
     padding-block: 40px;
+    text-align: left;
+}
+.hero-stats {
     text-align: center;
+}
+@media (min-width: 1101px) {
+    .header {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 .main-title > p {
     margin-top: 18px;
@@ -51,7 +70,6 @@ footer {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
     width: 100%;
-    max-width: 720px;
 }
 .stat-card {
     padding: 18px 14px;
@@ -67,7 +85,8 @@ footer {
     transform: rotate(14deg);
 }
 /* Chapters: title block, then modules. A module is a finding followed by its
-   chart card, so prose never sits beside a taller chart with a gap below. */
+   chart card. Compact charts use a side row on wide screens instead, so the
+   finding sits beside its chart rather than adding a text band above it. */
 .sections > section {
     padding-block: var(--section-space);
 }
@@ -86,8 +105,11 @@ footer {
 .section-title h2 {
     margin-bottom: 6px;
 }
-.section-deck {
-    max-width: 56ch;
+.section-deck,
+.method-note,
+.map-actions span,
+.colophon {
+    max-width: var(--measure);
 }
 .story-row {
     display: grid;
@@ -102,9 +124,8 @@ footer {
 .map-pair > * {
     min-width: 0;
 }
-/* Full-row modules (world map, beeswarm, ownership trend, household groups, spending,
-   barriers, density scatterplot, closing chart): the
-   finding splits into two text columns on the shared centre line. */
+/* Full-row modules (world map, closing waffles): the finding splits into two
+   text columns on the shared centre line. */
 .panels-featured .narrative {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -120,6 +141,51 @@ footer {
 .panels-featured .narrative .section-callout {
     border-top: 0;
     padding-top: 0;
+}
+/* Side rows: the finding takes 30% and its chart 70% (--side-text and
+   --side-chart). Rows
+   alternate sides (.row-side, then .row-side-right), so the eye snakes down
+   the page: text, chart, then straight down to the next text. Only the world
+   map, the closing waffles and the two paired chapters span the full width.
+   Text and chart share one frame. The text stays first in the page source,
+   so below 1,101 pixels every row stacks with its finding above its chart. */
+@media (min-width: 1101px) {
+    .story-row.row-side {
+        grid-template-columns: minmax(0, var(--side-text)) minmax(0, var(--side-chart));
+        column-gap: var(--column-gap);
+    }
+    .story-row.row-side-right {
+        grid-template-columns: minmax(0, var(--side-chart)) minmax(0, var(--side-text));
+    }
+    .row-side-right > .narrative {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    .row-side-right > .chart-figure {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    .panels-featured .row-side .narrative {
+        display: block;
+    }
+    .panels-featured .row-side .narrative h3 {
+        margin-bottom: 8px;
+    }
+    .panels-featured .row-side .narrative p + p {
+        margin-top: 12px;
+    }
+    .panels-featured .row-side .narrative .section-callout {
+        margin-top: 20px;
+        padding-top: 14px;
+        border-top: 1px solid var(--color-border);
+    }
+    /* A long note inside a side-row card uses two short columns instead of
+       one narrow column beside empty card space. */
+    .row-side .chart-figure > .method-note {
+        max-width: none;
+        columns: 2;
+        column-gap: var(--column-gap);
+    }
 }
 /* Paired modules: two findings share a text row and two equal cards share a
    chart row, giving one centre line and common top and bottom edges. */
@@ -162,7 +228,7 @@ footer {
     margin-bottom: 8px;
 }
 .narrative p {
-    max-width: 48ch;
+    max-width: var(--measure);
 }
 .narrative p + p {
     margin-top: 12px;
@@ -200,17 +266,27 @@ footer {
 .section-transition {
     margin-top: 24px;
     padding-top: 12px;
-    max-width: 62ch;
+    max-width: var(--measure);
 }
 .section-conclusion {
     padding-top: 12px;
 }
-/* Captions follow their charts. */
+/* Frame padding: the frame (style.css) holds the text and chart, so the chart
+   itself needs no padding. Captions follow their charts. */
+.panels-featured > .story-row,
+.shared-pet-panels,
+.story-frame {
+    padding: var(--card-padding);
+}
 .chart-figure {
     margin: 0;
-    padding: var(--card-padding);
+    padding: 0;
     display: flex;
     flex-direction: column;
+}
+/* The note under both maps is separated from the maps' source lines. */
+.story-frame > .map-note {
+    margin-top: 20px;
 }
 .chart-container > div,
 .vega-embed {
@@ -231,7 +307,7 @@ footer {
     margin-bottom: 16px;
 }
 .section-brief p {
-    max-width: 54ch;
+    max-width: var(--measure);
     margin: 0;
 }
 .map-pair {
@@ -269,7 +345,7 @@ footer {
     margin-top: 0;
 }
 footer p {
-    max-width: 56ch;
+    max-width: var(--measure);
 }
 footer h3 {
     margin: 24px 0 10px;
@@ -277,7 +353,6 @@ footer h3 {
 .colophon {
     margin-top: 28px;
     padding-top: 16px;
-    max-width: none;
 }
 /* Stack before narrow columns would squeeze the data. DOM order is kept.
    Every finding keeps the two-column text split above its full-width card. */

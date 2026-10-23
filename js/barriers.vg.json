@@ -9,10 +9,10 @@
   "title": {
     "description": "The big heading and the smaller line under it. On a phone the words are split into shorter lines.",
     "text": {
-      "signal": "narrow ? ['Cost stops owners; home and', 'lifestyle stop others'] : 'Cost stops owners; home and lifestyle stop others'"
+      "signal": "'Reasons for not getting a pet'"
     },
     "subtitle": {
-      "signal": "narrow ? ['Reasons people who would like a pet do not', 'have one, by whether they already own a pet,', '2025 (several reasons could be given)'] : 'Reasons people who would like a pet do not have one, by whether they already own a pet, 2025 (several reasons could be given)'"
+      "signal": "'Reasons people who would like a pet do not have one, by whether they already own a pet, 2025 (several reasons could be given)'"
     },
     "anchor": "start",
     "offset": {
@@ -46,13 +46,12 @@
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
-    "readingNote": "23% of owners wanting another pet say they already have enough pets. Affordability is not the only obstacle.",
     "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
     {
       "name": "colorAccent",
-      "description": "Colour: the blue highlight colour, used for the one thing we want you to notice. This is only a backup; the real colour comes from --color-accent in css/style.css.",
+      "description": "Colour: the blue accent colour. Every bar, name, value and header in this chart uses it, so no reason is emphasised. This is only a backup; the real colour comes from --color-accent in css/style.css.",
       "value": "#005a9c"
     },
     {
@@ -122,18 +121,13 @@
     },
     {
       "name": "height",
-      "description": "Regular reason rows with a small bottom margin; the floating annotation does not change row spacing.",
+      "description": "Regular reason rows with a small bottom margin.",
       "update": "plotHeight + 8"
-    },
-    {
-      "name": "colorBorder",
-      "value": "#868d96",
-      "description": "Grey baseline mark colour supplied by --color-border in css/style.css."
     },
     {
       "name": "hoverReason",
       "value": null,
-      "description": "Temporary hover focus; mouseout restores the default emphasis.",
+      "description": "Temporary hover focus; mouseout returns every reason to full strength.",
       "on": [
         {
           "events": "@ownerBars:mouseover, @nonOwnerBars:mouseover, @ownerValues:mouseover, @rightValue:mouseover, @barrierReasons:mouseover",
@@ -154,16 +148,6 @@
       "name": "focusReason",
       "update": "pinnedKey !== null ? pinnedKey : hoverReason",
       "description": "Pinned selection takes precedence over temporary hover."
-    },
-    {
-      "name": "colorPage",
-      "value": "#dadfef",
-      "description": "Plain annotation background supplied by --color-page in css/style.css."
-    },
-    {
-      "name": "readingLines",
-      "update": "wrapChartText([\"23% of owners wanting another pet\",\"say they already have enough pets.\",\"Affordability is not the only obstacle.\"], narrow ? min(300, width - 40) : min(300, leftEnd - 30), 12, fontBody)",
-      "description": "Short annotation lines wrap within the chart at all widths."
     }
   ],
   "data": [
@@ -205,13 +189,7 @@
           "type": "formula",
           "description": "Replace short reason names from the file with full words, for example \"Ongoing costs of keeping a pet\".",
           "as": "label",
-          "expr": "{'Ongoing costs': 'Ongoing costs of keeping a pet', 'Already enough pets/do not want more': 'Already have enough pets', 'Initial costs': 'Initial cost of getting a pet', 'Responsibility': 'Responsibility of looking after a pet', 'Unsuitable home/lifestyle': 'Home or lifestyle is not suitable', 'Uncertain employment/living situation': 'Work or living situation is uncertain', 'Other household members': 'Others in the household do not want one', 'Cannot work from home enough': 'Cannot work from home often enough', 'Previous pet died/not ready': 'Previous pet died, not ready for another', 'Landlord restriction': 'Landlord does not allow pets', 'Buying/adoption process too difficult': 'Buying or adopting is too difficult', 'Wait times too long': 'Wait times are too long', 'Allergies': 'Allergies in the household', 'Body corporate/strata restriction': 'Body corporate or strata does not allow pets', 'Gave away previous pet/not ready': 'Had to give away a previous pet'}[datum.reason] || datum.reason"
-        },
-        {
-          "type": "formula",
-          "description": "Highlight Already have enough pets by default, matching the nearby annotation.",
-          "as": "emphasis",
-          "expr": "datum.reason === 'Already enough pets/do not want more'"
+          "expr": "{'Ongoing costs': 'Ongoing costs of keeping a pet', 'Already enough pets/do not want more': 'Already have enough pets', 'Initial costs': 'Initial cost of getting a pet', 'Responsibility': 'Responsibility of looking after a pet', 'Unsuitable home/lifestyle': 'Home or lifestyle is not suitable', 'Uncertain employment/living situation': 'Work or living situation is uncertain', 'Other household members': 'Others in the household do not want one', 'Cannot work from home enough': 'Cannot work from home often enough', 'Previous pet died/not ready': 'Previous pet died, not ready for another', 'Landlord restriction': 'Landlord does not allow pets', 'Buying/adoption process too difficult': 'Buying or adopting is too difficult', 'Wait times too long': 'Wait times are too long', 'Allergies': 'Allergies in the household', 'Body corporate/strata restriction': 'Strata management does not allow pets', 'Gave away previous pet/not ready': 'Had to give away a previous pet'}[datum.reason] || datum.reason"
         },
         {
           "type": "formula",
@@ -360,7 +338,7 @@
     },
     {
       "type": "text",
-      "description": "The reason names: in the middle column on a computer, above each row on a phone. The highlighted reason is blue.",
+      "description": "The reason names: in the middle column on a computer, above each row on a phone. All are blue; hovering or pinning a reason fades the others.",
       "from": {
         "data": "barriers"
       },
@@ -390,10 +368,13 @@
             "signal": "narrow ? 12 : 13"
           },
           "fontWeight": {
-            "signal": "datum.emphasis ? 600 : 400"
+            "value": 400
           },
           "fill": {
-            "signal": "(focusReason !== null ? datum.reason === focusReason : datum.emphasis) ? colorAccent : colorBorder"
+            "signal": "colorMuted"
+          },
+          "opacity": {
+            "signal": "focusReason === null || datum.reason === focusReason ? 1 : 0.3"
           },
           "tooltip": {
             "signal": "{'Reason': datum.label, 'Current owners wanting another pet': datum.owners + '%', 'People without a pet who want one': datum.non_owners + '%'}"
@@ -405,7 +386,7 @@
     },
     {
       "type": "rect",
-      "description": "Grey cohort bars. Hover highlights the same reason on both sides in blue; mouseout restores the default enough-pets emphasis.",
+      "description": "Blue cohort bars, all equal in emphasis. Hovering or pinning a reason fades every other reason on both sides; mouseout restores full strength.",
       "from": {
         "data": "barriers"
       },
@@ -427,7 +408,10 @@
             "signal": "barHeight"
           },
           "fill": {
-            "signal": "(focusReason !== null ? datum.reason === focusReason : datum.emphasis) ? colorAccent : colorBorder"
+            "signal": "colorAccent"
+          },
+          "opacity": {
+            "signal": "focusReason === null || datum.reason === focusReason ? 1 : 0.3"
           },
           "tooltip": {
             "signal": "{'Reason': datum.label, 'Respondent group': 'Current owners wanting another pet', 'Share reporting this reason': datum.owners + '%'}"
@@ -439,7 +423,7 @@
     },
     {
       "type": "rect",
-      "description": "Grey cohort bars. Hover highlights the same reason on both sides in blue; mouseout restores the default enough-pets emphasis.",
+      "description": "Blue cohort bars, all equal in emphasis. Hovering or pinning a reason fades every other reason on both sides; mouseout restores full strength.",
       "from": {
         "data": "barriers"
       },
@@ -461,7 +445,10 @@
             "signal": "barHeight"
           },
           "fill": {
-            "signal": "(focusReason !== null ? datum.reason === focusReason : datum.emphasis) ? colorAccent : colorBorder"
+            "signal": "colorAccent"
+          },
+          "opacity": {
+            "signal": "focusReason === null || datum.reason === focusReason ? 1 : 0.3"
           },
           "tooltip": {
             "signal": "{'Reason': datum.label, 'Respondent group': 'People without a pet who want one', 'Share reporting this reason': datum.non_owners + '%'}"
@@ -505,10 +492,13 @@
             "signal": "narrow ? 11 : 12"
           },
           "fontWeight": {
-            "signal": "datum.emphasis ? 600 : 400"
+            "value": 400
           },
           "fill": {
-            "signal": "(focusReason !== null ? datum.reason === focusReason : datum.emphasis) ? colorAccent : colorBorder"
+            "signal": "colorAccent"
+          },
+          "opacity": {
+            "signal": "focusReason === null || datum.reason === focusReason ? 1 : 0.3"
           },
           "tooltip": {
             "signal": "{'Reason': datum.label, 'Respondent group': 'Current owners wanting another pet', 'Share reporting this reason': datum.owners + '%'}"
@@ -551,10 +541,13 @@
             "signal": "narrow ? 11 : 12"
           },
           "fontWeight": {
-            "signal": "datum.emphasis ? 600 : 400"
+            "value": 400
           },
           "fill": {
-            "signal": "(focusReason !== null ? datum.reason === focusReason : datum.emphasis) ? colorAccent : colorBorder"
+            "signal": "colorAccent"
+          },
+          "opacity": {
+            "signal": "focusReason === null || datum.reason === focusReason ? 1 : 0.3"
           },
           "tooltip": {
             "signal": "{'Reason': datum.label, 'Respondent group': 'People without a pet who want one', 'Share reporting this reason': datum.non_owners + '%'}"
@@ -564,76 +557,6 @@
       "name": "rightValue",
       "description": "The percentages at the outer end of each right bar.",
       "interactive": true
-    },
-    {
-      "type": "text",
-      "name": "barrierReadingNote",
-      "description": "Floating annotation near Already have enough pets. It does not reserve space or move subsequent categories.",
-      "interactive": false,
-      "zindex": 2,
-      "encode": {
-        "update": {
-          "x": {
-            "signal": "20"
-          },
-          "y": {
-            "signal": "scale('y', 'Already enough pets/do not want more') + bandwidth('y') + 12"
-          },
-          "text": {
-            "signal": "readingLines"
-          },
-          "align": {
-            "value": "left"
-          },
-          "baseline": {
-            "value": "top"
-          },
-          "font": {
-            "signal": "fontBody"
-          },
-          "fontSize": {
-            "value": 12
-          },
-          "lineHeight": {
-            "value": 17
-          },
-          "fill": {
-            "signal": "colorMuted"
-          }
-        }
-      }
-    },
-    {
-      "type": "rect",
-      "name": "barrierReadingBackground",
-      "description": "Plain background follows the note text bounds, masking gridlines without a border or shadow.",
-      "from": {
-        "data": "barrierReadingNote"
-      },
-      "interactive": false,
-      "zindex": 1,
-      "encode": {
-        "update": {
-          "x": {
-            "signal": "datum.bounds.x1 - 10"
-          },
-          "x2": {
-            "signal": "datum.bounds.x2 + 10"
-          },
-          "y": {
-            "signal": "datum.bounds.y1 - 7"
-          },
-          "y2": {
-            "signal": "datum.bounds.y2 + 7"
-          },
-          "fill": {
-            "signal": "colorPage"
-          },
-          "cornerRadius": {
-            "value": 3
-          }
-        }
-      }
     }
   ]
 }

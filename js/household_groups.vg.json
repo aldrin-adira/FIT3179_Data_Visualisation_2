@@ -9,10 +9,10 @@
   "title": {
     "description": "The big heading and the smaller line under it. On a phone the words are split into shorter lines.",
     "text": {
-      "signal": "narrow ? ['Families and mortgage holders', 'are likeliest to own pets'] : 'Families and mortgage holders are likeliest to own pets'"
+      "signal": "'Pet ownership by household group'"
     },
     "subtitle": {
-      "signal": "narrow ? ['Share of households owning at least one pet,', 'by household group, 2025'] : 'Share of households owning at least one pet, by household group, 2025'"
+      "signal": "'Share of households owning at least one pet, 2025'"
     },
     "anchor": "start",
     "offset": 30,
@@ -159,7 +159,7 @@
   "data": [
     {
       "name": "groups",
-      "description": "The survey numbers: for each household group (for example \"Apartments or units\"), the share of homes with a pet.",
+      "description": "The survey numbers: for each household group (for example \"Apartments or flats\"), the share of homes with a pet.",
       "url": "data/selected/au_selected_demographics_2025.csv",
       "format": {
         "type": "csv",
@@ -178,13 +178,13 @@
           "type": "formula",
           "description": "Replace short group names from the file with full words, for example \"Families with children at home\".",
           "as": "label",
-          "expr": "{'Apartment/unit': 'Apartments or units', 'Own outright': 'Own their home outright', 'Families with kids at home': 'Families with children at home', 'Living alone/couples without kids': 'Living alone or couples without children', 'At least AUD 100000 annually': '$100,000 or more a year', 'Below AUD 50000 annually': 'Under $50,000 a year'}[datum.group] || datum.group"
+          "expr": "{'Larger free-standing homes': 'Larger detached houses', 'Apartment/unit': 'Apartments or flats', 'Mortgage holders': 'Paying off a housing loan', 'Own outright': 'Own their home with no loan', 'Families with kids at home': 'Families with children at home', 'Living alone/couples without kids': 'Living alone or couples without children', 'At least AUD 100000 annually': '$100,000 or more a year', 'Below AUD 50000 annually': 'Under $50,000 a year'}[datum.group] || datum.group"
         },
         {
           "type": "formula",
           "description": "Write each comparison's heading in full words, for example \"Type of home\".",
           "as": "dimension_label",
-          "expr": "{'Housing': 'Type of home', 'Tenure': 'Home ownership', 'Household': 'Household make-up', 'Income': 'Household income'}[datum.dimension]"
+          "expr": "{'Housing': 'Type of home', 'Tenure': 'Home ownership', 'Household': 'Household make-up', 'Income': 'Household income (Australian dollars)'}[datum.dimension]"
         },
         {
           "type": "formula",
@@ -525,7 +525,7 @@
                 "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
               },
               "tooltip": {
-                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"
+                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label + ({'At least AUD 100000 annually': ' (about 276,000 ringgit or more)', 'Below AUD 50000 annually': ' (under about 138,000 ringgit)'}[datum.group] || ''), 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published share owning a pet' : '100% minus the published share without a pet'}"
               }
             }
           },
@@ -563,7 +563,7 @@
                 "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
               },
               "tooltip": {
-                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"
+                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label + ({'At least AUD 100000 annually': ' (about 276,000 ringgit or more)', 'Below AUD 50000 annually': ' (under about 138,000 ringgit)'}[datum.group] || ''), 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published share owning a pet' : '100% minus the published share without a pet'}"
               }
             }
           },
@@ -593,7 +593,7 @@
                 "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
               },
               "tooltip": {
-                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"
+                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label + ({'At least AUD 100000 annually': ' (about 276,000 ringgit or more)', 'Below AUD 50000 annually': ' (under about 138,000 ringgit)'}[datum.group] || ''), 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published share owning a pet' : '100% minus the published share without a pet'}"
               }
             }
           },
@@ -643,7 +643,7 @@
                 "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
               },
               "tooltip": {
-                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"
+                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label + ({'At least AUD 100000 annually': ' (about 276,000 ringgit or more)', 'Below AUD 50000 annually': ' (under about 138,000 ringgit)'}[datum.group] || ''), 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published share owning a pet' : '100% minus the published share without a pet'}"
               }
             }
           },

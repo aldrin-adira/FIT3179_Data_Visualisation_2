@@ -9,10 +9,10 @@
   "title": {
     "description": "The big heading and the smaller line under it. On a phone the words are split into shorter lines.",
     "text": {
-      "signal": "narrow ? ['Companionship leads, except', 'for fish and reptiles'] : 'Companionship leads, except for fish and reptiles'"
+      "signal": "'Reasons for getting each type of pet'"
     },
     "subtitle": {
-      "signal": "narrow ? ['Share of owners giving each reason for', 'getting their pet, 2025'] : 'Share of owners giving each reason for getting their pet, 2025'"
+      "signal": "'Share of owners giving each reason, 2025'"
     },
     "anchor": "start",
     "offset": 16,
@@ -57,6 +57,11 @@
     }
   },
   "signals": [
+    {
+      "name": "colorChartPanel",
+      "value": "#f4f6f7",
+      "description": "Colour: the light grey chart background, used where outlines, halos or label boxes should blend into it. This is only a backup; the real colour comes from --color-chart-panel in css/style.css."
+    },
     {
       "name": "colorMuted",
       "description": "Colour: the dark grey colour of small text: labels, axis words and notes. This is only a backup; the real colour comes from --color-muted in css/style.css.",
@@ -569,7 +574,7 @@
             "signal": "datum.published_cell ? {'Pet type': datum.species, 'Reason': datum.label, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Survey year': 2025} : {'Pet type': datum.species, 'Reason': datum.label, 'Value': 'Not published: outside this pet\\'s top five reasons', 'Interpretation': 'An unpublished value is not zero'}"
           },
           "stroke": {
-            "signal": "pinnedKey === datum.species + '|' + datum.reason ? colorAccent : colorSurface"
+            "signal": "pinnedKey === datum.species + '|' + datum.reason ? colorAccent : colorChartPanel"
           },
           "strokeWidth": {
             "signal": "pinnedKey === datum.species + '|' + datum.reason ? 2 : 0"

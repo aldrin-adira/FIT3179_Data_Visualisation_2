@@ -9,10 +9,10 @@
   "title": {
     "description": "The big heading and the smaller line under it. On a phone the words are split into shorter lines.",
     "text": {
-      "signal": "narrow ? ['Australia stands out', 'most for dogs'] : 'Australia stands out most for dogs'"
+      "signal": "'Dog and cat ownership in 43 countries'"
     },
     "subtitle": {
-      "signal": "narrow ? ['Each dot is one of 43 countries, placed by', 'its share of households with a dog or a cat'] : 'Each dot is one of 43 countries, placed by its share of households owning at least one dog (top row) or cat (bottom row)'"
+      "signal": "'Each dot is one of 43 countries, placed by its share of households owning at least one dog (top row) or cat (bottom row)'"
     },
     "anchor": "start",
     "offset": 16,
@@ -46,6 +46,11 @@
     "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
+    {
+      "name": "colorChartPanel",
+      "value": "#f4f6f7",
+      "description": "Colour: the light grey chart background, used where outlines, halos or label boxes should blend into it. This is only a backup; the real colour comes from --color-chart-panel in css/style.css."
+    },
     {
       "name": "colorPetDogs",
       "description": "Colour: the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs in css/style.css.",
@@ -575,7 +580,7 @@
                 "signal": "activeCountry ? (activeCountry === datum.iso3 ? (datum.species === 'Dogs' ? colorPetDogs : colorPetCats) : colorBorder) : datum.colour"
               },
               "stroke": {
-                "signal": "focusIso === datum.iso3 ? (datum.species === 'Dogs' ? colorPetDogs : colorPetCats) : colorSurface"
+                "signal": "focusIso === datum.iso3 ? (datum.species === 'Dogs' ? colorPetDogs : colorPetCats) : colorChartPanel"
               },
               "strokeWidth": {
                 "signal": "focusIso === datum.iso3 ? 1 : 1"
@@ -825,7 +830,8 @@
       "encode": {
         "update": {
           "x": {
-            "signal": "width / 2 + 150"
+            "signal": "min(width / 2 + 150, width - min(300, width - 40) - 10)",
+            "description": "Right of centre; moves left only when the wrapped note would pass the chart edge (for example in a two-thirds card)."
           },
           "y": {
             "signal": "rowDogs + rowHeight / 2 + 12"

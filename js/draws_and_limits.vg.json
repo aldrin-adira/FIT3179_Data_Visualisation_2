@@ -100,10 +100,10 @@
   ],
   "title": {
     "text": {
-      "signal": "narrow ? ['Companionship draws', 'about half of owners'] : 'Companionship draws about half of owners'"
+      "signal": "'Reasons for getting a dog or cat'"
     },
     "subtitle": {
-      "signal": "narrow ? ['Of every 100 owners, how many gave', 'each reason for getting their pet, 2025'] : 'Of every 100 owners, how many gave each reason for getting their pet, 2025. One square = one owner in 100.'"
+      "signal": "'Of every 100 owners, how many gave each reason for getting their pet, 2025. One square = one owner in 100.'"
     },
     "anchor": "start",
     "font": {

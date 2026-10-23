@@ -9,10 +9,10 @@
   "title": {
     "description": "The big heading and the smaller line under it. On a phone the words are split into shorter lines.",
     "text": {
-      "signal": "narrow ? ['Pet ownership rose', 'in number and share'] : 'Pet ownership rose in number and share'"
+      "signal": "'Pet-owning households and ownership rate over time'"
     },
     "subtitle": {
-      "signal": "narrow ? ['Each point is an Animal Medicines Australia', 'survey; follow the path from 2016 to 2025'] : 'Each point is an Animal Medicines Australia survey; follow the path from 2016 to 2025'"
+      "signal": "'Each point is an Animal Medicines Australia survey; follow the path from 2016 to 2025'"
     },
     "anchor": "start",
     "offset": 16,
