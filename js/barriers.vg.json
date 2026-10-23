@@ -46,7 +46,7 @@
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
-    "readingNote": "Housing access can limit ownership even before budgeting begins. Affordability alone cannot remove every obstacle.",
+    "readingNote": "23% of owners wanting another pet say they already have enough pets. Affordability is not the only obstacle.",
     "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
@@ -122,7 +122,7 @@
     },
     {
       "name": "height",
-      "description": "Bars only; the reading note wraps in HTML below the SVG.",
+      "description": "Regular reason rows with a small bottom margin; the floating annotation does not change row spacing.",
       "update": "plotHeight + 8"
     },
     {
@@ -154,6 +154,16 @@
       "name": "focusReason",
       "update": "pinnedKey !== null ? pinnedKey : hoverReason",
       "description": "Pinned selection takes precedence over temporary hover."
+    },
+    {
+      "name": "colorPage",
+      "value": "#dadfef",
+      "description": "Plain annotation background supplied by --color-page in css/style.css."
+    },
+    {
+      "name": "readingLines",
+      "update": "wrapChartText([\"23% of owners wanting another pet\",\"say they already have enough pets.\",\"Affordability is not the only obstacle.\"], narrow ? min(300, width - 40) : min(300, leftEnd - 30), 12, fontBody)",
+      "description": "Short annotation lines wrap within the chart at all widths."
     }
   ],
   "data": [
@@ -199,9 +209,9 @@
         },
         {
           "type": "formula",
-          "description": "Mark the one row to highlight in blue: \"Home or lifestyle is not suitable\", the row the note talks about.",
+          "description": "Highlight Already have enough pets by default, matching the nearby annotation.",
           "as": "emphasis",
-          "expr": "datum.reason === 'Unsuitable home/lifestyle'"
+          "expr": "datum.reason === 'Already enough pets/do not want more'"
         },
         {
           "type": "formula",
@@ -395,7 +405,7 @@
     },
     {
       "type": "rect",
-      "description": "Grey cohort bars. Hover highlights the same reason on both sides in blue; mouseout restores the default home-or-lifestyle emphasis.",
+      "description": "Grey cohort bars. Hover highlights the same reason on both sides in blue; mouseout restores the default enough-pets emphasis.",
       "from": {
         "data": "barriers"
       },
@@ -429,7 +439,7 @@
     },
     {
       "type": "rect",
-      "description": "Grey cohort bars. Hover highlights the same reason on both sides in blue; mouseout restores the default home-or-lifestyle emphasis.",
+      "description": "Grey cohort bars. Hover highlights the same reason on both sides in blue; mouseout restores the default enough-pets emphasis.",
       "from": {
         "data": "barriers"
       },
@@ -554,6 +564,76 @@
       "name": "rightValue",
       "description": "The percentages at the outer end of each right bar.",
       "interactive": true
+    },
+    {
+      "type": "text",
+      "name": "barrierReadingNote",
+      "description": "Floating annotation near Already have enough pets. It does not reserve space or move subsequent categories.",
+      "interactive": false,
+      "zindex": 2,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "20"
+          },
+          "y": {
+            "signal": "scale('y', 'Already enough pets/do not want more') + bandwidth('y') + 12"
+          },
+          "text": {
+            "signal": "readingLines"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "lineHeight": {
+            "value": 17
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "name": "barrierReadingBackground",
+      "description": "Plain background follows the note text bounds, masking gridlines without a border or shadow.",
+      "from": {
+        "data": "barrierReadingNote"
+      },
+      "interactive": false,
+      "zindex": 1,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "datum.bounds.x1 - 10"
+          },
+          "x2": {
+            "signal": "datum.bounds.x2 + 10"
+          },
+          "y": {
+            "signal": "datum.bounds.y1 - 7"
+          },
+          "y2": {
+            "signal": "datum.bounds.y2 + 7"
+          },
+          "fill": {
+            "signal": "colorPage"
+          },
+          "cornerRadius": {
+            "value": 3
+          }
+        }
+      }
     }
   ]
 }
