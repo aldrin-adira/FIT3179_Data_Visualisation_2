@@ -388,7 +388,7 @@
             "signal": "datum.highlight ? colorAccent : colorNeutral"
           },
           "fill": {
-            "signal": "datum.highlight ? colorAccent : colorSurface"
+            "signal": "datum.highlight ? colorAccent : colorNeutral"
           }
         },
         "update": {

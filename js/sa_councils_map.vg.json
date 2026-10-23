@@ -215,6 +215,11 @@
       "name": "colorMapWater",
       "value": "#f4f6f7",
       "description": "Theme colour supplied by css/style.css through the shared loader."
+    },
+    {
+      "name": "colorAccent",
+      "value": "#005a9c",
+      "description": "Hover and selection outline colour supplied by --color-accent in css/style.css."
     }
   ],
   "data": [
@@ -399,7 +404,7 @@
                 "field": "rate"
               },
               "stroke": {
-                "signal": "focusCode===datum.code ? colorHeading : colorSurface"
+                "signal": "focusCode===datum.code ? colorAccent : colorSurface"
               },
               "strokeWidth": {
                 "signal": "focusCode===datum.code ? 2.5 : 0.8"

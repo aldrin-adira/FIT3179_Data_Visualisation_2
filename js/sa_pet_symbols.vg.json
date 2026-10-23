@@ -195,6 +195,11 @@
       "name": "colorHeading",
       "value": "#0b2540",
       "description": "Colour: the dark blue colour of chart titles. This is only a backup; the real colour comes from --color-heading in css/style.css."
+    },
+    {
+      "name": "colorAccent",
+      "value": "#005a9c",
+      "description": "Hover and selection outline colour supplied by --color-accent in css/style.css."
     }
   ],
   "data": [
@@ -446,7 +451,7 @@
                 "signal": "focusCode === datum.code ? 0.9 : focusCode ? 0.25 : 0.6"
               },
               "stroke": {
-                "signal": "species === 'Dog' ? colorPetDogsDark : colorPetCatsDark"
+                "signal": "focusCode === datum.code ? colorAccent : (species === 'Dog' ? colorPetDogsDark : colorPetCatsDark)"
               },
               "strokeWidth": {
                 "signal": "focusCode === datum.code ? 2 : 0.8"

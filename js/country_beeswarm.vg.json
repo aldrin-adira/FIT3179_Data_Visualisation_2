@@ -465,10 +465,10 @@
                 "field": "colour"
               },
               "stroke": {
-                "signal": "focusIso === datum.iso3 ? colorHeading : colorSurface"
+                "signal": "focusIso === datum.iso3 ? colorAccent : colorSurface"
               },
               "strokeWidth": {
-                "signal": "focusIso === datum.iso3 ? 2.5 : 1"
+                "signal": "focusIso === datum.iso3 ? 1 : 1"
               },
               "fx": {
                 "scale": "x",

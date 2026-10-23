@@ -371,10 +371,10 @@
                 "signal": "datum.value_class < 0 ? 0.45 : 1"
               },
               "stroke": {
-                "signal": "focusIso === datum.iso && datum.value_class >= 0 ? colorHeading : colorSurface"
+                "signal": "focusIso === datum.iso && datum.value_class >= 0 ? colorAccent : colorSurface"
               },
               "strokeWidth": {
-                "signal": "focusIso === datum.iso && datum.value_class >= 0 ? 2 : 0.3"
+                "signal": "focusIso === datum.iso && datum.value_class >= 0 ? 1 : 0.3"
               },
               "zindex": {
                 "signal": "focusIso === datum.iso ? 1 : 0"
