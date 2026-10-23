@@ -8,7 +8,7 @@
     // Match the operating-system preference; changes take effect immediately.
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     // The proportional-symbol map (totals) and rate map share one camera, species and council.
-    const saIds = ['#chart9_chart', '#chart10_chart'];
+    const saIds = ['#chart10_chart', '#chart11_chart'];
     const mapIds = {sa: saIds};
     const cameraRuns = {sa: 0}; // Tokens cancel superseded camera moves.
     let species = 'Dog';
@@ -180,14 +180,15 @@
         '#chart2_chart': {marks: ['dots'], key: datum => datum.iso3},
         '#chart3_chart': {marks: ['surveyPoints', 'surveyLabels'], key: datum => datum.year},
         '#chart4_chart': {marks: ['householdPoints', 'householdSticks', 'householdLabels', 'valueLabel'], key: datum => datum.label},
-        '#chart5_chart': {marks: ['rankPoints', 'rankLines', 'firstSurveyLabels', 'lastSurveyLabels'], key: datum => datum.species},
-        '#chart6_chart': {marks: ['motivationCells'], key: datum => datum.species + '|' + datum.reason},
-        '#chart7_chart': {marks: ['branches', 'nodeDots', 'leafNames', 'spendingLabel0', 'spendingLabel1'], key: datum => (datum.target || datum).key},
-        '#chart8_chart': {marks: ['ownerBars', 'nonOwnerBars', 'ownerValues', 'rightValue', 'barrierReasons'], key: datum => datum.reason},
-        '#chart9_chart': {marks: ['councilSymbols'], key: datum => datum.code},
-        '#chart10_chart': {marks: ['councilAreas'], key: datum => datum.code},
-        '#chart11_chart': {marks: ['councilPoints', 'calloutText'], key: datum => datum.code},
-        '#chart12_chart': {marks: ['squares', 'waffleLabels'], key: datum => datum.species + '|' + datum.reason}
+        '#chart5_chart': {marks: ['homeDots', 'regionAreas'], key: datum => datum.code},
+        '#chart6_chart': {marks: ['rankPoints', 'rankLines', 'firstSurveyLabels', 'lastSurveyLabels'], key: datum => datum.species},
+        '#chart7_chart': {marks: ['motivationCells'], key: datum => datum.species + '|' + datum.reason},
+        '#chart8_chart': {marks: ['branches', 'nodeDots', 'leafNames', 'spendingLabel0', 'spendingLabel1'], key: datum => (datum.target || datum).key},
+        '#chart9_chart': {marks: ['ownerBars', 'nonOwnerBars', 'ownerValues', 'rightValue', 'barrierReasons'], key: datum => datum.reason},
+        '#chart10_chart': {marks: ['councilSymbols'], key: datum => datum.code},
+        '#chart11_chart': {marks: ['councilAreas'], key: datum => datum.code},
+        '#chart12_chart': {marks: ['councilPoints', 'calloutText'], key: datum => datum.code},
+        '#chart13_chart': {marks: ['squares', 'waffleLabels'], key: datum => datum.species + '|' + datum.reason}
     };
     const connectedClickViews = new WeakSet();
 
@@ -203,20 +204,20 @@
             document.querySelector('#country-select').value = country;
             await update(['#chart1_chart', '#chart2_chart'], {pinnedKey: key, selectedCountry: country, hoverIso: null});
             showCountry(country);
-        } else if (id === '#chart5_chart' || id === '#chart6_chart') {
+        } else if (id === '#chart6_chart' || id === '#chart7_chart') {
             const pet = key === null ? '' : datum.species;
             syncPetControls(pet);
             await Promise.all([
-                update(['#chart5_chart'], {pinnedKey: key === null ? null : pet, selectedPet: pet, hoverPet: null}),
-                update(['#chart6_chart'], {pinnedKey: id === '#chart6_chart' ? key : null, selectedPet: pet === 'Other pets' ? '' : pet})
+                update(['#chart6_chart'], {pinnedKey: key === null ? null : pet, selectedPet: pet, hoverPet: null}),
+                update(['#chart7_chart'], {pinnedKey: id === '#chart7_chart' ? key : null, selectedPet: pet === 'Other pets' ? '' : pet})
             ]);
-        } else if ([...saIds, '#chart11_chart'].includes(id)) {
+        } else if ([...saIds, '#chart12_chart'].includes(id)) {
             const council = key || '';
             document.querySelector('#council-select').value = council;
-            await update([...saIds, '#chart11_chart'], {pinnedKey: key, selectedCouncil: council, hoverCode: null});
+            await update([...saIds, '#chart12_chart'], {pinnedKey: key, selectedCouncil: council, hoverCode: null});
             showCouncil(council);
         } else {
-            const hoverSignal = {'#chart3_chart': 'hoverYear', '#chart4_chart': 'hoverGroup', '#chart7_chart': 'hoverKey', '#chart8_chart': 'hoverReason'}[id];
+            const hoverSignal = {'#chart5_chart': 'hoverCode', '#chart3_chart': 'hoverYear', '#chart4_chart': 'hoverGroup', '#chart8_chart': 'hoverKey', '#chart9_chart': 'hoverReason'}[id];
             const changes = {pinnedKey: key};
             if (hoverSignal) changes[hoverSignal] = null;
             await update([id], changes);
@@ -258,8 +259,8 @@
             document.querySelectorAll('[data-control="pet"]').forEach(other => {
                 other.value = [...other.options].some(option => option.value === pet) ? pet : '';
             });
-            update(['#chart5_chart'], {pinnedKey: null, selectedPet: pet});
-            update(['#chart6_chart'], {pinnedKey: null, selectedPet: pet === 'Other pets' ? '' : pet});
+            update(['#chart6_chart'], {pinnedKey: null, selectedPet: pet});
+            update(['#chart7_chart'], {pinnedKey: null, selectedPet: pet === 'Other pets' ? '' : pet});
         });
     });
     document.querySelector('#country-select').addEventListener('change', event => {
@@ -268,7 +269,7 @@
     });
     document.querySelector('#council-select').addEventListener('change', event => {
         const code = event.target.value;
-        update([...saIds, '#chart11_chart'], {pinnedKey: null, selectedCouncil: code});
+        update([...saIds, '#chart12_chart'], {pinnedKey: null, selectedCouncil: code});
         showCouncil(code);
         const row = councilRows.find(row => row.lga_code_2025 === code);
         moveCamera('sa', row ? councilCamera(row.shape) : regions.south, row ? 'council' : 'south');
@@ -292,7 +293,7 @@
         const scope = button.dataset.mapScope;
         if (scope === 'sa') {
             document.querySelector('#council-select').value = '';
-            update([...saIds, '#chart11_chart'], {pinnedKey: null, selectedCouncil: ''});
+            update([...saIds, '#chart12_chart'], {pinnedKey: null, selectedCouncil: ''});
             showCouncil('');
         }
         moveCamera(scope, regions[button.dataset.mapRegion], button.dataset.mapRegion);
@@ -336,7 +337,7 @@
             connect(['#chart1_chart', '#chart2_chart'], 'hoverIso');
             connect(saIds, 'zoom');
             connect(saIds, 'pan');
-            connect([...saIds, '#chart11_chart'], 'hoverCode');
+            connect([...saIds, '#chart12_chart'], 'hoverCode');
             showCountry(document.querySelector('#country-select').value);
         } catch (error) {
             document.querySelector('#council-readout').textContent = 'Map controls unavailable. The charts and source downloads remain available.';
@@ -347,5 +348,5 @@
     window.addEventListener('charts-redrawing', () => {
         cameraRuns.sa++;
     });
-    if (Object.keys(chartViews).length === 12) connectCharts();
+    if (Object.keys(chartViews).length === 13) connectCharts();
 })();

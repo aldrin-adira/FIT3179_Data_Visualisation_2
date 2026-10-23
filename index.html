@@ -22,6 +22,7 @@
         <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
         <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+        <script src="js/dot-map-helpers.js" defer></script>
         <script src="js/vega_lite_vis.js" defer></script>
         <!-- Page controls, linked focus, map navigation and source disclosure. -->
         <script src="js/story-interactions.js" defer></script>
@@ -215,6 +216,38 @@
                         </figure>
                     </div>
                 </div>
+                <div class="chapter-panels panels-featured">
+                    <div class="story-row">
+                        <aside class="narrative">
+                            <h3>Different homes across Australia</h3>
+                            <p>
+                                The previous chart shows lower pet ownership among apartment households. This map adds
+                                the housing context: compare where separate houses and flats or apartments were counted
+                                across Australia in the 2021 Census.
+                            </p>
+                            <p class="method-note">
+                                Each dot represents about 2,000 occupied homes. These are housing counts; the pet
+                                ownership comparisons come from a separate 2025 survey. Dot positions are illustrative
+                                within statistical regions, rather than actual home addresses.
+                            </p>
+                        </aside>
+                        <figure class="chart-container chart-figure">
+                            <h3 class="chart-heading">The homes behind the national picture</h3>
+                            <p class="chart-subtitle">Australia · 2021 Census · Each dot represents about 2,000 occupied homes</p>
+                            <div id="chart5_chart"></div>
+                            <p class="method-note">
+                                Choose a home type below the map. Hover for regional counts; click to hold a highlight.
+                                All occupied homes also includes townhouses and other dwelling types. Counts are rounded
+                                separately by region. Mainland Australia and Tasmania are shown; Christmas Island,
+                                the Cocos (Keeling) Islands and Norfolk Island are omitted.
+                            </p>
+                            <figcaption class="chart-source">
+                                Source: <a href="#source-housing">Australian Bureau of Statistics, 2021 Census</a>,
+                                dwelling structure by statistical region.
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
                 <p class="section-transition">Different homes also make room for different kinds of pet.</p>
             </section>
             <!-- CHAPTER 3: title → finding → related chart. Full-row and half-width panels share the same outer edges and one centre line. -->
@@ -253,14 +286,14 @@
                     </aside>
                     <div class="chart-toolbar shared-pet-toolbar">
                         <label for="pet-select">Follow a pet type</label>
-                        <select id="pet-select" data-control="pet" aria-controls="chart5_chart chart6_chart">
+                        <select id="pet-select" data-control="pet" aria-controls="chart6_chart chart7_chart">
                             <option value="">All pet types</option>
                         </select>
                         <span>Other pets have no published motivation data.</span>
                     </div>
                     <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
                     <figure class="chart-container chart-figure">
-                        <div id="chart5_chart" data-fill-height></div>
+                        <div id="chart6_chart" data-fill-height></div>
                         <figcaption class="chart-source">
                             Sources:
                             <a href="#source-ama-earlier">Animal Medicines Australia (2016, page 9; 2019, page 6; 2022, page 6)</a>; <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 7.
@@ -268,7 +301,7 @@
                     </figure>
                     <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
                     <figure class="chart-container chart-figure">
-                        <div id="chart6_chart"></div>
+                        <div id="chart7_chart"></div>
                         <figcaption class="chart-source">
                             Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 22.
                         </figcaption>
@@ -308,7 +341,7 @@
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
                         <figure class="chart-container chart-figure">
-                            <div id="chart7_chart"></div>
+                            <div id="chart8_chart"></div>
                             <figcaption class="chart-source">
                                 Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 42.
                             </figcaption>
@@ -332,7 +365,7 @@
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
                         <figure class="chart-container chart-figure">
-                            <div id="chart8_chart"></div>
+                            <div id="chart9_chart"></div>
                             <figcaption class="chart-source">
                                 Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 33.
                             </figcaption>
@@ -401,7 +434,7 @@
 
                         <h3 class="chart-heading">Where <span data-species-label>dogs</span> are recorded</h3>
                         <p class="chart-subtitle">Circle area shows <span data-species-label>dogs</span> recorded at home · 2025</p>
-                        <div id="chart9_chart"></div>
+                        <div id="chart10_chart"></div>
                         <p class="method-note map-note">
                             Each circle represents one council. Its area is proportional to the selected animal total,
                             on one scale for dogs and cats. Hover over a circle for exact values. Circle centres
@@ -417,7 +450,7 @@
 
                         <h3 class="chart-heading">Where <span data-species-label>dogs</span> are more common</h3>
                         <p class="chart-subtitle"><span data-species-word>Dogs</span> per 1,000 residents · 2025</p>
-                        <div id="chart10_chart"></div>
+                        <div id="chart11_chart"></div>
                         <figcaption class="chart-source">
                             Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
                             <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
@@ -444,7 +477,7 @@
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
                         <figure class="chart-container chart-figure">
-                            <div id="chart11_chart"></div>
+                            <div id="chart12_chart"></div>
                             <figcaption class="chart-source">
                                 Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
                                 <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
@@ -480,7 +513,7 @@
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
                         <figure class="chart-container chart-figure">
-                            <div id="chart12_chart"></div>
+                            <div id="chart13_chart"></div>
                             <figcaption class="chart-source">
                                 Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 22.
                             </figcaption>
@@ -523,6 +556,17 @@
 
                         <h3>Sources</h3>
 
+                        <p id="source-housing">
+                            <strong>Australian housing:</strong> Australian Bureau of Statistics,
+                            <a href="https://www.abs.gov.au/census/find-census-data/quickstats/2021/AUS">2021 Census</a>,
+                            <a href="https://services1.arcgis.com/v8Kimc579yljmjSP/ArcGIS/rest/services/ABS_2021_Census_G37_Beta/FeatureServer/3">General Community Profile table G37: tenure and landlord type by dwelling structure</a>.
+                            Occupied private dwellings, excluding visitor-only and other non-classifiable households,
+                            for Statistical Areas Level 3. Simplified 2021 boundaries; downloaded 23 October 2026.
+                            Privacy adjustments can cause regional sums to differ slightly from national totals.
+                            Dot placement is illustrative within each region. Three offshore territories and records
+                            without geographic boundaries are excluded. Data used under the
+                            <a href="https://www.abs.gov.au/about/legislation-and-policy/copyright">Australian Bureau of Statistics copyright terms</a>.
+                        </p>
                         <p id="source-ama">
                             Animal Medicines Australia,
                             <a

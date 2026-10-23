@@ -15,7 +15,7 @@ var chartJobs = [];
 var controlNames = {};
 var controlValues = {};
 // Preserve selections and camera state across responsive redraws.
-var persistentSignals = ["pinnedKey", "selectedCountry", "selectedPet", "selectedCouncil", "species", "region", "zoom", "pan", "cameraLon", "cameraLat", "cameraSpan"];
+var persistentSignals = ["pinnedKey", "housingType", "selectedCountry", "selectedPet", "selectedCouncil", "species", "region", "zoom", "pan", "cameraLon", "cameraLat", "cameraSpan"];
 // Cache chart definitions across resize redraws; clone before applying state.
 var specCache = new Map();
 var svgObservers = [];
@@ -210,22 +210,23 @@ function drawCharts() {
     embedChart("#chart1_chart", "js/world_map.vg.json");
     embedChart("#chart2_chart", "js/country_beeswarm.vg.json");
     // Section 2: how pet ownership changed from 2016 to 2025, and which
-    // households own pets.
+    // households own pets, followed by Australian housing distribution.
     embedChart("#chart3_chart", "js/ownership_trend.vg.json");
     embedChart("#chart4_chart", "js/household_groups.vg.json");
+    embedChart("#chart5_chart", "js/au_housing_density.vg.json");
     // Section 3: which pets Australians keep, and why they chose them.
-    embedChart("#chart5_chart", "js/pet_types.vg.json");
-    embedChart("#chart6_chart", "js/motivations.vg.json");
+    embedChart("#chart6_chart", "js/pet_types.vg.json");
+    embedChart("#chart7_chart", "js/motivations.vg.json");
     // Section 4: what pets cost, and what stops people getting one.
-    embedChart("#chart7_chart", "js/spending_tree.vg.json");
-    embedChart("#chart8_chart", "js/barriers.vg.json");
+    embedChart("#chart8_chart", "js/spending_tree.vg.json");
+    embedChart("#chart9_chart", "js/barriers.vg.json");
     // Section 5: linked dog/cat maps compare totals with resident rates; the
     // scatterplot relates dog and cat rates to population density.
-    embedChart("#chart9_chart", "js/sa_pet_symbols.vg.json");
-    embedChart("#chart10_chart", "js/sa_councils_map.vg.json");
-    embedChart("#chart11_chart", "js/density_scatter.vg.json");
+    embedChart("#chart10_chart", "js/sa_pet_symbols.vg.json");
+    embedChart("#chart11_chart", "js/sa_councils_map.vg.json");
+    embedChart("#chart12_chart", "js/density_scatter.vg.json");
     // Section 6: waffle charts compare three dog/cat motivations.
-    embedChart("#chart12_chart", "js/draws_and_limits.vg.json");
+    embedChart("#chart13_chart", "js/draws_and_limits.vg.json");
     window.chartsReady = Promise.all(chartJobs).then(function() {
         drawing = false;
         // Fill paired cards after the charts have finished drawing.

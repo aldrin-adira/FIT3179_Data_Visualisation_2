@@ -319,11 +319,11 @@ button:disabled {
     opacity: .6;
     cursor: wait;
 }
-#chart10_chart svg, #chart9_chart svg {
+#chart11_chart svg, #chart10_chart svg {
     touch-action: pan-y;
     cursor: grab;
 }
-#chart10_chart svg:active, #chart9_chart svg:active {
+#chart11_chart svg:active, #chart10_chart svg:active {
     cursor: grabbing;
 }
 

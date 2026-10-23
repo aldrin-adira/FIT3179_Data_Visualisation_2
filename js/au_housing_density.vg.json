@@ -1,0 +1,311 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Australia-wide dot-density map of occupied homes by housing type, 2021 Census. Each dot represents about 2,000 homes within a statistical region. Includes all states, the Australian Capital Territory, the Northern Territory and Jervis Bay. Excludes three offshore territories. Housing context for pet ownership; dots do not count pets.",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "signals": [
+    {
+      "name": "placementSeed",
+      "value": 4179,
+      "description": "Fixed seed keeps illustrative positions identical across redraws and returning to a species."
+    },
+    {
+      "name": "colorSurface",
+      "value": "#ffffff",
+      "description": "Colour: white, the colour of the card each chart sits on. This is only a backup; the real colour comes from --color-surface in css/style.css."
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans",
+      "description": "Font: the plain font for all other text (Fira Sans). This is only a backup; the real font comes from --font-body in css/style.css."
+    },
+    {
+      "name": "width",
+      "init": "containerSize()[0]",
+      "description": "Measured by the loader; small-screen charts keep a compact minimum width."
+    },
+    {
+      "name": "narrow",
+      "update": "width < 540",
+      "description": "Compact chart breakpoint; all source observations remain available."
+    },
+    {
+      "name": "colorMapWater",
+      "value": "#f4f6f7"
+    },
+    {
+      "name": "colorMapLand",
+      "value": "#e9e7de"
+    },
+    {
+      "name": "colorAccent",
+      "value": "#005a9c"
+    },
+    {
+      "name": "colorBorder",
+      "value": "#868d96"
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725"
+    },
+    {
+      "name": "housingType",
+      "value": "Separate houses",
+      "bind": {
+        "input": "select",
+        "options": [
+          "Separate houses",
+          "Flats or apartments",
+          "All occupied homes"
+        ],
+        "name": "Home type: "
+      },
+      "description": "Choose one dwelling count; all options retain the same homes-per-dot scale."
+    },
+    {
+      "name": "homesPerDot",
+      "value": 2000,
+      "description": "A dot represents about 2,000 occupied private dwellings; round separately for each region."
+    },
+    {
+      "name": "plotHeight",
+      "update": "min(540, width * 0.78)",
+      "description": "Fit the whole mainland and Tasmania within the available card width."
+    },
+    {
+      "name": "height",
+      "update": "plotHeight"
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "on": [
+        {
+          "events": {
+            "signal": "housingType"
+          },
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "hoverCode",
+      "value": null,
+      "on": [
+        {
+          "events": {
+            "signal": "housingType"
+          },
+          "update": "null"
+        },
+        {
+          "events": "@homeDots:mouseover, @regionAreas:mouseover",
+          "update": "datum.code"
+        },
+        {
+          "events": "@homeDots:mouseout, @regionAreas:mouseout",
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "focusCode",
+      "update": "pinnedKey || hoverCode",
+      "on": [
+        {
+          "events": {"signal": "housingType"},
+          "update": "null",
+          "force": true
+        }
+      ],
+      "description": "A pinned region takes precedence over hover. Changing the home type clears focus in the same update as the regenerated dots."
+    }
+  ],
+  "data": [
+    {
+      "name": "regions",
+      "url": "data/selected/au_housing_regions_2021.geojson",
+      "format": {
+        "type": "json",
+        "property": "features"
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "code",
+          "expr": "datum.properties.code"
+        },
+        {
+          "type": "formula",
+          "as": "name",
+          "expr": "datum.properties.name"
+        },
+        {
+          "type": "formula",
+          "as": "count",
+          "expr": "housingType === 'Separate houses' ? datum.properties.houses : housingType === 'Flats or apartments' ? datum.properties.apartments : datum.properties.total"
+        },
+        {
+          "type": "formula",
+          "as": "housingType",
+          "expr": "housingType"
+        },
+        {
+          "type": "formula",
+          "as": "dotCount",
+          "expr": "round(datum.count / homesPerDot)"
+        }
+      ]
+    },
+    {
+      "name": "dots",
+      "values": [
+        {}
+      ],
+      "transform": [
+        {
+          "type": "formula",
+          "as": "positions",
+          "expr": "placeDotsInsideRegions(data('regions'), placementSeed)"
+        },
+        {
+          "type": "flatten",
+          "fields": [
+            "positions"
+          ],
+          "as": [
+            "dot"
+          ]
+        },
+        {
+          "type": "project",
+          "fields": [
+            "dot.code",
+            "dot.name",
+            "dot.count",
+            "dot.longitude",
+            "dot.latitude"
+          ],
+          "as": [
+            "code",
+            "name",
+            "count",
+            "longitude",
+            "latitude"
+          ]
+        }
+      ]
+    }
+  ],
+  "projections": [
+    {
+      "name": "map",
+      "type": "conicEqualArea",
+      "parallels": [
+        -18,
+        -36
+      ],
+      "rotate": [
+        -134,
+        0
+      ],
+      "fit": {
+        "signal": "data('regions')"
+      },
+      "extent": {
+        "signal": "[[12, 12], [width - 12, plotHeight - 12]]"
+      }
+    }
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "clip": true,
+      "interactive": true,
+      "encode": {
+        "update": {
+          "width": {
+            "signal": "width"
+          },
+          "height": {
+            "signal": "plotHeight"
+          },
+          "fill": {
+            "signal": "colorMapWater"
+          }
+        }
+      },
+      "marks": [
+        {
+          "type": "shape",
+          "name": "regionAreas",
+          "from": {
+            "data": "regions"
+          },
+          "interactive": true,
+          "transform": [
+            {
+              "type": "geoshape",
+              "projection": "map"
+            }
+          ],
+          "encode": {
+            "update": {
+              "fill": {
+                "signal": "colorMapLand"
+              },
+              "stroke": {
+                "signal": "focusCode === datum.code ? colorAccent : colorSurface"
+              },
+              "strokeWidth": {
+                "signal": "focusCode === datum.code ? 1.5 : 0.3"
+              },
+              "tooltip": {
+                "signal": "{'Region': datum.name, 'Home type': housingType, 'Occupied homes': format(datum.count, ',.0f'), 'Census year': 2021, 'Each dot represents': 'About 2,000 homes', 'Dot locations': 'Illustrative within statistical regions, not home addresses'}"
+              }
+            }
+          }
+        },
+        {
+          "type": "symbol",
+          "name": "homeDots",
+          "from": {
+            "data": "dots"
+          },
+          "interactive": true,
+          "encode": {
+            "update": {
+              "x": {
+                "signal": "geoCentroid('map',{type:'Point',coordinates:[datum.longitude,datum.latitude]})[0]"
+              },
+              "y": {
+                "signal": "geoCentroid('map',{type:'Point',coordinates:[datum.longitude,datum.latitude]})[1]"
+              },
+              "size": {
+                "value": 9
+              },
+              "fill": {
+                "signal": "focusCode === datum.code ? colorAccent : colorBorder"
+              },
+              "opacity": {
+                "signal": "focusCode && focusCode !== datum.code ? 0.22 : 0.8"
+              },
+              "tooltip": {
+                "signal": "{'Region': datum.name, 'Home type': housingType, 'Occupied homes': format(datum.count, ',.0f'), 'Census year': 2021, 'Each dot represents': 'About 2,000 homes', 'Dot locations': 'Illustrative within statistical regions, not home addresses'}"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "usermeta": {
+    "method": "Counts from the Australian Bureau of Statistics 2021 Census table G37, occupied private dwellings excluding visitor-only and other non-classifiable households. Each region is rounded independently to 2,000-home dots. Fixed-seed area-uniform placement uses simplified boundaries and excludes holes. Dots do not locate actual homes or estimate pet ownership. Privacy adjustments mean regional sums can differ slightly from published national totals.",
+    "source": "https://services1.arcgis.com/v8Kimc579yljmjSP/ArcGIS/rest/services/ABS_2021_Census_G37_Beta/FeatureServer/3",
+    "coverage": "337 geographic regions across all states and mainland territories, plus Jervis Bay. Christmas Island, Cocos (Keeling) Islands and Norfolk Island omitted from this mainland-and-Tasmania view. Non-geographic records excluded."
+  }
+}
