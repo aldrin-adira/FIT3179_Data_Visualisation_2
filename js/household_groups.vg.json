@@ -42,7 +42,6 @@
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
-    "readingNote": "Household circumstances may shape the feasibility of pet care. These comparisons cannot establish what causes ownership.",
     "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
@@ -123,7 +122,7 @@
     },
     {
       "name": "height",
-      "description": "Plot and axis only; the reading note wraps in HTML below the SVG.",
+      "description": "Plot and axis height; the chart has no separate reading note.",
       "update": "plotHeight + 60"
     },
     {
@@ -238,6 +237,17 @@
             "block",
             "emphasis"
           ]
+        }
+      ]
+    },
+    {
+      "name": "focusedHousehold",
+      "source": "groups",
+      "description": "Identify the comparison block for the hovered or pinned household group, so its heading follows the same focus as its marks.",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.label === focusGroup"
         }
       ]
     }
@@ -437,7 +447,7 @@
         },
         {
           "type": "text",
-          "description": "The comparison headings, for example \"Type of home\". The highlighted one is blue.",
+          "description": "Comparison headings follow the hovered or pinned group; the household make-up heading is blue only when it is the active block or the default emphasis.",
           "from": {
             "data": "blocks"
           },
@@ -470,11 +480,12 @@
                 "signal": "datum.block * blockHeight + 4"
               },
               "fill": {
-                "signal": "datum.emphasis ? colorAccent : colorBorder"
+                "signal": "(focusGroup !== null ? length(data('focusedHousehold')) > 0 && datum.dimension === data('focusedHousehold')[0].dimension : datum.emphasis) ? colorAccent : colorBorder"
               }
             }
           },
-          "interactive": false
+          "interactive": false,
+          "name": "householdHeadings"
         },
         {
           "type": "text",
@@ -508,7 +519,7 @@
                 "signal": "narrow ? 12 : 13"
               },
               "fontWeight": {
-                "signal": "datum.emphasis ? 600 : 400"
+                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? 600 : 400"
               },
               "fill": {
                 "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
@@ -626,7 +637,7 @@
                 "signal": "datum.pct + '%'"
               },
               "fontWeight": {
-                "signal": "datum.emphasis ? 600 : 400"
+                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? 600 : 400"
               },
               "fill": {
                 "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"

@@ -23,7 +23,7 @@
         <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
         <script src="js/vega_lite_vis.js" defer></script>
-        <!-- Page controls, linked focus, map navigation, survey replay and source disclosure. -->
+        <!-- Page controls, linked focus, map navigation and source disclosure. -->
         <script src="js/story-interactions.js" defer></script>
 
         <!-- Fonts from Google Fonts: DM Serif Display for headings and Fira Sans for everything else. "preconnect" starts the connection early so the fonts arrive sooner. -->
@@ -186,16 +186,7 @@
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
                         <figure class="chart-container chart-figure">
-                            <div class="chart-toolbar">
-                                <button id="replay-trend" type="button">Replay survey years</button>
-                                <button id="show-trend" type="button">Show all years</button>
-                                <span id="trend-status" role="status" aria-live="polite">All four surveys shown</span>
-                            </div>
                             <div id="chart3_chart"></div>
-                            <p class="method-note chart-reading-note">
-                                As Australia gains households, pet-owning homes can increase even when the share with a
-                                pet falls.
-                            </p>
                             <figcaption class="chart-source">
                                 Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 6.
                             </figcaption>
@@ -218,10 +209,6 @@
 
                         <figure class="chart-container chart-figure">
                             <div id="chart4_chart"></div>
-                            <p class="method-note chart-reading-note">
-                                Household circumstances may shape the feasibility of pet care. These comparisons cannot
-                                establish what causes ownership.
-                            </p>
                             <figcaption class="chart-source">
                                 Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, pages 8, 31.
                             </figcaption>

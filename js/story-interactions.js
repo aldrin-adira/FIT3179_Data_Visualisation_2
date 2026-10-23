@@ -12,7 +12,6 @@
     const mapIds = {sa: saIds};
     const cameraRuns = {sa: 0}; // Tokens cancel superseded camera moves.
     let species = 'Dog';
-    let replayTimer;
     let councilRows = [];
     let countryRows = [];
     let dataReady;
@@ -301,39 +300,6 @@
         moveCamera(scope, regions[button.dataset.mapRegion], button.dataset.mapRegion);
     }));
 
-    // Survey replay starts only on request. Every observed year persists,
-    // and the full static chart remains the default and reduced-motion view.
-    function stopReplay(showAll = true) {
-        clearTimeout(replayTimer);
-        document.querySelector('#replay-trend').disabled = false;
-        if (showAll) update(['#chart3_chart'], {visibleYear: 2025});
-        document.querySelector('#trend-status').textContent = 'All four surveys shown';
-    }
-    document.querySelector('#show-trend').addEventListener('click', () => stopReplay());
-    document.querySelector('#replay-trend').addEventListener('click', () => {
-        stopReplay(false);
-        if (reducedMotion.matches) { stopReplay(); return; }
-        const view = chartViews['#chart3_chart'];
-        if (!view) return;
-        const years = view.data('trend').map(row => row.year).sort((a, b) => a - b);
-        document.querySelector('#replay-trend').disabled = true;
-        let index = 0;
-        function step() {
-            if (index >= years.length) { stopReplay(); return; }
-            const year = years[index++];
-            update(['#chart3_chart'], {visibleYear: year});
-            document.querySelector('#trend-status').textContent = `Survey ${year} · ${index} of ${years.length}`;
-            replayTimer = setTimeout(step, 900);
-        }
-        step();
-    });
-    reducedMotion.addEventListener('change', () => {
-        if (reducedMotion.matches) stopReplay();
-    });
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) stopReplay(); // No animation continues in a hidden tab.
-    });
-
     // Footer is collapsed initially. Deep links reveal it before scrolling;
     // this also handles source anchors loaded directly from another page.
     const footerButton = document.querySelector('#footer-toggle');
@@ -374,7 +340,6 @@
             connect(saIds, 'pan');
             connect([...saIds, '#chart11_chart'], 'hoverCode');
             showCountry(document.querySelector('#country-select').value);
-            document.querySelector('#replay-trend').textContent = reducedMotion.matches ? 'Survey replay: reduced motion' : 'Replay survey years';
         } catch (error) {
             document.querySelector('#council-readout').textContent = 'Map controls unavailable. The charts and source downloads remain available.';
             console.error(error);
@@ -382,10 +347,7 @@
     }
     window.addEventListener('charts-ready', connectCharts);
     window.addEventListener('charts-redrawing', () => {
-        clearTimeout(replayTimer);
         cameraRuns.sa++;
-        document.querySelector('#replay-trend').disabled = false;
-        document.querySelector('#trend-status').textContent = 'All four surveys shown';
     });
     if (Object.keys(chartViews).length === 12) connectCharts();
 })();
