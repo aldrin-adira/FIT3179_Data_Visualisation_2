@@ -110,7 +110,7 @@
     },
     {
       "name": "height",
-      "description": "Plot and axis only; the reading note wraps in HTML below the SVG.",
+      "description": "Plot and axis height; the reading note floats inside the plot without moving data marks.",
       "update": "plotHeight + 64"
     },
     {
@@ -147,6 +147,21 @@
       "name": "pinnedKey",
       "value": null,
       "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
+    },
+    {
+      "name": "colorPage",
+      "value": "#dadfef",
+      "description": "Plain annotation background supplied by --color-page in css/style.css."
+    },
+    {
+      "name": "readingWidth",
+      "update": "min(300, width - 40)",
+      "description": "Maximum annotation width, kept within the chart on phones."
+    },
+    {
+      "name": "readingLines",
+      "update": "wrapChartText(['Density may reflect housing constraints', 'and different lifestyles. Recording practices', 'also affect these observed relationships.'], readingWidth, 12, fontBody)",
+      "description": "Original reading note wraps into short lines within the chart."
     }
   ],
   "data": [
@@ -642,6 +657,76 @@
         }
       ],
       "interactive": true
+    },
+    {
+      "type": "text",
+      "name": "densityReadingNote",
+      "description": "Left-aligned reading note floating on the right at the 400 animals per 1,000 residents gridline.",
+      "interactive": false,
+      "zindex": 2,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "width - readingWidth - 20"
+          },
+          "y": {
+            "signal": "scale('y', 400)"
+          },
+          "text": {
+            "signal": "readingLines"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "lineHeight": {
+            "value": 17
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "name": "densityReadingBackground",
+      "description": "Plain background follows the note text bounds, masking gridlines without a border or shadow.",
+      "from": {
+        "data": "densityReadingNote"
+      },
+      "interactive": false,
+      "zindex": 1,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "datum.bounds.x1 - 10"
+          },
+          "x2": {
+            "signal": "datum.bounds.x2 + 10"
+          },
+          "y": {
+            "signal": "datum.bounds.y1 - 7"
+          },
+          "y2": {
+            "signal": "datum.bounds.y2 + 7"
+          },
+          "fill": {
+            "signal": "colorPage"
+          },
+          "cornerRadius": {
+            "value": 3
+          }
+        }
+      }
     }
   ]
 }
