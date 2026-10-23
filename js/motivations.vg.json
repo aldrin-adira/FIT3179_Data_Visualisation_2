@@ -740,56 +740,6 @@
         }
       },
       "interactive": false
-    },
-    {
-      "type": "text",
-      "description": "Print every published percentage; unpublished cells remain hatched.",
-      "from": {
-        "data": "cells"
-      },
-      "interactive": true,
-      "encode": {
-        "update": {
-          "x": {
-            "scale": "x",
-            "field": "species",
-            "band": 0.5
-          },
-          "y": {
-            "scale": "y",
-            "field": "reason",
-            "band": 0.5
-          },
-          "align": {
-            "value": "center"
-          },
-          "baseline": {
-            "value": "middle"
-          },
-          "font": {
-            "signal": "fontBody"
-          },
-          "fontSize": {
-            "signal": "narrow ? 10 : 11"
-          },
-          "fontWeight": {
-            "value": 600
-          },
-          "text": {
-            "signal": "datum.published_cell ? datum.percent+'%' : ''"
-          },
-          "fill": {
-            "signal": "datum.percent>=35 ? colorSurface : colorHeading"
-          },
-          "tooltip": {
-            "signal": "datum.published_cell ? {'Pet type': datum.species, 'Reason': datum.label, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Survey year': 2025} : {'Pet type': datum.species, 'Reason': datum.label, 'Value': 'Not published: outside this pet\\'s top five reasons', 'Interpretation': 'An unpublished value is not zero'}"
-          },
-          "opacity": {
-            "signal": "!selectedPet || selectedPet === datum.species ? 1 : 0.25"
-          }
-        }
-      },
-      "name": "motivationValues"
     }
   ]
 }
