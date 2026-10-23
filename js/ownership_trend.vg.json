@@ -48,7 +48,8 @@
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
-    "readingNote": "As Australia gains households, pet-owning homes can increase even when the share with a pet falls."
+    "readingNote": "As Australia gains households, pet-owning homes can increase even when the share with a pet falls.",
+    "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "config": {
     "axis": {
@@ -72,11 +73,6 @@
       "description": "How tall the plot is: 380 pixels (plus extraHeight, which is 0 here)."
     },
     {
-      "name": "colorNeutral",
-      "value": "#512D22",
-      "description": "Colour: the main brown colour, used for plain bars, lines and dots. This is only a backup; the real colour comes from --color-neutral in css/style.css."
-    },
-    {
       "name": "colorAccent",
       "value": "#005a9c",
       "description": "Colour: the blue highlight colour, used for the one thing we want you to notice. This is only a backup; the real colour comes from --color-accent in css/style.css."
@@ -98,7 +94,7 @@
     },
     {
       "name": "colorBorder",
-      "value": "#a4adb8",
+      "value": "#868d96",
       "description": "Colour: light grey, used for gridlines, empty squares and places with no data. This is only a backup; the real colour comes from --color-border in css/style.css."
     },
     {
@@ -125,6 +121,31 @@
       "name": "visibleYear",
       "value": 2025,
       "description": "Replay cutoff; always starts with the full overview. Advances through observed years only."
+    },
+    {
+      "name": "hoverYear",
+      "value": null,
+      "description": "Temporary hover focus; mouseout restores the default emphasis.",
+      "on": [
+        {
+          "events": "@surveyPoints:mouseover, @surveyLabels:mouseover",
+          "update": "datum.year"
+        },
+        {
+          "events": "@surveyPoints:mouseout, @surveyLabels:mouseout",
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
+    },
+    {
+      "name": "focusYear",
+      "update": "pinnedKey !== null ? pinnedKey : hoverYear",
+      "description": "Pinned selection takes precedence over temporary hover."
     }
   ],
   "data": [
@@ -341,7 +362,7 @@
   "marks": [
     {
       "type": "line",
-      "description": "The brown line that joins the surveys in order, from 2016 to 2025, so you can follow the path.",
+      "description": "Grey line joins the surveys chronologically, from 2016 to 2025.",
       "from": {
         "data": "visibleTrend"
       },
@@ -351,7 +372,7 @@
             "value": "linear"
           },
           "stroke": {
-            "signal": "colorNeutral"
+            "signal": "colorBorder"
           },
           "strokeWidth": {
             "value": 3
@@ -375,7 +396,7 @@
     },
     {
       "type": "symbol",
-      "description": "One dot per survey: white with a brown outline, or solid blue for 2025. Hover shows the values.",
+      "description": "Grey survey dots; 2025 is blue by default. Hover transfers blue emphasis to the hovered survey and enlarges its dot.",
       "from": {
         "data": "visibleTrend"
       },
@@ -383,17 +404,11 @@
         "enter": {
           "strokeWidth": {
             "value": 2.5
-          },
-          "stroke": {
-            "signal": "datum.highlight ? colorAccent : colorNeutral"
-          },
-          "fill": {
-            "signal": "datum.highlight ? colorAccent : colorNeutral"
           }
         },
         "update": {
           "size": {
-            "value": 110
+            "signal": "focusYear === datum.year ? 200 : 110"
           },
           "x": {
             "scale": "x",
@@ -405,11 +420,12 @@
           },
           "tooltip": {
             "signal": "{'Survey year': datum.year, 'Households owning pets': format(datum.household_ownership_pct, ',') + '%', 'Pet-owning households': format(datum.pet_households_millions_rounded, '.1f') + ' million', 'Adults surveyed': format(datum.sample_n, ',.0f')}"
-          }
-        },
-        "hover": {
-          "size": {
-            "value": 200
+          },
+          "stroke": {
+            "signal": "(focusYear !== null ? datum.year === focusYear : datum.highlight) ? colorAccent : colorBorder"
+          },
+          "fill": {
+            "signal": "(focusYear !== null ? datum.year === focusYear : datum.highlight) ? colorAccent : colorBorder"
           }
         }
       },
@@ -435,9 +451,6 @@
           },
           "fontWeight": {
             "signal": "datum.highlight ? 600 : 400"
-          },
-          "fill": {
-            "signal": "datum.highlight ? colorAccent : colorMuted"
           }
         },
         "update": {
@@ -467,6 +480,9 @@
           },
           "tooltip": {
             "signal": "{'Survey year': datum.year, 'Households owning pets': format(datum.household_ownership_pct, ',') + '%', 'Pet-owning households': format(datum.pet_households_millions_rounded, '.1f') + ' million', 'Adults surveyed': format(datum.sample_n, ',.0f')}"
+          },
+          "fill": {
+            "signal": "(focusYear !== null ? datum.year === focusYear : datum.highlight) ? colorAccent : colorBorder"
           }
         }
       },

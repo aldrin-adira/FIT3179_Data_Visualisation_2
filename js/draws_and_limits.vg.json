@@ -91,6 +91,11 @@
       "name": "height",
       "update": "noteY + 36",
       "description": "How tall the whole chart is: the grids plus the two-line note."
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
     }
   ],
   "title": {
@@ -292,6 +297,9 @@
           },
           "tooltip": {
             "signal": "{'Pet type': datum.species, 'Reason': datum.reason, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Each square': 'One percentage point', 'Survey year': 2025}"
+          },
+          "opacity": {
+            "signal": "pinnedKey === null || pinnedKey === datum.species + '|' + datum.reason ? 1 : 0.25"
           }
         }
       },
@@ -331,6 +339,9 @@
           },
           "tooltip": {
             "signal": "{'Pet type': datum.species, 'Reason': datum.reason, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Each square': 'One percentage point', 'Survey year': 2025}"
+          },
+          "opacity": {
+            "signal": "pinnedKey === null || pinnedKey === datum.species + '|' + datum.reason ? 1 : 0.25"
           }
         }
       },
@@ -377,6 +388,7 @@
     "scales": {
       "colour": "Pet colour, shared with every other chart: dogs amber, cats plum."
     },
-    "projections": {}
+    "projections": {},
+    "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   }
 }

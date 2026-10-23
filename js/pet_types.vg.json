@@ -152,8 +152,13 @@
     },
     {
       "name": "focusPet",
-      "update": "hoverPet || selectedPet",
-      "description": "Hover takes precedence over the persistent focus."
+      "update": "pinnedKey || hoverPet || selectedPet",
+      "description": "Pinned selection takes precedence over hover and the page-control selection."
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
     }
   ],
   "data": [
@@ -578,6 +583,7 @@
       "colour": "Species identity only."
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
-    "projections": {}
+    "projections": {},
+    "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   }
 }

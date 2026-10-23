@@ -18,13 +18,13 @@
     --color-heading: #0b2540; /* Page, section and chart headings */
     --color-muted: #252725; /* Supporting text, captions and chart labels */
     --color-accent: #005a9c; /* Questions, links, keyboard focus and chart highlights */
-    --color-border: #a4adb8; /* Dividers, card outlines and chart gridlines */
+    --color-border: #868d96; /* Dividers, gridlines and baseline chart marks */
     --color-map-water: #f4f6f7; /* Symbol map background, outside the council shapes */
     --color-map-land: #e9e7de; /* Unshaded council shapes behind the symbol map's circles */
     --color-aus-orange: #e55812; /* Orange like the Australian colors */
     --color-dark: #4e1a0a; /* Chart sequential scale: high values */
     --color-light: #f5dfd8; /* Chart sequential scale: low values */
-    --color-neutral: #512d22; /* Chart marks without a colour encoding */
+    --color-neutral: #512d22; /* Retained neutral palette token */
 
     /* Pet type colours: each pet always has the same colour in every chart.
        None of them is blue or red-brown, so they never get mixed up with the
@@ -44,8 +44,8 @@
        The middle of each ramp is that pet's normal colour from above. */
     --color-pet-dogs-light: #fbe8d4;
     --color-pet-dogs-mid-light: #e5c18b; /* Second class of the dog-rate map */
-    --color-pet-dogs-mid-dark: #764300; /* Fourth class of the dog-rate map */
-    --color-pet-dogs-dark: #4b2800;
+    --color-pet-dogs-mid-dark: #9c6500; /* Fourth class of the dog-rate map */
+    --color-pet-dogs-dark: #4e3300;
     --color-pet-cats-light: #f8e6f2;
     /* Intermediate stops restored from the original cat-rate map. */
     --color-pet-cats-mid-light: #b98eae;

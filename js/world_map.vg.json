@@ -43,16 +43,17 @@
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {
       "worldProjection": "Equal Earth projection, fitted so every country shape fills the map box."
-    }
+    },
+    "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
     {
-      "name": "colorLight",
+      "name": "colorPetDogsLight",
       "description": "Colour: the palest shade of the site's sequential colours, for low values. This is only a backup; the real colour comes from --color-light in css/style.css.",
       "value": "#F5DFD8"
     },
     {
-      "name": "colorDark",
+      "name": "colorPetDogsDark",
       "description": "Colour: the darkest shade of the site's sequential colours, for high values. This is only a backup; the real colour comes from --color-dark in css/style.css.",
       "value": "#4E1A0A"
     },
@@ -153,8 +154,13 @@
     },
     {
       "name": "focusIso",
-      "update": "(hoverIso || selectedCountry)==='XKX' ? 'KOS' : (hoverIso || selectedCountry)",
-      "description": "Hover temporarily overrides a pinned country; Australia keeps its default blue encoding."
+      "update": "(pinnedKey || hoverIso || selectedCountry)==='XKX' ? 'KOS' : (pinnedKey || hoverIso || selectedCountry)",
+      "description": "Pinned selection takes precedence over hover and the page-control selection."
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
     }
   ],
   "data": [
@@ -313,7 +319,7 @@
         3
       ],
       "range": {
-        "signal": "[colorLight, colorDark]"
+        "signal": "[colorPetDogsLight, colorPetDogsDark]"
       },
       "interpolate": "lab"
     }
@@ -371,10 +377,10 @@
                 "signal": "datum.value_class < 0 ? 0.45 : 1"
               },
               "stroke": {
-                "signal": "focusIso === datum.iso && datum.value_class >= 0 ? colorAccent : colorSurface"
+                "signal": "focusIso === datum.iso && (datum.value_class >= 0 || pinnedKey !== null) ? colorAccent : colorSurface"
               },
               "strokeWidth": {
-                "signal": "focusIso === datum.iso && datum.value_class >= 0 ? 1 : 0.3"
+                "signal": "focusIso === datum.iso && (datum.value_class >= 0 || pinnedKey !== null) ? 1 : 0.3"
               },
               "zindex": {
                 "signal": "focusIso === datum.iso ? 1 : 0"

@@ -42,14 +42,10 @@
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
-    "readingNote": "Australia stands further above the typical country for dogs than cats. Different survey methods limit close country comparisons."
+    "readingNote": "Australia stands further above the typical country for dogs than cats. Different survey methods limit close country comparisons.",
+    "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
-    {
-      "name": "colorAccent",
-      "description": "Colour: the blue highlight colour, used for the one thing we want you to notice. This is only a backup; the real colour comes from --color-accent in css/style.css.",
-      "value": "#005a9c"
-    },
     {
       "name": "colorPetDogs",
       "description": "Colour: the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs in css/style.css.",
@@ -122,8 +118,8 @@
     },
     {
       "name": "rowCats",
-      "description": "The middle line of the cat row: cat dots gather around this height.",
-      "update": "rowDogs + rowHeight + 48"
+      "description": "Cat-row centre; the extra inter-row gap reserves room for the reading note above the cat headings.",
+      "update": "rowDogs + rowHeight + 138"
     },
     {
       "name": "plotHeight",
@@ -142,12 +138,12 @@
     },
     {
       "name": "height",
-      "description": "Plot, axis and dedicated legend line; the reading note wraps in HTML below the SVG.",
+      "description": "Plot, axis and dedicated legend line. The reading note sits between the two species rows.",
       "update": "legendY + 24"
     },
     {
       "name": "hoverIso",
-      "description": "Remembers which country the mouse is pointing at. That country's dot gets a dark outline in both rows, so you can find it for dogs and for cats. It is cleared when the mouse leaves.",
+      "description": "Hovered country shared with the world map. Its dog dot becomes amber and its cat dot plum, and both enlarge. Other dots, including Australia, become grey. Mouseout restores default fills and sizes.",
       "value": null,
       "on": [
         {
@@ -167,8 +163,28 @@
     },
     {
       "name": "focusIso",
-      "update": "hoverIso || selectedCountry",
-      "description": "Hover temporarily overrides a pinned country; Australia keeps its default blue encoding."
+      "update": "pinnedKey || hoverIso || selectedCountry",
+      "description": "Pinned selection takes precedence over hover and the page-control selection."
+    },
+    {
+      "name": "colorPage",
+      "value": "#dadfef",
+      "description": "Plain annotation background, supplied by --color-page in css/style.css."
+    },
+    {
+      "name": "readingLines",
+      "update": "wrapChartText(['Australia stands further above the typical country', 'for dogs than cats. Different survey methods limit', 'close country comparisons.'], min(300, width - 40), 12, fontBody)",
+      "description": "Wrap a note capped at 300 pixels. Each source line has at most ten words and sixty characters; wrapping can only shorten it."
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
+    },
+    {
+      "name": "activeCountry",
+      "update": "pinnedKey || hoverIso",
+      "description": "Pinned selection takes precedence over temporary hover."
     }
   ],
   "data": [
@@ -214,9 +230,9 @@
         },
         {
           "type": "formula",
-          "description": "Choose each dot's colour: blue for Australia, grey for every other country.",
+          "description": "Default fill: Australia uses the row species colour; other countries use grey.",
           "as": "colour",
-          "expr": "datum.iso3 === 'AUS' ? colorAccent : colorBorder"
+          "expr": "datum.iso3 === 'AUS' ? (datum.species === 'Dogs' ? colorPetDogs : colorPetCats) : colorBorder"
         }
       ]
     },
@@ -257,15 +273,20 @@
     },
     {
       "name": "legend",
-      "description": "The two items in the key: Australia and other countries.",
+      "description": "Highlighted dog observations are amber and cat observations plum; other countries are grey.",
       "values": [
         {
           "i": 0,
-          "country": "Australia",
-          "key": "accent"
+          "country": "Dogs",
+          "key": "dogs"
         },
         {
           "i": 1,
+          "country": "Cats",
+          "key": "cats"
+        },
+        {
+          "i": 2,
           "country": "Other countries",
           "key": "grey"
         }
@@ -273,9 +294,9 @@
       "transform": [
         {
           "type": "formula",
-          "description": "Give each key item its colour: blue for Australia, grey for other countries.",
+          "description": "Use the CSS species colours for highlighted dots and grey for comparison countries.",
           "as": "colour",
-          "expr": "datum.key === 'accent' ? colorAccent : colorBorder"
+          "expr": "datum.key === 'dogs' ? colorPetDogs : datum.key === 'cats' ? colorPetCats : colorBorder"
         }
       ]
     },
@@ -297,6 +318,101 @@
         },
         {
           "v": 50
+        }
+      ]
+    },
+    {
+      "name": "packedCountries",
+      "source": "countries",
+      "description": "Calculate positions separately from dot appearance, so hovering cannot restart packing. Width changes recompute percentage positions before packing.",
+      "transform": [
+        {
+          "type": "formula",
+          "as": "fx",
+          "expr": "scale('x', datum.value)"
+        },
+        {
+          "type": "formula",
+          "as": "yfocus",
+          "expr": "datum.species === 'Dogs' ? rowDogs : rowCats"
+        },
+        {
+          "type": "formula",
+          "as": "r",
+          "expr": "radius"
+        },
+        {
+          "type": "force",
+          "description": "Pack countries vertically with x fixed to each reported percentage. Only layout inputs restart packing; hover changes mark appearance downstream.",
+          "iterations": 500,
+          "static": true,
+          "forces": [
+            {
+              "force": "collide",
+              "radius": {
+                "field": "r"
+              },
+              "iterations": 2
+            },
+            {
+              "force": "y",
+              "y": "yfocus",
+              "strength": {
+                "signal": "narrow ? 0.08 : 0.3"
+              }
+            }
+          ],
+          "restart": true
+        }
+      ]
+    },
+    {
+      "name": "australiaPoints",
+      "source": "packedCountries",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.iso3 === 'AUS'"
+        }
+      ]
+    },
+    {
+      "name": "australiaLabelTops",
+      "source": "packedCountries",
+      "description": "Find the highest nearby dot in each species row so Australian percentage labels do not cover neighbouring dots.",
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "australiaPoints",
+          "key": "species",
+          "fields": [
+            "species"
+          ],
+          "values": [
+            "x"
+          ],
+          "as": [
+            "australiaX"
+          ]
+        },
+        {
+          "type": "filter",
+          "expr": "abs(datum.x - datum.australiaX) <= 22"
+        },
+        {
+          "type": "aggregate",
+          "groupby": [
+            "species"
+          ],
+          "fields": [
+            "y"
+          ],
+          "ops": [
+            "min"
+          ],
+          "as": [
+            "top"
+          ]
         }
       ]
     }
@@ -441,9 +557,9 @@
         {
           "type": "symbol",
           "name": "dots",
-          "description": "One dot per country per pet: blue for Australia, grey for the others. Its left-to-right position is the country's percentage. Hover shows the values.",
+          "description": "One dot per country per pet, with x fixed at the reported percentage. Australia uses the row species colour by default. Hover transfers that colour to the hovered country and increases its dot areas by 50%; other countries become grey. Packing retains the base radius.",
           "from": {
-            "data": "countries"
+            "data": "packedCountries"
           },
           "encode": {
             "enter": {
@@ -452,64 +568,35 @@
               }
             },
             "update": {
-              "yfocus": {
-                "signal": "(datum.species === 'Dogs' ? rowDogs : rowCats)"
-              },
               "size": {
-                "signal": "PI * radius * radius"
-              },
-              "r": {
-                "signal": "radius"
+                "signal": "PI * radius * radius * (activeCountry === datum.iso3 ? 1.5 : 1)"
               },
               "fill": {
-                "field": "colour"
+                "signal": "activeCountry ? (activeCountry === datum.iso3 ? (datum.species === 'Dogs' ? colorPetDogs : colorPetCats) : colorBorder) : datum.colour"
               },
               "stroke": {
-                "signal": "focusIso === datum.iso3 ? colorAccent : colorSurface"
+                "signal": "focusIso === datum.iso3 ? (datum.species === 'Dogs' ? colorPetDogs : colorPetCats) : colorSurface"
               },
               "strokeWidth": {
                 "signal": "focusIso === datum.iso3 ? 1 : 1"
               },
-              "fx": {
-                "scale": "x",
-                "field": "value"
-              },
               "tooltip": {
                 "signal": "{'Country': datum.country, 'Pet type': datum.species, 'Households owning this pet': format(datum.value, ',') + '%', 'Survey data year': datum.data_year, 'Rank among selected countries': datum.rank}"
+              },
+              "x": {
+                "field": "x"
+              },
+              "y": {
+                "field": "y"
               }
             }
           },
-          "transform": [
-            {
-              "type": "force",
-              "description": "Fix x exactly at the reported percentage (fx). Collision avoidance moves points vertically only, so packing cannot distort quantitative position.",
-              "iterations": 500,
-              "static": true,
-              "forces": [
-                {
-                  "force": "collide",
-                  "radius": {
-                    "field": "r"
-                  },
-                  "iterations": 2
-                },
-                {
-                  "force": "y",
-                  "y": "yfocus",
-                  "strength": {
-                    "signal": "narrow ? 0.08 : 0.3"
-                  }
-                }
-              ],
-              "restart": true
-            }
-          ],
           "interactive": true
         },
         {
           "type": "text",
           "name": "ausLabels",
-          "description": "Australian values occupy a separate annotation line above each swarm; text never masks the data dots.",
+          "description": "Australian percentage labels sit directly above their dots, moving upward just enough to clear nearby points in dense layouts. Labels omit the country name and retain a six-pixel gap above the highest nearby dot.",
           "from": {
             "data": "dots"
           },
@@ -522,10 +609,10 @@
             },
             "update": {
               "x": {
-                "signal": "clamp(datum.x, 48, width - 48)"
+                "signal": "datum.x"
               },
               "y": {
-                "signal": "(datum.datum.species === 'Dogs' ? 0 : rowCats - rowDogs) + 36"
+                "signal": "min(datum.y, data('australiaLabelTops')[0].species === datum.datum.species ? data('australiaLabelTops')[0].top : data('australiaLabelTops')[1].top) - sqrt(datum.size / PI) - 6"
               },
               "baseline": {
                 "value": "bottom"
@@ -534,7 +621,7 @@
                 "value": "center"
               },
               "text": {
-                "signal": "datum.datum.iso3 === 'AUS' ? 'Australia ' + format(datum.datum.value, '.0f') + '%' : ''"
+                "signal": "datum.datum.iso3 === 'AUS' ? format(datum.datum.value, '.0f') + '%' : ''"
               },
               "fontSize": {
                 "signal": "narrow ? 11 : 13"
@@ -543,7 +630,7 @@
                 "signal": "fontBody"
               },
               "fill": {
-                "signal": "colorAccent"
+                "signal": "activeCountry && activeCountry !== 'AUS' ? colorBorder : (datum.datum.species === 'Dogs' ? colorPetDogs : colorPetCats)"
               }
             }
           }
@@ -672,7 +759,7 @@
     },
     {
       "type": "symbol",
-      "description": "The two coloured dots in the key: blue and grey.",
+      "description": "Legend symbols show dog amber, cat plum and comparison grey.",
       "from": {
         "data": "legend"
       },
@@ -680,7 +767,7 @@
       "encode": {
         "update": {
           "x": {
-            "signal": "legendX + 7 + datum.i * 120"
+            "signal": "legendX + 7 + datum.i * (narrow ? 90 : 120)"
           },
           "y": {
             "signal": "legendY + 8"
@@ -696,7 +783,7 @@
     },
     {
       "type": "text",
-      "description": "The words next to the key dots: \"Australia\" and \"Other countries\".",
+      "description": "Direct legend labels identify dog, cat and comparison symbols.",
       "from": {
         "data": "legend"
       },
@@ -712,7 +799,7 @@
         },
         "update": {
           "x": {
-            "signal": "legendX + 18 + datum.i * 120"
+            "signal": "legendX + 18 + datum.i * (narrow ? 90 : 120)"
           },
           "y": {
             "signal": "legendY + 8"
@@ -725,6 +812,76 @@
           },
           "fill": {
             "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "name": "beeswarmReadingNote",
+      "description": "A compact reading note in the empty gap between dog dots and the cat-row headings. Lines contain at most ten words and sixty characters.",
+      "interactive": false,
+      "zindex": 2,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "width / 2 + 150"
+          },
+          "y": {
+            "signal": "rowDogs + rowHeight / 2 + 12"
+          },
+          "text": {
+            "signal": "readingLines"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "lineHeight": {
+            "value": 17
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "name": "beeswarmReadingBackground",
+      "description": "Plain background follows the note text bounds, masking gridlines without a border or shadow.",
+      "from": {
+        "data": "beeswarmReadingNote"
+      },
+      "interactive": false,
+      "zindex": 1,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "datum.bounds.x1 - 10"
+          },
+          "x2": {
+            "signal": "datum.bounds.x2 + 10"
+          },
+          "y": {
+            "signal": "datum.bounds.y1 - 7"
+          },
+          "y2": {
+            "signal": "datum.bounds.y2 + 7"
+          },
+          "fill": {
+            "signal": "colorPage"
+          },
+          "cornerRadius": {
+            "value": 3
           }
         }
       }

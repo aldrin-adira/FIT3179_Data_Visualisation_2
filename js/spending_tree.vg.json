@@ -51,11 +51,6 @@
       "description": "Colour: white, the colour of the card each chart sits on; also the halo behind labels. This is only a backup; the real colour comes from --color-surface in css/style.css."
     },
     {
-      "name": "colorNeutral",
-      "value": "#512D22",
-      "description": "Colour: the starting node, which belongs to no single pet. This is only a backup; the real colour comes from --color-neutral in css/style.css."
-    },
-    {
       "name": "colorPetDogs",
       "value": "#9c6500",
       "description": "Colour: the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs in css/style.css."
@@ -143,6 +138,21 @@
         }
       ],
       "description": "The category or type of cost under the pointer. It is highlighted under both pets at once, so dogs and cats can be compared."
+    },
+    {
+      "name": "colorBorder",
+      "value": "#868d96",
+      "description": "Grey baseline mark colour supplied by --color-border in css/style.css."
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
+    },
+    {
+      "name": "focusKey",
+      "update": "pinnedKey || hoverKey",
+      "description": "Pinned selection takes precedence over temporary hover."
     }
   ],
   "data": [
@@ -555,7 +565,7 @@
             "value": "butt"
           },
           "strokeOpacity": {
-            "signal": "!hoverKey ? 0.55 : (datum.target.key === hoverKey ? 0.95 : 0.15)"
+            "signal": "!focusKey ? 0.55 : (datum.target.key === focusKey ? 0.95 : 0.15)"
           },
           "tooltip": {
             "signal": "datum.target.kind === 'root' ? {'Hierarchy': 'Pet spending', 'Note': 'Dog and cat averages have separate household denominators and are not added together'} : {'Pet type': datum.target.species, 'Category or cost group': datum.target.name, 'Average annual spending': format(datum.target.amount, ',.0f') + ' Australian dollars per owning household', 'Level': datum.target.kind === 'pet' ? 'Sum of displayed categories' : datum.target.kind === 'group' ? 'Editorial cost group' : 'Reported category', 'Rounding note': datum.target.kind === 'pet' && datum.target.species === 'Dogs' ? 'Displayed categories sum to 2,521 Australian dollars; published total is 2,520 because of rounding' : 'Category averages are rounded in the report'}"
@@ -583,7 +593,7 @@
             "signal": "datum.kind === 'item' ? 36 : 70"
           },
           "fill": {
-            "signal": "datum.kind === 'root' ? colorNeutral : scale('colour', datum.species)"
+            "signal": "datum.kind === 'root' ? colorBorder : scale('colour', datum.species)"
           },
           "stroke": {
             "signal": "colorSurface"
@@ -592,7 +602,7 @@
             "value": 1.5
           },
           "opacity": {
-            "signal": "!hoverKey || datum.key === hoverKey || datum.kind === 'root' ? 1 : 0.3"
+            "signal": "!focusKey || datum.key === focusKey || datum.kind === 'root' ? 1 : 0.3"
           },
           "tooltip": {
             "signal": "datum.kind === 'root' ? {'Hierarchy': 'Pet spending', 'Note': 'Dog and cat averages have separate household denominators and are not added together'} : {'Pet type': datum.species, 'Category or cost group': datum.name, 'Average annual spending': format(datum.amount, ',.0f') + ' Australian dollars per owning household', 'Level': datum.kind === 'pet' ? 'Sum of displayed categories' : datum.kind === 'group' ? 'Editorial cost group' : 'Reported category', 'Rounding note': datum.kind === 'pet' && datum.species === 'Dogs' ? 'Displayed categories sum to 2,521 Australian dollars; published total is 2,520 because of rounding' : 'Category averages are rounded in the report'}"
@@ -632,7 +642,7 @@
             "signal": "datum.kind === 'pet' ? 13 : 12"
           },
           "fontWeight": {
-            "signal": "datum.kind === 'pet' || datum.key === hoverKey ? 600 : 500"
+            "signal": "datum.kind === 'pet' || datum.key === focusKey ? 600 : 500"
           },
           "fill": {
             "signal": "scale('colour', datum.species)"
@@ -647,7 +657,7 @@
             "value": 0.9
           },
           "opacity": {
-            "signal": "!hoverKey || datum.key === hoverKey ? 1 : 0.35"
+            "signal": "!focusKey || datum.key === focusKey ? 1 : 0.35"
           }
         }
       }
@@ -683,19 +693,20 @@
             "signal": "datum.kind === 'pet' ? 13 : 12"
           },
           "fontWeight": {
-            "signal": "datum.kind === 'pet' || datum.key === hoverKey ? 600 : 500"
+            "signal": "datum.kind === 'pet' || datum.key === focusKey ? 600 : 500"
           },
           "fill": {
             "signal": "scale('colour', datum.species)"
           },
           "opacity": {
-            "signal": "!hoverKey || datum.key === hoverKey ? 1 : 0.35"
+            "signal": "!focusKey || datum.key === focusKey ? 1 : 0.35"
           },
           "tooltip": {
             "signal": "datum.kind === 'root' ? {'Hierarchy': 'Pet spending', 'Note': 'Dog and cat averages have separate household denominators and are not added together'} : {'Pet type': datum.species, 'Category or cost group': datum.name, 'Average annual spending': format(datum.amount, ',.0f') + ' Australian dollars per owning household', 'Level': datum.kind === 'pet' ? 'Sum of displayed categories' : datum.kind === 'group' ? 'Editorial cost group' : 'Reported category', 'Rounding note': datum.kind === 'pet' && datum.species === 'Dogs' ? 'Displayed categories sum to 2,521 Australian dollars; published total is 2,520 because of rounding' : 'Category averages are rounded in the report'}"
           }
         }
-      }
+      },
+      "name": "spendingLabel0"
     },
     {
       "type": "text",
@@ -725,13 +736,13 @@
             "signal": "narrow ? 11 : 12"
           },
           "fontWeight": {
-            "signal": "datum.key === hoverKey ? 600 : 400"
+            "signal": "datum.key === focusKey ? 600 : 400"
           },
           "fill": {
             "signal": "colorMuted"
           },
           "opacity": {
-            "signal": "!hoverKey || datum.key === hoverKey ? 1 : 0.4"
+            "signal": "!focusKey || datum.key === focusKey ? 1 : 0.4"
           },
           "tooltip": {
             "signal": "datum.kind === 'root' ? {'Hierarchy': 'Pet spending', 'Note': 'Dog and cat averages have separate household denominators and are not added together'} : {'Pet type': datum.species, 'Category or cost group': datum.name, 'Average annual spending': format(datum.amount, ',.0f') + ' Australian dollars per owning household', 'Level': datum.kind === 'pet' ? 'Sum of displayed categories' : datum.kind === 'group' ? 'Editorial cost group' : 'Reported category', 'Rounding note': datum.kind === 'pet' && datum.species === 'Dogs' ? 'Displayed categories sum to 2,521 Australian dollars; published total is 2,520 because of rounding' : 'Category averages are rounded in the report'}"
@@ -771,19 +782,20 @@
             "signal": "narrow ? 11 : 12"
           },
           "fontWeight": {
-            "signal": "datum.key === hoverKey || datum.key === 'Food' ? 600 : 400"
+            "signal": "datum.key === focusKey || datum.key === 'Food' ? 600 : 400"
           },
           "fill": {
             "signal": "scale('colour', datum.species)"
           },
           "opacity": {
-            "signal": "!hoverKey || datum.key === hoverKey ? 1 : 0.4"
+            "signal": "!focusKey || datum.key === focusKey ? 1 : 0.4"
           },
           "tooltip": {
             "signal": "datum.kind === 'root' ? {'Hierarchy': 'Pet spending', 'Note': 'Dog and cat averages have separate household denominators and are not added together'} : {'Pet type': datum.species, 'Category or cost group': datum.name, 'Average annual spending': format(datum.amount, ',.0f') + ' Australian dollars per owning household', 'Level': datum.kind === 'pet' ? 'Sum of displayed categories' : datum.kind === 'group' ? 'Editorial cost group' : 'Reported category', 'Rounding note': datum.kind === 'pet' && datum.species === 'Dogs' ? 'Displayed categories sum to 2,521 Australian dollars; published total is 2,520 because of rounding' : 'Category averages are rounded in the report'}"
           }
         }
-      }
+      },
+      "name": "spendingLabel1"
     }
   ],
   "usermeta": {
@@ -795,6 +807,7 @@
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
     "courseBasis": "W06 Network and Trees, slide 7, and Network idioms (Kirk), PDF page 2, explicitly allow line width for quantitative attributes in a dendrogram. The root groups the two species for navigation; it is not a summed household budget.",
-    "readingNote": "All reported categories are included. Dog items sum to 2,521 Australian dollars; the published 2,520 Australian dollars total differs by one Australian dollar from rounding. Averages include owners who spent nothing in a category. A source dash is missing, not zero."
+    "readingNote": "All reported categories are included. Dog items sum to 2,521 Australian dollars; the published 2,520 Australian dollars total differs by one Australian dollar from rounding. Averages include owners who spent nothing in a category. A source dash is missing, not zero.",
+    "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   }
 }

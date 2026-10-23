@@ -176,6 +176,83 @@
             : 'Choose a country to highlight it in the map and both dot rows.';
     }
 
+    // Each chart pins one meaningful observation or comparison. Existing linked
+    // charts share country, pet or council focus; other charts stay independent.
+    const clickTargets = {
+        '#chart1_chart': {marks: ['worldPanelShapes'], key: datum => datum.iso === 'KOS' ? 'XKX' : datum.iso},
+        '#chart2_chart': {marks: ['dots'], key: datum => datum.iso3},
+        '#chart3_chart': {marks: ['surveyPoints', 'surveyLabels'], key: datum => datum.year},
+        '#chart4_chart': {marks: ['householdPoints', 'householdSticks', 'householdLabels', 'valueLabel'], key: datum => datum.label},
+        '#chart5_chart': {marks: ['rankPoints', 'rankLines', 'firstSurveyLabels', 'lastSurveyLabels'], key: datum => datum.species},
+        '#chart6_chart': {marks: ['motivationCells'], key: datum => datum.species + '|' + datum.reason},
+        '#chart7_chart': {marks: ['branches', 'nodeDots', 'leafNames', 'spendingLabel0', 'spendingLabel1'], key: datum => (datum.target || datum).key},
+        '#chart8_chart': {marks: ['ownerBars', 'nonOwnerBars', 'ownerValues', 'rightValue', 'barrierReasons'], key: datum => datum.reason},
+        '#chart9_chart': {marks: ['councilSymbols'], key: datum => datum.code},
+        '#chart10_chart': {marks: ['councilAreas'], key: datum => datum.code},
+        '#chart11_chart': {marks: ['councilPoints', 'calloutText'], key: datum => datum.code},
+        '#chart12_chart': {marks: ['squares', 'waffleLabels'], key: datum => datum.species + '|' + datum.reason}
+    };
+    const connectedClickViews = new WeakSet();
+
+    function syncPetControls(pet) {
+        document.querySelectorAll('[data-control="pet"]').forEach(select => {
+            select.value = [...select.options].some(option => option.value === pet) ? pet : '';
+        });
+    }
+
+    async function pinSelection(id, key, datum) {
+        if (id === '#chart1_chart' || id === '#chart2_chart') {
+            const country = key || '';
+            document.querySelector('#country-select').value = country;
+            await update(['#chart1_chart', '#chart2_chart'], {pinnedKey: key, selectedCountry: country, hoverIso: null});
+            showCountry(country);
+        } else if (id === '#chart5_chart' || id === '#chart6_chart') {
+            const pet = key === null ? '' : datum.species;
+            syncPetControls(pet);
+            await Promise.all([
+                update(['#chart5_chart'], {pinnedKey: key === null ? null : pet, selectedPet: pet, hoverPet: null}),
+                update(['#chart6_chart'], {pinnedKey: id === '#chart6_chart' ? key : null, selectedPet: pet === 'Other pets' ? '' : pet})
+            ]);
+        } else if ([...saIds, '#chart11_chart'].includes(id)) {
+            const council = key || '';
+            document.querySelector('#council-select').value = council;
+            await update([...saIds, '#chart11_chart'], {pinnedKey: key, selectedCouncil: council, hoverCode: null});
+            showCouncil(council);
+        } else {
+            const hoverSignal = {'#chart3_chart': 'hoverYear', '#chart4_chart': 'hoverGroup', '#chart7_chart': 'hoverKey', '#chart8_chart': 'hoverReason'}[id];
+            const changes = {pinnedKey: key};
+            if (hoverSignal) changes[hoverSignal] = null;
+            await update([id], changes);
+        }
+    }
+
+    function connectClickSelections() {
+        Object.entries(clickTargets).forEach(([id, config]) => {
+            const view = chartViews[id];
+            if (!view || connectedClickViews.has(view)) return;
+            connectedClickViews.add(view);
+            let pointerStart;
+            let dragged = false;
+            // A completed map pan must not also select the council underneath.
+            view.addEventListener('pointerdown', event => {
+                pointerStart = [event.clientX, event.clientY];
+                dragged = false;
+            });
+            view.addEventListener('pointermove', event => {
+                if (pointerStart && event.buttons && Math.hypot(event.clientX - pointerStart[0], event.clientY - pointerStart[1]) > 5) dragged = true;
+            });
+            view.addEventListener('click', (event, item) => {
+                if (dragged) { dragged = false; return; }
+                const isMark = item && config.marks.includes(item.mark.name);
+                if (!isMark && item && item.mark.marktype !== 'group') return;
+                const datum = isMark ? item.datum : null;
+                const key = isMark ? config.key(datum) : null;
+                if (isMark && (key === undefined || key === null || key === '')) return;
+                pinSelection(id, key, datum).catch(error => console.error(error));
+            });
+        });
+    }
+
     // Persistent species focus links two different idioms without removing
     // the surrounding data, reducing the need to remember a pet's colour.
     document.querySelectorAll('[data-control="pet"]').forEach(select => {
@@ -184,17 +261,17 @@
             document.querySelectorAll('[data-control="pet"]').forEach(other => {
                 other.value = [...other.options].some(option => option.value === pet) ? pet : '';
             });
-            update(['#chart5_chart'], {selectedPet: pet});
-            update(['#chart6_chart'], {selectedPet: pet === 'Other pets' ? '' : pet});
+            update(['#chart5_chart'], {pinnedKey: null, selectedPet: pet});
+            update(['#chart6_chart'], {pinnedKey: null, selectedPet: pet === 'Other pets' ? '' : pet});
         });
     });
     document.querySelector('#country-select').addEventListener('change', event => {
-        update(['#chart1_chart', '#chart2_chart'], {selectedCountry: event.target.value});
+        update(['#chart1_chart', '#chart2_chart'], {pinnedKey: null, selectedCountry: event.target.value});
         showCountry(event.target.value);
     });
     document.querySelector('#council-select').addEventListener('change', event => {
         const code = event.target.value;
-        update([...saIds, '#chart11_chart'], {selectedCouncil: code});
+        update([...saIds, '#chart11_chart'], {pinnedKey: null, selectedCouncil: code});
         showCouncil(code);
         const row = councilRows.find(row => row.lga_code_2025 === code);
         moveCamera('sa', row ? councilCamera(row.shape) : regions.south, row ? 'council' : 'south');
@@ -218,7 +295,7 @@
         const scope = button.dataset.mapScope;
         if (scope === 'sa') {
             document.querySelector('#council-select').value = '';
-            update([...saIds, '#chart11_chart'], {selectedCouncil: ''});
+            update([...saIds, '#chart11_chart'], {pinnedKey: null, selectedCouncil: ''});
             showCouncil('');
         }
         moveCamera(scope, regions[button.dataset.mapRegion], button.dataset.mapRegion);
@@ -291,6 +368,7 @@
         try {
             dataReady ||= loadControlData();
             await dataReady;
+            connectClickSelections();
             connect(['#chart1_chart', '#chart2_chart'], 'hoverIso');
             connect(saIds, 'zoom');
             connect(saIds, 'pan');

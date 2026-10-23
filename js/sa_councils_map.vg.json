@@ -178,8 +178,8 @@
     },
     {
       "name": "focusCode",
-      "update": "hoverCode || selectedCouncil",
-      "description": "Keep the selected council visible when the pointer leaves the map."
+      "update": "pinnedKey || hoverCode || selectedCouncil",
+      "description": "Pinned selection takes precedence over hover and the page-control selection."
     },
     {
       "name": "colorPetCats",
@@ -220,6 +220,11 @@
       "name": "colorAccent",
       "value": "#005a9c",
       "description": "Hover and selection outline colour supplied by --color-accent in css/style.css."
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
     }
   ],
   "data": [
@@ -469,6 +474,7 @@
     "projections": {
       "map": "Conic equal-area projection. The camera signals (cameraLon, cameraLat, cameraSpan) choose the visible area."
     },
-    "pageTitle": "Where dogs are more common"
+    "pageTitle": "Where dogs are more common",
+    "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   }
 }

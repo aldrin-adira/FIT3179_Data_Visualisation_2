@@ -45,7 +45,8 @@
       "petColour": "Gives each pet its fixed colour, used for the pet names along the top."
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
-    "projections": {}
+    "projections": {},
+    "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "config": {
     "axis": {
@@ -170,6 +171,16 @@
       "name": "selectedPet",
       "value": "",
       "description": "Shared species focus set above the rank chart or above this heatmap."
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
+    },
+    {
+      "name": "colorAccent",
+      "value": "#005a9c",
+      "description": "Selection outline supplied by --color-accent in css/style.css."
     }
   ],
   "data": [
@@ -525,7 +536,7 @@
     },
     {
       "type": "rect",
-      "description": "The squares of the grid. Squares with a published number are coloured by it; the others are white.",
+      "description": "The squares of the grid. Squares with a published number are coloured by it; the others are white. Clicking pins a cell with an accent outline, preserving its quantitative fill and the unpublished-data treatment.",
       "from": {
         "data": "cells"
       },
@@ -552,10 +563,19 @@
             "signal": "datum.published_cell ? scale('colour', datum.percent) : colorSurface"
           },
           "opacity": {
-            "signal": "!selectedPet || selectedPet===datum.species ? 1 : 0.25"
+            "signal": "pinnedKey !== null ? (pinnedKey === datum.species + '|' + datum.reason ? 1 : 0.25) : (!selectedPet || selectedPet === datum.species ? 1 : 0.25)"
           },
           "tooltip": {
             "signal": "datum.published_cell ? {'Pet type': datum.species, 'Reason': datum.label, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Survey year': 2025} : {'Pet type': datum.species, 'Reason': datum.label, 'Value': 'Not published: outside this pet\\'s top five reasons', 'Interpretation': 'An unpublished value is not zero'}"
+          },
+          "stroke": {
+            "signal": "pinnedKey === datum.species + '|' + datum.reason ? colorAccent : colorSurface"
+          },
+          "strokeWidth": {
+            "signal": "pinnedKey === datum.species + '|' + datum.reason ? 2 : 0"
+          },
+          "zindex": {
+            "signal": "pinnedKey === datum.species + '|' + datum.reason ? 1 : 0"
           }
         }
       },

@@ -15,7 +15,7 @@ var chartJobs = [];
 var controlNames = {};
 var controlValues = {};
 // Preserve selections and camera state across responsive redraws.
-var persistentSignals = ["selectedCountry", "selectedPet", "selectedCouncil", "species", "region", "zoom", "pan", "cameraLon", "cameraLat", "cameraSpan"];
+var persistentSignals = ["pinnedKey", "selectedCountry", "selectedPet", "selectedCouncil", "species", "region", "zoom", "pan", "cameraLon", "cameraLat", "cameraSpan"];
 // Cache chart definitions across resize redraws; clone before applying state.
 var specCache = new Map();
 var svgObservers = [];

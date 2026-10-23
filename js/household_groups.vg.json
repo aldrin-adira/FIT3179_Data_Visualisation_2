@@ -42,14 +42,10 @@
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
-    "readingNote": "Household circumstances may shape the feasibility of pet care. These comparisons cannot establish what causes ownership."
+    "readingNote": "Household circumstances may shape the feasibility of pet care. These comparisons cannot establish what causes ownership.",
+    "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
-    {
-      "name": "colorNeutral",
-      "value": "#512D22",
-      "description": "Colour: the main brown colour, used for plain bars, lines and dots. This is only a backup; the real colour comes from --color-neutral in css/style.css."
-    },
     {
       "name": "colorAccent",
       "value": "#005a9c",
@@ -129,6 +125,36 @@
       "name": "height",
       "description": "Plot and axis only; the reading note wraps in HTML below the SVG.",
       "update": "plotHeight + 60"
+    },
+    {
+      "name": "colorBorder",
+      "value": "#868d96",
+      "description": "Grey baseline mark colour supplied by --color-border in css/style.css."
+    },
+    {
+      "name": "hoverGroup",
+      "value": null,
+      "description": "Temporary hover focus; mouseout restores the default emphasis.",
+      "on": [
+        {
+          "events": "@householdLabels:mouseover, @householdSticks:mouseover, @householdPoints:mouseover, @valueLabel:mouseover",
+          "update": "datum.label"
+        },
+        {
+          "events": "@householdLabels:mouseout, @householdSticks:mouseout, @householdPoints:mouseout, @valueLabel:mouseout",
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
+    },
+    {
+      "name": "focusGroup",
+      "update": "pinnedKey !== null ? pinnedKey : hoverGroup",
+      "description": "Pinned selection takes precedence over temporary hover."
     }
   ],
   "data": [
@@ -444,7 +470,7 @@
                 "signal": "datum.block * blockHeight + 4"
               },
               "fill": {
-                "signal": "datum.emphasis ? colorAccent : colorMuted"
+                "signal": "datum.emphasis ? colorAccent : colorBorder"
               }
             }
           },
@@ -485,7 +511,7 @@
                 "signal": "datum.emphasis ? 600 : 400"
               },
               "fill": {
-                "signal": "datum.emphasis ? colorAccent : colorMuted"
+                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
               },
               "tooltip": {
                 "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"
@@ -497,7 +523,7 @@
         },
         {
           "type": "rule",
-          "description": "The lollipop stick: a line from the national rate to the group's value. Brown, or blue for the highlighted comparison.",
+          "description": "Grey lollipop sticks connect group rates to the benchmark. Hover highlights the matching stick and dot in blue; mouseout restores default household emphasis.",
           "from": {
             "data": "groups"
           },
@@ -523,7 +549,7 @@
                 "signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 30 : rowHeight / 2)"
               },
               "stroke": {
-                "signal": "datum.emphasis ? colorAccent : colorNeutral"
+                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
               },
               "tooltip": {
                 "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"
@@ -553,7 +579,7 @@
                 "value": 130
               },
               "fill": {
-                "signal": "datum.emphasis ? colorAccent : colorNeutral"
+                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
               },
               "tooltip": {
                 "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"
@@ -603,7 +629,7 @@
                 "signal": "datum.emphasis ? 600 : 400"
               },
               "fill": {
-                "signal": "datum.emphasis ? colorAccent : colorMuted"
+                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
               },
               "tooltip": {
                 "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label, 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published ownership percentage' : 'Calculated from the published non-owner percentage'}"

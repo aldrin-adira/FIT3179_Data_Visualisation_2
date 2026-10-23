@@ -46,14 +46,10 @@
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
-    "readingNote": "Housing access can limit ownership even before budgeting begins. Affordability alone cannot remove every obstacle."
+    "readingNote": "Housing access can limit ownership even before budgeting begins. Affordability alone cannot remove every obstacle.",
+    "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
-    {
-      "name": "colorNeutral",
-      "description": "Colour: the main brown colour, used for plain bars, lines and dots. This is only a backup; the real colour comes from --color-neutral in css/style.css.",
-      "value": "#512D22"
-    },
     {
       "name": "colorAccent",
       "description": "Colour: the blue highlight colour, used for the one thing we want you to notice. This is only a backup; the real colour comes from --color-accent in css/style.css.",
@@ -128,6 +124,36 @@
       "name": "height",
       "description": "Bars only; the reading note wraps in HTML below the SVG.",
       "update": "plotHeight + 8"
+    },
+    {
+      "name": "colorBorder",
+      "value": "#868d96",
+      "description": "Grey baseline mark colour supplied by --color-border in css/style.css."
+    },
+    {
+      "name": "hoverReason",
+      "value": null,
+      "description": "Temporary hover focus; mouseout restores the default emphasis.",
+      "on": [
+        {
+          "events": "@ownerBars:mouseover, @nonOwnerBars:mouseover, @ownerValues:mouseover, @rightValue:mouseover, @barrierReasons:mouseover",
+          "update": "datum.reason"
+        },
+        {
+          "events": "@ownerBars:mouseout, @nonOwnerBars:mouseout, @ownerValues:mouseout, @rightValue:mouseout, @barrierReasons:mouseout",
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
+    },
+    {
+      "name": "focusReason",
+      "update": "pinnedKey !== null ? pinnedKey : hoverReason",
+      "description": "Pinned selection takes precedence over temporary hover."
     }
   ],
   "data": [
@@ -357,7 +383,7 @@
             "signal": "datum.emphasis ? 600 : 400"
           },
           "fill": {
-            "signal": "datum.emphasis ? colorAccent : colorMuted"
+            "signal": "(focusReason !== null ? datum.reason === focusReason : datum.emphasis) ? colorAccent : colorBorder"
           },
           "tooltip": {
             "signal": "{'Reason': datum.label, 'Current owners wanting another pet': datum.owners + '%', 'People without a pet who want one': datum.non_owners + '%'}"
@@ -369,7 +395,7 @@
     },
     {
       "type": "rect",
-      "description": "The left bars (current owners), growing left from the middle. Brown, or blue for the highlighted row.",
+      "description": "Grey cohort bars. Hover highlights the same reason on both sides in blue; mouseout restores the default home-or-lifestyle emphasis.",
       "from": {
         "data": "barriers"
       },
@@ -391,7 +417,7 @@
             "signal": "barHeight"
           },
           "fill": {
-            "signal": "datum.emphasis ? colorAccent : colorNeutral"
+            "signal": "(focusReason !== null ? datum.reason === focusReason : datum.emphasis) ? colorAccent : colorBorder"
           },
           "tooltip": {
             "signal": "{'Reason': datum.label, 'Respondent group': 'Current owners wanting another pet', 'Share reporting this reason': datum.owners + '%'}"
@@ -403,7 +429,7 @@
     },
     {
       "type": "rect",
-      "description": "The right bars (people without a pet), growing right from the middle. Brown, or blue for the highlighted row.",
+      "description": "Grey cohort bars. Hover highlights the same reason on both sides in blue; mouseout restores the default home-or-lifestyle emphasis.",
       "from": {
         "data": "barriers"
       },
@@ -425,7 +451,7 @@
             "signal": "barHeight"
           },
           "fill": {
-            "signal": "datum.emphasis ? colorAccent : colorNeutral"
+            "signal": "(focusReason !== null ? datum.reason === focusReason : datum.emphasis) ? colorAccent : colorBorder"
           },
           "tooltip": {
             "signal": "{'Reason': datum.label, 'Respondent group': 'People without a pet who want one', 'Share reporting this reason': datum.non_owners + '%'}"
@@ -472,7 +498,7 @@
             "signal": "datum.emphasis ? 600 : 400"
           },
           "fill": {
-            "signal": "datum.emphasis ? colorAccent : colorMuted"
+            "signal": "(focusReason !== null ? datum.reason === focusReason : datum.emphasis) ? colorAccent : colorBorder"
           },
           "tooltip": {
             "signal": "{'Reason': datum.label, 'Respondent group': 'Current owners wanting another pet', 'Share reporting this reason': datum.owners + '%'}"
@@ -518,7 +544,7 @@
             "signal": "datum.emphasis ? 600 : 400"
           },
           "fill": {
-            "signal": "datum.emphasis ? colorAccent : colorMuted"
+            "signal": "(focusReason !== null ? datum.reason === focusReason : datum.emphasis) ? colorAccent : colorBorder"
           },
           "tooltip": {
             "signal": "{'Reason': datum.label, 'Respondent group': 'People without a pet who want one', 'Share reporting this reason': datum.non_owners + '%'}"
