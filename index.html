@@ -225,65 +225,54 @@
                     <h2 id="section-3-title">A companion that fits</h2>
                     <p class="section-deck">The most common pet is not the most numerous.</p>
                 </div>
-                <div class="chapter-panels panels-even">
-                    <div class="story-row">
-                        <aside class="narrative">
-                            <h3>One dog, or a tank of fish</h3>
-                            <p>
-                                Dogs reach the most homes, yet fish have led the animal count in every survey since
-                                2016: about 12.1 million fish compared with 7.4 million dogs in 2025. Below them, birds
-                                briefly passed dogs in 2019, then slipped to fourth as cats moved up. Follow a line to
-                                trace one pet's rank.
-                            </p>
-                            <p class="method-note">
-                                Four national surveys, 2016 to 2025. Equal rank gaps do not mean equal differences in
-                                quantity.
-                            </p>
-                        </aside>
-                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
-
-                        <figure class="chart-container chart-figure">
-                            <div class="chart-toolbar">
-                                <label for="pet-select">Follow a pet type</label>
-                                <select id="pet-select" data-control="pet">
-                                    <option value="">All pet types</option>
-                                </select>
-                            </div>
-                            <div id="chart5_chart" data-fill-height></div>
-                            <figcaption class="chart-source">
-                                Sources:
-                                <a href="#source-ama-earlier">Animal Medicines Australia (2016, page 9; 2019, page 6; 2022, page 6)</a>; <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 7.
-                            </figcaption>
-                        </figure>
+                <div class="chapter-panels panels-even shared-pet-panels">
+                    <aside class="narrative">
+                        <h3>One dog, or a tank of fish</h3>
+                        <p>
+                            Dogs reach the most homes, yet fish have led the animal count in every survey since
+                            2016: about 12.1 million fish compared with 7.4 million dogs in 2025. Below them, birds
+                            briefly passed dogs in 2019, then slipped to fourth as cats moved up. Follow a line to
+                            trace one pet's rank.
+                        </p>
+                        <p class="method-note">
+                            Four national surveys, 2016 to 2025. Equal rank gaps do not mean equal differences in
+                            quantity.
+                        </p>
+                    </aside>
+                    <aside class="narrative">
+                        <h3>Different expectations</h3>
+                        <p>
+                            Companionship is the leading published reason for dogs, cats, birds and small mammals.
+                            Fish owners favour relaxation; reptile owners favour lower maintenance. Read down each
+                            pet's column to compare its published reasons.
+                        </p>
+                        <p class="method-note">
+                            Hatching means outside the published top five, not zero. Owners could give several
+                            reasons.
+                        </p>
+                    </aside>
+                    <div class="chart-toolbar shared-pet-toolbar">
+                        <label for="pet-select">Follow a pet type</label>
+                        <select id="pet-select" data-control="pet" aria-controls="chart5_chart chart6_chart">
+                            <option value="">All pet types</option>
+                        </select>
+                        <span>Other pets have no published motivation data.</span>
                     </div>
-                    <div class="story-row">
-                        <aside class="narrative">
-                            <h3>Different expectations</h3>
-                            <p>
-                                Companionship is the leading published reason for dogs, cats, birds and small mammals.
-                                Fish owners favour relaxation; reptile owners favour lower maintenance. Read down each
-                                pet's column to compare its published reasons.
-                            </p>
-                            <p class="method-note">
-                                Hatching means outside the published top five, not zero. Owners could give several
-                                reasons.
-                            </p>
-                        </aside>
-                        <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
-
-                        <figure class="chart-container chart-figure">
-                            <div class="chart-toolbar">
-                                <label for="motivation-pet-select">Focus on a pet type</label>
-                                <select id="motivation-pet-select" data-control="pet">
-                                    <option value="">All pet types</option>
-                                </select>
-                            </div>
-                            <div id="chart6_chart"></div>
-                            <figcaption class="chart-source">
-                                Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 22.
-                            </figcaption>
-                        </figure>
-                    </div>
+                    <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+                    <figure class="chart-container chart-figure">
+                        <div id="chart5_chart" data-fill-height></div>
+                        <figcaption class="chart-source">
+                            Sources:
+                            <a href="#source-ama-earlier">Animal Medicines Australia (2016, page 9; 2019, page 6; 2022, page 6)</a>; <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 7.
+                        </figcaption>
+                    </figure>
+                    <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
+                    <figure class="chart-container chart-figure">
+                        <div id="chart6_chart"></div>
+                        <figcaption class="chart-source">
+                            Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 22.
+                        </figcaption>
+                    </figure>
                 </div>
                 <p class="section-transition">A suitable companion also needs affordable, ongoing care.</p>
             </section>

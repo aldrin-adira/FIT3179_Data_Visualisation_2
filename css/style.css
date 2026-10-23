@@ -285,6 +285,10 @@ a:hover {
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
 }
+.shared-pet-toolbar {
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
 .selection-readout {
     font-size: .84rem;
     color: var(--color-heading);

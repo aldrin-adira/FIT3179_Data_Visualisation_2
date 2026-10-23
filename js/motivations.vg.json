@@ -170,7 +170,7 @@
     {
       "name": "selectedPet",
       "value": "",
-      "description": "Shared species focus set above the rank chart or above this heatmap."
+      "description": "Shared species focus supplied by the single selector above both charts."
     },
     {
       "name": "pinnedKey",

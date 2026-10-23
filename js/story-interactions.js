@@ -86,10 +86,8 @@
             .map(row => [row.lga_code_2025, row.shape.properties.lga_name_2025.replace(' (SA)', '')])
             .sort((a, b) => a[1].localeCompare(b[1])));
         const pets = ['Dogs', 'Cats', 'Fish', 'Birds', 'Small mammals', 'Reptiles', 'Other pets'];
-        document.querySelectorAll('[data-control="pet"]').forEach(select => {
-            // The motivation report has no column for 'Other pets'.
-            addOptions(select, pets.filter(pet => select.id === 'pet-select' || pet !== 'Other pets').map(pet => [pet, pet]));
-        });
+        // One shared selector drives both charts; Other pets has no heatmap column.
+        addOptions(document.querySelector('#pet-select'), pets.map(pet => [pet, pet]));
     }
 
     // One named region replaces multiple simultaneous overview/inset panels.

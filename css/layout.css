@@ -385,6 +385,28 @@ footer h3 {
 .chart-toolbar select {
     max-width: 100%;
 }
+/* Introductory text comes first, then one selector above both chart cards. */
+.shared-pet-toolbar {
+    padding-block: 12px;
+}
+@media (min-width: 1101px) {
+    .shared-pet-panels .shared-pet-toolbar {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        margin-bottom: 0;
+    }
+    .shared-pet-panels .chart-figure {
+        grid-row: 3;
+    }
+}
+@media (max-width: 1100px) {
+    .shared-pet-panels > * + * {
+        margin-top: var(--stack-gap);
+    }
+    .shared-pet-panels > .chart-figure + .chart-figure {
+        margin-top: var(--row-space);
+    }
+}
 .map-explorer {
     padding: 12px 0;
     margin-bottom: 16px;
