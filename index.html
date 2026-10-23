@@ -23,8 +23,8 @@
         <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
         <script src="js/vega_lite_vis.js" defer></script>
-        <!-- Open source references and the sources footer. -->
-        <script src="js/page-sources.js" defer></script>
+        <!-- Page controls, linked focus, map navigation, survey replay and source disclosure. -->
+        <script src="js/story-interactions.js" defer></script>
 
         <!-- Fonts from Google Fonts: DM Serif Display for headings and Fira Sans for everything else. "preconnect" starts the connection early so the fonts arrive sooner. -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -119,6 +119,12 @@
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
                         <figure class="chart-container chart-figure">
+                            <div class="chart-toolbar">
+                                <label for="country-select">Compare a country</label>
+                                <select id="country-select" data-control="country">
+                                    <option value="">All countries</option>
+                                </select>
+                            </div>
                             <div id="chart1_chart"></div>
                             <figcaption class="chart-source">
                                 Sources:
@@ -134,7 +140,8 @@
                             <h3>A strong position in this selection</h3>
                             <p>
                                 Australia ranks fourth for dog ownership in this selection, and eighth for cats. These
-                                are selected-country rankings, not world rankings.
+                                are selected-country rankings, not world rankings. Choose a country to follow its dog
+                                and cat figures across both charts.
                             </p>
                             <p class="section-callout">
                                 <strong>49%</strong><span>of Australian homes own a dog.</span>
@@ -183,6 +190,11 @@
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
                         <figure class="chart-container chart-figure">
+                            <div class="chart-toolbar">
+                                <button id="replay-trend" type="button">Replay survey years</button>
+                                <button id="show-trend" type="button">Show all years</button>
+                                <span id="trend-status" role="status" aria-live="polite">All four surveys shown</span>
+                            </div>
                             <div id="chart3_chart"></div>
                             <p class="method-note chart-reading-note">
                                 As Australia gains households, pet-owning homes can increase even when the share with a
@@ -248,6 +260,12 @@
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
                         <figure class="chart-container chart-figure">
+                            <div class="chart-toolbar">
+                                <label for="pet-select">Follow a pet type</label>
+                                <select id="pet-select" data-control="pet">
+                                    <option value="">All pet types</option>
+                                </select>
+                            </div>
                             <div id="chart5_chart" data-fill-height></div>
                             <figcaption class="chart-source">
                                 Sources:
@@ -271,6 +289,12 @@
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
                         <figure class="chart-container chart-figure">
+                            <div class="chart-toolbar">
+                                <label for="motivation-pet-select">Focus on a pet type</label>
+                                <select id="motivation-pet-select" data-control="pet">
+                                    <option value="">All pet types</option>
+                                </select>
+                            </div>
                             <div id="chart6_chart"></div>
                             <figcaption class="chart-source">
                                 Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 22.
@@ -366,14 +390,45 @@
                 <div class="section-brief">
                     <p>
                         Large populations can produce large pet totals. A rate divides by residents to make council
-                        comparisons fairer. The left map sizes one circle by each council’s dog total; the right map
-                        shows how common recorded animals are for the number of people. Both maps show dogs over the
-                        same area, so places line up.
+                        comparisons fairer. The left map sizes one circle by each council’s animal total; the right map
+                        shows how common recorded animals are for the number of people. Both maps show the same species
+                        and area, so places line up.
                     </p>
                     <p class="method-note">
                         68 municipal councils · Animal records: 30 May 2025 · Population: 30 June 2025. Recorded animals
-                        are not a household ownership estimate. The maps show the settled south. Coober Pedy and Roxby
-                        Downs lie outside this view; the scatterplot includes all 68 councils.
+                        are not a household ownership estimate. The maps start over the settled south. Choose All
+                        councils to include Coober Pedy and Roxby Downs; the scatterplot includes all 68 councils.
+                    </p>
+                </div>
+
+                <!-- Shared species, region and council controls for both maps. -->
+                <div class="map-explorer">
+                    <div class="map-toolbar">
+                        <div class="map-controls-left">
+                            <div class="region-buttons" role="group" aria-label="Animal shown on both maps">
+                                <button type="button" data-map-species="Dog" aria-pressed="true">Dogs</button>
+                                <button type="button" data-map-species="Cat" aria-pressed="false">Cats</button>
+                            </div>
+                            <div class="region-buttons" role="group" aria-label="Map region">
+                                <button type="button" data-map-region="south" data-map-scope="sa" aria-pressed="true">Settled south</button>
+                                <button type="button" data-map-region="metro" data-map-scope="sa" aria-pressed="false">Adelaide</button>
+                                <button type="button" data-map-region="all" data-map-scope="sa" aria-pressed="false">All councils</button>
+                            </div>
+                        </div>
+                        <label class="council-field" for="council-select">Find a council
+                            <select id="council-select">
+                                <option value="">All councils</option>
+                            </select>
+                        </label>
+                    </div>
+                    <p class="map-actions">
+                        <span>
+                            Switch between dogs and cats, choose a view, or drag to pan and use Shift + scroll to zoom.
+                            A view button resets both maps.
+                        </span>
+                    </p>
+                    <p id="council-readout" class="selection-readout" role="status" aria-live="polite">
+                        Choose a council for its total, rate and population.
                     </p>
                 </div>
 
@@ -382,12 +437,13 @@
                     <figure class="chart-container chart-figure">
                         <!-- Map heading is outside the clipped geographic viewport. -->
 
-                        <h3 class="chart-heading">Where dogs are recorded</h3>
-                        <p class="chart-subtitle">Circle area shows dogs recorded at home · 2025</p>
+                        <h3 class="chart-heading">Where <span data-species-label>dogs</span> are recorded</h3>
+                        <p class="chart-subtitle">Circle area shows <span data-species-label>dogs</span> recorded at home · 2025</p>
                         <div id="chart9_chart"></div>
                         <p class="method-note map-note">
-                            Each circle represents one council. Its area is proportional to the dog total. Hover over a
-                            circle for exact values. Circle centres represent councils, not animal addresses.
+                            Each circle represents one council. Its area is proportional to the selected animal total,
+                            on one scale for dogs and cats. Hover over a circle for exact values. Circle centres
+                            represent councils, not animal addresses.
                         </p>
                         <figcaption class="chart-source">
                             Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
@@ -397,8 +453,8 @@
                     <figure class="chart-container chart-figure">
                         <!-- Map heading is outside the clipped geographic viewport. -->
 
-                        <h3 class="chart-heading">Where dogs are more common</h3>
-                        <p class="chart-subtitle">Dogs per 1,000 residents · 2025</p>
+                        <h3 class="chart-heading">Where <span data-species-label>dogs</span> are more common</h3>
+                        <p class="chart-subtitle"><span data-species-word>Dogs</span> per 1,000 residents · 2025</p>
                         <div id="chart10_chart"></div>
                         <figcaption class="chart-source">
                             Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
@@ -407,8 +463,8 @@
                     </figure>
                 </div>
                 <p class="method-note map-note">
-                    Municipal council records only. Blank areas lie outside the council dataset. The rate colours show
-                    dogs per 1,000 residents in steps of 100.
+                    Municipal council records only. Blank areas lie outside the council dataset. The rate colours use different steps for cats (25 per 1,000) than for dogs (100 per 1,000),
+                    because cats are recorded at about a quarter of the dog rate.
                 </p>
                 <div class="chapter-panels panels-featured local-panels">
                     <div class="story-row">

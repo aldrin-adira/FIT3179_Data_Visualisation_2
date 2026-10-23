@@ -144,6 +144,31 @@
       "name": "height",
       "description": "Plot, axis and dedicated legend line; the reading note wraps in HTML below the SVG.",
       "update": "legendY + 24"
+    },
+    {
+      "name": "hoverIso",
+      "description": "Remembers which country the mouse is pointing at. That country's dot gets a dark outline in both rows, so you can find it for dogs and for cats. It is cleared when the mouse leaves.",
+      "value": null,
+      "on": [
+        {
+          "events": "@dots:mouseover",
+          "update": "datum.iso3"
+        },
+        {
+          "events": "@dots:mouseout",
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "selectedCountry",
+      "value": "",
+      "description": "Country chosen with the keyboard-accessible page dropdown."
+    },
+    {
+      "name": "focusIso",
+      "update": "hoverIso || selectedCountry",
+      "description": "Hover temporarily overrides a pinned country; Australia keeps its default blue encoding."
     }
   ],
   "data": [
@@ -440,10 +465,10 @@
                 "field": "colour"
               },
               "stroke": {
-                "signal": "colorSurface"
+                "signal": "focusIso === datum.iso3 ? colorHeading : colorSurface"
               },
               "strokeWidth": {
-                "value": 1
+                "signal": "focusIso === datum.iso3 ? 2.5 : 1"
               },
               "fx": {
                 "scale": "x",

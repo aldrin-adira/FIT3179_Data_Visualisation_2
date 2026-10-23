@@ -373,3 +373,73 @@ footer h3 {
         break-inside: avoid;
     }
 }
+
+/* Controls wrap with the chart cards; map controls share both viewports. */
+.chart-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-bottom: 12px;
+}
+.chart-toolbar select {
+    max-width: 100%;
+}
+.map-explorer {
+    padding: 12px 0;
+    margin-bottom: 16px;
+}
+.map-toolbar {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 16px;
+}
+.region-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.map-controls-left {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+}
+.council-field {
+    display: grid;
+    gap: 4px;
+    min-width: 200px;
+    max-width: 310px;
+}
+.council-field select {
+    width: 100%;
+}
+.map-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+.selection-readout {
+    margin-top: 10px;
+    min-height: 1.65em;
+}
+
+@media (max-width: 1100px) {
+    .map-toolbar {
+        align-items: start;
+        flex-direction: column;
+    }
+}
+@media (max-width: 600px) {
+    .region-buttons button {
+        padding-inline: 9px;
+    }
+}
+@media print {
+    .chart-toolbar,
+    .map-explorer {
+        display: none;
+    }
+}

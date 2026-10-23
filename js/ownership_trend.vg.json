@@ -120,6 +120,11 @@
       "name": "narrow",
       "description": "Below 640 pixels of available width: the 2016, 2019 and 2022 labels show only the year, the bottom axis has fewer numbers and the left axis starts lower.",
       "update": "width < 640"
+    },
+    {
+      "name": "visibleYear",
+      "value": 2025,
+      "description": "Replay cutoff; always starts with the full overview. Advances through observed years only."
     }
   ],
   "data": [
@@ -164,6 +169,18 @@
           "description": "Join observations in chronological order, independently of input row order."
         }
       ]
+    },
+    {
+      "name": "visibleTrend",
+      "source": "trend",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.year <= visibleYear",
+          "description": "Reveal observations chronologically, retaining earlier survey points for context."
+        }
+      ],
+      "description": "Derive visibleTrend from trend."
     }
   ],
   "scales": [
@@ -326,7 +343,7 @@
       "type": "line",
       "description": "The brown line that joins the surveys in order, from 2016 to 2025, so you can follow the path.",
       "from": {
-        "data": "trend"
+        "data": "visibleTrend"
       },
       "encode": {
         "enter": {
@@ -360,7 +377,7 @@
       "type": "symbol",
       "description": "One dot per survey: white with a brown outline, or solid blue for 2025. Hover shows the values.",
       "from": {
-        "data": "trend"
+        "data": "visibleTrend"
       },
       "encode": {
         "enter": {
@@ -389,6 +406,11 @@
           "tooltip": {
             "signal": "{'Survey year': datum.year, 'Households owning pets': format(datum.household_ownership_pct, ',') + '%', 'Pet-owning households': format(datum.pet_households_millions_rounded, '.1f') + ' million', 'Adults surveyed': format(datum.sample_n, ',.0f')}"
           }
+        },
+        "hover": {
+          "size": {
+            "value": 200
+          }
         }
       },
       "interactive": true,
@@ -398,7 +420,7 @@
       "type": "text",
       "description": "The year label beside each dot, with its numbers. On a phone, only 2025 keeps its numbers (the others show just the year).",
       "from": {
-        "data": "trend"
+        "data": "visibleTrend"
       },
       "encode": {
         "enter": {

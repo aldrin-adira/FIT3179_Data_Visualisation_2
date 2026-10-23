@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Choropleth map of dogs recorded at home per 1,000 residents in South Australian councils, 2025, in five classes. The map shows the settled south. Hover for exact council values.",
+  "description": "South Australian council dog or cat records per 1,000 residents, 2025. Shared controls select the species, region and council; drag to pan, hold Shift and scroll to zoom, or hover for values.",
   "padding": 5,
   "autosize": {
     "type": "fit-x",
@@ -59,28 +59,23 @@
     },
     {
       "name": "breaks",
-      "description": "The boundaries between the five dog-rate classes, per 1,000 residents.",
-      "value": [
-        100,
-        200,
-        300,
-        400
-      ]
+      "description": "The boundaries between the five species-specific rate classes, per 1,000 residents.",
+      "update": "species === 'Dog' ? [100, 200, 300, 400] : [25, 50, 75, 100]"
     },
     {
       "name": "cameraLon",
       "value": 137.1,
-      "description": "Longitude at the centre of the fixed map view."
+      "description": "Longitude at the centre of the shared map view."
     },
     {
       "name": "cameraLat",
       "value": -34.9,
-      "description": "Latitude at the centre of the fixed map view."
+      "description": "Latitude at the centre of the shared map view."
     },
     {
       "name": "cameraSpan",
       "value": 0.132,
-      "description": "Vertical extent of the fixed view over the settled south."
+      "description": "Vertical extent of the shared view, initially over the settled south."
     },
     {
       "name": "colorPetDogsMidLight",
@@ -91,12 +86,141 @@
       "name": "colorPetDogsMidDark",
       "value": "#764300",
       "description": "Fourth dog-rate class; the theme reads --color-pet-dogs-mid-dark."
+    },
+    {
+      "name": "species",
+      "value": "Dog",
+      "description": "Dog or Cat: set by the page's Dogs/Cats buttons, shared with the proportional-symbol map beside this one."
+    },
+    {
+      "name": "speciesWord",
+      "update": "species === 'Dog' ? 'Dogs' : 'Cats'",
+      "description": "Plural name for the legend and tooltips."
+    },
+    {
+      "name": "region",
+      "value": "south",
+      "description": "Named camera region: south, metro, all or council; shared page controls set it."
+    },
+    {
+      "name": "selectedCouncil",
+      "value": "",
+      "description": "Council code selected in the shared HTML dropdown; also works without hover."
+    },
+    {
+      "name": "zoom",
+      "value": 1,
+      "description": "User zoom. Only Shift+wheel zooms, allowing normal page scrolling.",
+      "on": [
+        {
+          "events": {
+            "type": "wheel",
+            "filter": [
+              "event.shiftKey"
+            ],
+            "consume": true
+          },
+          "update": "clamp(zoom*pow(1.001,-event.deltaY),1,12)"
+        },
+        {
+          "events": "dblclick",
+          "update": "1"
+        }
+      ]
+    },
+    {
+      "name": "pan",
+      "value": [
+        0,
+        0
+      ],
+      "description": "Pixel offset from the current regional camera; linked with the proportional-symbol map.",
+      "on": [
+        {
+          "events": "[pointerdown, window:pointerup] > window:pointermove",
+          "update": "dragStart ? [dragStart[2]+x()-dragStart[0],dragStart[3]+y()-dragStart[1]] : pan"
+        },
+        {
+          "events": "dblclick",
+          "update": "[0,0]"
+        }
+      ]
+    },
+    {
+      "name": "dragStart",
+      "value": null,
+      "description": "Record the initial pointer and pan positions to avoid cumulative drag error.",
+      "on": [
+        {
+          "events": "pointerdown",
+          "update": "[x(),y(),pan[0],pan[1]]"
+        },
+        {
+          "events": "window:pointerup",
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "hoverCode",
+      "value": null,
+      "description": "Transient council code copied to the proportional-symbol map and the density scatterplot.",
+      "on": [
+        {
+          "events": "@councilAreas:pointerover",
+          "update": "datum.code"
+        },
+        {
+          "events": "@councilAreas:pointerout",
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "focusCode",
+      "update": "hoverCode || selectedCouncil",
+      "description": "Keep the selected council visible when the pointer leaves the map."
+    },
+    {
+      "name": "colorPetCats",
+      "value": "#7a376b",
+      "description": "Colour: the colour for cats (plum). This is only a backup; the real colour comes from --color-pet-cats in css/style.css."
+    },
+    {
+      "name": "colorPetCatsLight",
+      "value": "#f8e6f2",
+      "description": "Colour: the palest shade of the colour for cats (plum). This is only a backup; the real colour comes from --color-pet-cats-light in css/style.css."
+    },
+    {
+      "name": "colorPetCatsDark",
+      "value": "#4e1f43",
+      "description": "Colour: the darkest shade of the colour for cats (plum). This is only a backup; the real colour comes from --color-pet-cats-dark in css/style.css."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Colour: the dark blue colour of chart titles. This is only a backup; the real colour comes from --color-heading in css/style.css."
+    },
+    {
+      "name": "colorPetCatsMidLight",
+      "value": "#b98eae",
+      "description": "Theme colour supplied by css/style.css through the shared loader."
+    },
+    {
+      "name": "colorPetCatsMidDark",
+      "value": "#642b57",
+      "description": "Theme colour supplied by css/style.css through the shared loader."
+    },
+    {
+      "name": "colorMapWater",
+      "value": "#f4f6f7",
+      "description": "Theme colour supplied by css/style.css through the shared loader."
     }
   ],
   "data": [
     {
       "name": "rates",
-      "description": "Dog totals, residents and dog rates for the 68 councils; the maps show the settled south.",
+      "description": "Selected-species totals, residents and rates for all 68 councils.",
       "url": "data/selected/sa_council_animals_per_1000_residents_2025.csv",
       "format": {
         "type": "csv",
@@ -109,8 +233,8 @@
       "transform": [
         {
           "type": "filter",
-          "description": "Show dogs; cats remain in the source table and the density scatterplot.",
-          "expr": "datum.species === \"Dog\""
+          "description": "Select the same species as the adjacent proportional-symbol map.",
+          "expr": "datum.species === species"
         },
         {
           "type": "formula",
@@ -122,7 +246,7 @@
     },
     {
       "name": "councils",
-      "description": "Council shapes, each with its dog numbers attached.",
+      "description": "Council shapes with selected-species totals and rates attached.",
       "url": "data/selected/sa_council_boundaries_2025.geojson",
       "format": {
         "type": "json",
@@ -183,10 +307,10 @@
             "field": "animals",
             "order": "descending"
           },
-          "description": "Sort the councils from most dogs to fewest."
+          "description": "Sort the councils from most animals to fewest."
         }
       ],
-      "description": "Councils with a record, most dogs first. Not used by any part of this map at present."
+      "description": "Councils with a record, most animals first. Not used by any part of this map at present."
     },
     {
       "name": "mappedCouncils",
@@ -217,10 +341,10 @@
         "signal": "[cameraLon-135,cameraLat]"
       },
       "scale": {
-        "signal": "min(width / (cameraSpan*1.15),plotHeight/cameraSpan)"
+        "signal": "min(width / (cameraSpan*1.15),plotHeight/cameraSpan)*zoom"
       },
       "translate": {
-        "signal": "[width/2,plotHeight/2]"
+        "signal": "[width/2+pan[0],plotHeight/2+pan[1]]"
       }
     }
   ],
@@ -232,7 +356,7 @@
         "signal": "breaks"
       },
       "range": {
-        "signal": "[colorPetDogsLight, colorPetDogsMidLight, colorPetDogs, colorPetDogsMidDark, colorPetDogsDark]"
+        "signal": "species === 'Dog' ? [colorPetDogsLight, colorPetDogsMidLight, colorPetDogs, colorPetDogsMidDark, colorPetDogsDark] : [colorPetCatsLight, colorPetCatsMidLight, colorPetCats, colorPetCatsMidDark, colorPetCatsDark]"
       }
     }
   ],
@@ -250,7 +374,7 @@
             "signal": "plotHeight"
           },
           "fill": {
-            "value": "#f4f6f7"
+            "signal": "colorMapWater"
           }
         }
       },
@@ -258,7 +382,7 @@
         {
           "type": "shape",
           "name": "councilAreas",
-          "description": "The council shapes, coloured by their dog-rate class. Hover shows the values.",
+          "description": "Council areas use the selected species rate classes; hover and selection link to the symbol map and scatterplot.",
           "from": {
             "data": "mappedCouncils"
           },
@@ -275,16 +399,16 @@
                 "field": "rate"
               },
               "stroke": {
-                "signal": "colorSurface"
+                "signal": "focusCode===datum.code ? colorHeading : colorSurface"
               },
               "strokeWidth": {
-                "value": 0.8
+                "signal": "focusCode===datum.code ? 2.5 : 0.8"
               },
               "fillOpacity": {
-                "value": 1
+                "signal": "focusCode && focusCode!==datum.code ? 0.5 : 1"
               },
               "tooltip": {
-                "signal": "{'Council': datum.name, 'Dogs recorded at home': format(datum.animals, ',.0f'), 'Residents': format(datum.residents, ',.0f'), 'Dogs per 1,000 residents': format(datum.rate, '.1f')}"
+                "signal": "{'Council': datum.name, 'Pet type': speciesWord, 'Recorded at home': format(datum.animals, ',.0f'), 'Residents': format(datum.residents, ',.0f'), 'Recorded animals per 1,000 residents': format(datum.rate, '.1f')}"
               }
             }
           },
@@ -302,7 +426,7 @@
       "orient": "bottom",
       "direction": "horizontal",
       "title": {
-        "value": "Dogs per 1,000 residents"
+        "signal": "speciesWord + ' per 1,000 residents'"
       },
       "values": {
         "signal": "[breaks[0] / 2, (breaks[0] + breaks[1]) / 2, (breaks[1] + breaks[2]) / 2, (breaks[2] + breaks[3]) / 2, breaks[3] + breaks[0] / 2]"
@@ -320,7 +444,7 @@
         "labels": {
           "update": {
             "text": {
-              "signal": "datum.value < breaks[0] ? 'Under ' + breaks[0] : datum.value < breaks[1] ? breaks[0] + '–' + (breaks[1] - 1) : datum.value < breaks[2] ? breaks[1] + '–' + (breaks[2] - 1) : datum.value < breaks[3] ? breaks[2] + '–' + (breaks[3] - 1) : breaks[3] + ' or more'"
+              "signal": "datum.value < breaks[0] ? 'Under ' + breaks[0] : datum.value < breaks[1] ? breaks[0] + ' to ' + (breaks[1] - 1) : datum.value < breaks[2] ? breaks[1] + ' to ' + (breaks[2] - 1) : datum.value < breaks[3] ? breaks[2] + ' to ' + (breaks[3] - 1) : breaks[3] + ' or more'"
             }
           }
         }
@@ -334,7 +458,7 @@
   "usermeta": {
     "camera": "Conic equal-area; same projection, centre, span and viewport height as the symbol map.",
     "scales": {
-      "rateColour": "Five fixed dog-rate classes with boundaries at 100, 200, 300 and 400 dogs per 1,000 residents. Colours come from the dog ramp in the stylesheet."
+      "rateColour": "Five fixed classes: dog boundaries at 100, 200, 300 and 400; cat boundaries at 25, 50, 75 and 100 animals per 1,000 residents. Pet ramps come from the stylesheet."
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {

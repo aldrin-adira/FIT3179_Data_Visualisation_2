@@ -165,6 +165,11 @@
       "name": "legendY",
       "description": "How far down the key starts: just under the grid.",
       "update": "gridHeight + 22"
+    },
+    {
+      "name": "selectedPet",
+      "value": "",
+      "description": "Shared species focus set above the rank chart or above this heatmap."
     }
   ],
   "data": [
@@ -547,7 +552,7 @@
             "signal": "datum.published_cell ? scale('colour', datum.percent) : colorSurface"
           },
           "opacity": {
-            "value": 1
+            "signal": "!selectedPet || selectedPet===datum.species ? 1 : 0.25"
           },
           "tooltip": {
             "signal": "datum.published_cell ? {'Pet type': datum.species, 'Reason': datum.label, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Survey year': 2025} : {'Pet type': datum.species, 'Reason': datum.label, 'Value': 'Not published: outside this pet\\'s top five reasons', 'Interpretation': 'An unpublished value is not zero'}"
@@ -778,6 +783,9 @@
           },
           "tooltip": {
             "signal": "datum.published_cell ? {'Pet type': datum.species, 'Reason': datum.label, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Survey year': 2025} : {'Pet type': datum.species, 'Reason': datum.label, 'Value': 'Not published: outside this pet\\'s top five reasons', 'Interpretation': 'An unpublished value is not zero'}"
+          },
+          "opacity": {
+            "signal": "!selectedPet || selectedPet === datum.species ? 1 : 0.25"
           }
         }
       },

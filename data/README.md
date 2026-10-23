@@ -23,8 +23,8 @@ Source IDs, dates and report-page fields remain in the supplied CSVs. Full sourc
 
 ## Proportional-symbol map
 
-`js/sa_pet_symbols.vg.json` joins recorded-at-home dog totals to council boundaries by council code. One circle represents each council, positioned at its projected geographic centroid. A zero-based linear scale maps the raw dog total to symbol area: twice the number of dogs produces twice the circle area. The same scale draws the size legend. The map shows the settled south; all 68 municipal councils remain in its underlying dataset.
+`js/sa_pet_symbols.vg.json` joins recorded-at-home dog or cat totals to council boundaries by council code. One circle represents each council, positioned at its projected geographic centroid. A zero-based linear scale shared across both species maps animal totals to symbol area: twice the count produces twice the circle area. The same scale draws the size legend. Both maps start over the settled south; shared controls can show all 68 municipal councils, Adelaide or a selected council.
 
-Hovering over a circle shows the council name, dog total, resident population and dogs per 1,000 residents. Transparency, outlines and drawing larger circles first help distinguish overlaps. Hover changes the outline and opacity without changing symbol area.
+Hovering over a circle shows the council name, selected species total, resident population and animals per 1,000 residents. Transparency, outlines and drawing larger circles first help distinguish overlaps. Hover and council selection link both maps with the density scatterplot, changing emphasis without changing circle area.
 
-The circle centres represent councils, not animal addresses or neighbourhood observations. The source table contains both dogs and cats; the current local maps show dogs. No dot-position file or custom placement helper is needed.
+The circle centres represent councils, not animal addresses or neighbourhood observations. Both local maps switch between dogs and cats together and share pan and zoom. No dot-position file or custom placement helper is needed.

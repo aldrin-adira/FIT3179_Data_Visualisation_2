@@ -47,6 +47,9 @@
     --color-pet-dogs-mid-dark: #764300; /* Fourth class of the dog-rate map */
     --color-pet-dogs-dark: #4b2800;
     --color-pet-cats-light: #f8e6f2;
+    /* Intermediate stops restored from the original cat-rate map. */
+    --color-pet-cats-mid-light: #b98eae;
+    --color-pet-cats-mid-dark: #642b57;
     --color-pet-cats-dark: #4e1f43;
 }
 
@@ -266,8 +269,27 @@ a:hover {
 .map-note {
     margin-top: 10px;
 }
-/* Native controls support touch, keyboard and browser accessibility tools. */
-button {
+/* Native controls and map gestures support mouse, touch and keyboard exploration. */
+.chart-toolbar, .map-toolbar, .map-actions {
+    font-size: .8rem;
+}
+.chart-toolbar label, .council-field {
+    color: var(--color-heading);
+    font-weight: 500;
+}
+.chart-toolbar span, .map-actions span {
+    color: var(--color-muted);
+    font-size: .74rem;
+}
+.map-explorer {
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
+.selection-readout {
+    font-size: .84rem;
+    color: var(--color-heading);
+}
+button, select {
     font: inherit;
     color: var(--color-heading);
     background: var(--color-surface);
@@ -278,14 +300,29 @@ button {
 }
 button {
     cursor: pointer;
-    transition:
-        background-color 160ms,
-        border-color 160ms;
+    transition: background-color 160ms, border-color 160ms;
 }
 button:hover {
     border-color: var(--color-accent);
     background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
 }
+button[aria-pressed="true"] {
+    background: var(--color-heading);
+    border-color: var(--color-heading);
+    color: var(--color-surface);
+}
+button:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+#chart10_chart svg, #chart9_chart svg {
+    touch-action: pan-y;
+    cursor: grab;
+}
+#chart10_chart svg:active, #chart9_chart svg:active {
+    cursor: grabbing;
+}
+
 /* Source links open this complete metadata disclosure automatically. */
 footer {
     border-top: 1px solid var(--color-border);
@@ -322,6 +359,19 @@ footer a {
 .skip-link:focus {
     top: 12px;
 }
+/* Brief confirmation of a deliberate council selection. */
+.control-feedback {
+    animation: feedback 300ms ease-out;
+}
+@keyframes feedback {
+    from {
+        background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+    }
+    to {
+        background-color: transparent;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

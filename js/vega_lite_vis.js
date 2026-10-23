@@ -12,6 +12,10 @@ var embedOptions = {actions: false, renderer: "svg", tooltip: true};
 // Keep the finished views so they can be released before a responsive redraw.
 var chartViews = {};
 var chartJobs = [];
+var controlNames = {};
+var controlValues = {};
+// Preserve selections and camera state across responsive redraws.
+var persistentSignals = ["selectedCountry", "selectedPet", "selectedCouncil", "species", "region", "zoom", "pan", "cameraLon", "cameraLat", "cameraSpan"];
 // Cache chart definitions across resize redraws; clone before applying state.
 var specCache = new Map();
 var svgObservers = [];
@@ -63,6 +67,8 @@ var themeSignals = {
     colorPetDogsMidLight: "--color-pet-dogs-mid-light",
     colorPetDogsMidDark: "--color-pet-dogs-mid-dark",
     colorPetDogsDark: "--color-pet-dogs-dark",
+    colorPetCatsMidLight: "--color-pet-cats-mid-light",
+    colorPetCatsMidDark: "--color-pet-cats-mid-dark",
     colorPetCatsLight: "--color-pet-cats-light",
     colorPetCatsDark: "--color-pet-cats-dark",
     fontHeading: "--font-heading",
@@ -143,6 +149,10 @@ function embedChart(container, specUrl) {
         }).then(function(spec) { specCache.set(specUrl, spec); return spec; });
     var job = definition.then(function(spec) { return JSON.parse(JSON.stringify(spec)); })
         .then(function (spec) {
+            controlNames[container] = (spec.signals || []).filter(function(s) { return s.bind || persistentSignals.includes(s.name); }).map(function(s) { return s.name; });
+            (spec.signals || []).forEach(function(s) {
+                if (controlValues[container] && Object.prototype.hasOwnProperty.call(controlValues[container], s.name)) s.value = controlValues[container][s.name];
+            });
             host.setAttribute("aria-label", spec.description || "Data chart");
             return document.fonts.ready.then(function() {
                 return vegaEmbed(container, applyTheme(spec), embedOptions);
@@ -186,8 +196,12 @@ function drawCharts() {
     // Disconnect observers before replacing SVGs, preventing retained DOM nodes.
     svgObservers.forEach(function(observer) { observer.disconnect(); });
     svgObservers = [];
+    window.dispatchEvent(new Event("charts-redrawing"));
     Object.entries(chartViews).forEach(function(entry) {
-        entry[1].finalize();
+        var container = entry[0], view = entry[1];
+        controlValues[container] = {};
+        (controlNames[container] || []).forEach(function(name) { controlValues[container][name] = view.signal(name); });
+        view.finalize();
     });
     chartViews = {};
     chartJobs = [];
@@ -205,7 +219,7 @@ function drawCharts() {
     // Section 4: what pets cost, and what stops people getting one.
     embedChart("#chart7_chart", "js/spending_tree.vg.json");
     embedChart("#chart8_chart", "js/barriers.vg.json");
-    // Section 5: dog maps compare totals with resident rates, then the
+    // Section 5: linked dog/cat maps compare totals with resident rates; the
     // scatterplot relates dog and cat rates to population density.
     embedChart("#chart9_chart", "js/sa_pet_symbols.vg.json");
     embedChart("#chart10_chart", "js/sa_councils_map.vg.json");

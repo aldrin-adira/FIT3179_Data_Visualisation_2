@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "Proportional-symbol map of dogs recorded at home in South Australian councils, 2025. One circle represents one council; circle area is proportional to its dog total. Hover for exact council values.",
+  "description": "Proportional-symbol map of South Australian dogs or cats recorded at home, 2025. Circle area shows council totals on one scale across species. Shared controls, linked council highlighting, pan, zoom and tooltips support exploration.",
   "padding": 5,
   "autosize": {
     "type": "fit-x",
@@ -40,17 +40,17 @@
     {
       "name": "cameraLon",
       "value": 137.1,
-      "description": "Longitude at the centre of the fixed map view."
+      "description": "Longitude at the centre of the shared map view."
     },
     {
       "name": "cameraLat",
       "value": -34.9,
-      "description": "Latitude at the centre of the fixed map view."
+      "description": "Latitude at the centre of the shared map view."
     },
     {
       "name": "cameraSpan",
       "value": 0.132,
-      "description": "Vertical extent of the fixed view over the settled south."
+      "description": "Vertical extent of the shared view, initially over the settled south."
     },
     {
       "name": "colorMuted",
@@ -86,12 +86,132 @@
       "name": "maxSymbolArea",
       "update": "narrow ? 1000 : 1600",
       "description": "Maximum symbol size in square pixels. The linear scale starts at zero, preserving area ratios at each screen width."
+    },
+    {
+      "name": "species",
+      "value": "Dog",
+      "description": "Dog or Cat: set by the page's Dogs/Cats buttons, shared with the council-rate map beside this one."
+    },
+    {
+      "name": "speciesWord",
+      "update": "species === 'Dog' ? 'Dogs' : 'Cats'",
+      "description": "Plural name for the legend and tooltips."
+    },
+    {
+      "name": "region",
+      "value": "south",
+      "description": "Named camera region: south, metro, all or council; shared page controls set it."
+    },
+    {
+      "name": "selectedCouncil",
+      "value": "",
+      "description": "Council code selected in the shared HTML dropdown; also works without hover."
+    },
+    {
+      "name": "zoom",
+      "value": 1,
+      "description": "User zoom. Only Shift+wheel zooms, allowing normal page scrolling.",
+      "on": [
+        {
+          "events": {
+            "type": "wheel",
+            "filter": [
+              "event.shiftKey"
+            ],
+            "consume": true
+          },
+          "update": "clamp(zoom*pow(1.001,-event.deltaY),1,12)"
+        },
+        {
+          "events": "dblclick",
+          "update": "1"
+        }
+      ]
+    },
+    {
+      "name": "pan",
+      "value": [
+        0,
+        0
+      ],
+      "description": "Pixel offset from the current regional camera; linked with the council-rate map.",
+      "on": [
+        {
+          "events": "[pointerdown, window:pointerup] > window:pointermove",
+          "update": "dragStart ? [dragStart[2]+x()-dragStart[0],dragStart[3]+y()-dragStart[1]] : pan"
+        },
+        {
+          "events": "dblclick",
+          "update": "[0,0]"
+        }
+      ]
+    },
+    {
+      "name": "dragStart",
+      "value": null,
+      "description": "Record the initial pointer and pan positions to avoid cumulative drag error.",
+      "on": [
+        {
+          "events": "pointerdown",
+          "update": "[x(),y(),pan[0],pan[1]]"
+        },
+        {
+          "events": "window:pointerup",
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "hoverCode",
+      "value": null,
+      "description": "Transient council code copied to the council-rate map and the density scatterplot. Mouse events match the tooltip lifecycle when z-order changes.",
+      "on": [
+        {
+          "events": "@councilSymbols:mouseover",
+          "update": "datum.code"
+        },
+        {
+          "events": "@councilSymbols:mouseout",
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "focusCode",
+      "update": "hoverCode || selectedCouncil",
+      "description": "Keep the selected council visible when the pointer leaves the map."
+    },
+    {
+      "name": "colorPetCats",
+      "value": "#7a376b",
+      "description": "Colour: the colour for cats (plum). This is only a backup; the real colour comes from --color-pet-cats in css/style.css."
+    },
+    {
+      "name": "colorPetCatsDark",
+      "value": "#4e1f43",
+      "description": "Colour: the darkest shade of the colour for cats (plum). This is only a backup; the real colour comes from --color-pet-cats-dark in css/style.css."
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540",
+      "description": "Colour: the dark blue colour of chart titles. This is only a backup; the real colour comes from --color-heading in css/style.css."
     }
   ],
   "data": [
     {
+      "name": "allRates",
+      "url": "data/selected/sa_council_animals_per_1000_residents_2025.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "recorded_at_home_animals": "number"
+        }
+      },
+      "description": "Both species establish one shared symbol-area scale; selecting a species does not rescale circles."
+    },
+    {
       "name": "rates",
-      "description": "Dog totals, residents and dog rates for the 68 councils; the maps show the settled south.",
+      "description": "Selected-species totals, residents and rates for all 68 councils.",
       "url": "data/selected/sa_council_animals_per_1000_residents_2025.csv",
       "format": {
         "type": "csv",
@@ -104,8 +224,8 @@
       "transform": [
         {
           "type": "filter",
-          "expr": "datum.species === \"Dog\"",
-          "description": "Show dogs; cats remain in the source table and the density scatterplot."
+          "expr": "datum.species === species",
+          "description": "Select the same species as the adjacent rate map."
         },
         {
           "type": "formula",
@@ -117,7 +237,7 @@
     },
     {
       "name": "councils",
-      "description": "Council shapes, each with its dog numbers attached.",
+      "description": "Council shapes with selected-species totals and rates attached.",
       "url": "data/selected/sa_council_boundaries_2025.geojson",
       "format": {
         "type": "json",
@@ -153,7 +273,7 @@
             "rate",
             "residents"
           ],
-          "description": "Match each shape to its numbers by council code and copy across the dogs recorded, the rate per 1,000 residents and residents."
+          "description": "Match each shape to its numbers by council code and copy across the selected animals recorded, the rate per 1,000 residents and residents."
         }
       ]
     },
@@ -211,8 +331,8 @@
       "name": "symbolArea",
       "type": "linear",
       "domain": {
-        "data": "points",
-        "field": "animals"
+        "data": "allRates",
+        "field": "recorded_at_home_animals"
       },
       "range": [
         0,
@@ -240,10 +360,10 @@
         "signal": "[cameraLon-135,cameraLat]"
       },
       "scale": {
-        "signal": "min(width / (cameraSpan*1.15),plotHeight/cameraSpan)"
+        "signal": "min(width / (cameraSpan*1.15),plotHeight/cameraSpan)*zoom"
       },
       "translate": {
-        "signal": "[width/2,plotHeight/2]"
+        "signal": "[width/2+pan[0],plotHeight/2+pan[1]]"
       }
     }
   ],
@@ -301,7 +421,7 @@
             "data": "points"
           },
           "interactive": true,
-          "description": "One circle at each council geographic centroid. Circle area shows the raw dog total; the centre represents the council, not an animal address.",
+          "description": "One circle at each council geographic centroid. Area shows the selected species total; focus changes opacity and outline, never circle size.",
           "encode": {
             "enter": {
               "shape": {
@@ -320,36 +440,25 @@
                 "field": "animals"
               },
               "fill": {
-                "signal": "colorPetDogs"
+                "signal": "species === 'Dog' ? colorPetDogs : colorPetCats"
               },
               "fillOpacity": {
-                "value": 0.6
+                "signal": "focusCode === datum.code ? 0.9 : focusCode ? 0.25 : 0.6"
               },
               "stroke": {
-                "signal": "colorPetDogsDark"
+                "signal": "species === 'Dog' ? colorPetDogsDark : colorPetCatsDark"
               },
               "strokeWidth": {
-                "value": 0.8
+                "signal": "focusCode === datum.code ? 2 : 0.8"
               },
               "zindex": {
-                "value": 0
+                "signal": "focusCode === datum.code ? 1 : 0"
               },
               "tooltip": {
-                "signal": "{'Council': datum.name, 'Dogs recorded at home': format(datum.animals, ',.0f'), 'Residents': format(datum.residents, ',.0f'), 'Dogs per 1,000 residents': format(datum.rate, '.1f')}"
+                "signal": "{'Council': datum.name, 'Pet type': speciesWord, 'Recorded at home': format(datum.animals, ',.0f'), 'Residents': format(datum.residents, ',.0f'), 'Recorded animals per 1,000 residents': format(datum.rate, '.1f')}"
               },
               "description": {
-                "signal": "datum.name + ': ' + format(datum.animals, ',.0f') + ' dogs recorded at home.'"
-              }
-            },
-            "hover": {
-              "fillOpacity": {
-                "value": 0.9
-              },
-              "strokeWidth": {
-                "value": 2
-              },
-              "zindex": {
-                "value": 1
+                "signal": "datum.name + ': ' + format(datum.animals, ',.0f') + ' ' + lower(speciesWord) + ' recorded at home.'"
               }
             }
           }
@@ -368,7 +477,7 @@
             "signal": "plotHeight + 18"
           },
           "text": {
-            "value": "Dogs recorded at home"
+            "signal": "speciesWord + ' recorded at home'"
           },
           "font": {
             "signal": "fontBody"
@@ -408,13 +517,13 @@
             "value": "circle"
           },
           "fill": {
-            "signal": "colorPetDogs"
+            "signal": "species === 'Dog' ? colorPetDogs : colorPetCats"
           },
           "fillOpacity": {
             "value": 0.6
           },
           "stroke": {
-            "signal": "colorPetDogsDark"
+            "signal": "species === 'Dog' ? colorPetDogsDark : colorPetCatsDark"
           },
           "strokeWidth": {
             "value": 0.8
@@ -456,11 +565,11 @@
     }
   ],
   "usermeta": {
-    "method": "One circle per council, placed at its projected geographic centroid. A zero-based linear scale maps recorded-at-home dog totals to circle area. Largest circles draw first; transparency and outlines reveal overlap. The map shows the settled south; all 68 councils remain in the underlying dataset.",
+    "method": "One circle per council at its projected geographic centroid. A zero-based linear scale, shared across dogs and cats, maps animal totals to area. Larger circles draw first. Shared map controls select species and camera; all 68 councils remain available.",
     "scales": {
-      "symbolArea": "Map dog totals linearly to symbol area, not radius. Twice the total produces twice the area. (Kept here because Vega does not accept a description on a scale.)"
+      "symbolArea": "Map animal totals linearly to area, not radius. The domain includes both species, so twice the total produces twice the area across species as well as councils."
     },
     "pageTitle": "Where dogs are recorded",
-    "codeGuide": "Data lookup joins totals to council boundaries. geoCentroid places symbols. symbolArea maps totals to area. The councilSymbols tooltip expression supplies hover values; hover changes outline and opacity without changing size."
+    "codeGuide": "Data lookup joins selected-species totals to boundaries. geoCentroid places symbols; symbolArea maps totals to area. Shared camera and focus signals connect both maps and the scatterplot. Focus changes outline and opacity without changing size."
   }
 }

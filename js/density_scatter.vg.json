@@ -116,6 +116,31 @@
       "name": "plotRight",
       "description": "Where the dots must stop on the right, leaving room for the words \"Dogs\" and \"Cats\" at the end of each trend line.",
       "update": "width - (narrow ? 44 : 56)"
+    },
+    {
+      "name": "hoverCode",
+      "description": "Remembers which council the mouse is pointing at. Both of its dots (dog and cat) get bigger and every other dot fades. It is cleared when the mouse leaves.",
+      "value": null,
+      "on": [
+        {
+          "events": "symbol:mouseover",
+          "update": "datum.code"
+        },
+        {
+          "events": "symbol:mouseout",
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "selectedCouncil",
+      "value": "",
+      "description": "Persistent council focus shared with both dog/cat maps."
+    },
+    {
+      "name": "focusCode",
+      "update": "hoverCode || selectedCouncil",
+      "description": "Both species remain visible for the selected council."
     }
   ],
   "data": [
@@ -430,13 +455,13 @@
                 "field": "pet"
               },
               "size": {
-                "signal": "narrow ? 34 : 48"
+                "signal": "focusCode === datum.code ? 160 : (narrow ? 34 : 48)"
               },
               "fillOpacity": {
-                "value": 0.8
+                "signal": "!focusCode || focusCode === datum.code ? 0.8 : 0.3"
               },
               "zindex": {
-                "value": 0
+                "signal": "focusCode === datum.code ? 1 : 0"
               },
               "tooltip": {
                 "signal": "{'Council': datum.name, 'Pet type': datum.pet, 'Recorded-at-home animals': format(datum.recorded_at_home_animals, ',.0f'), 'Animals per 1,000 residents': format(datum.rate, '.1f'), 'Population density': format(datum.density, ',.2f') + ' residents per square kilometre', 'Residents': format(datum.residents_2025, ',.0f')}"

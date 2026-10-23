@@ -129,6 +129,31 @@
       "name": "rightX",
       "update": "width - (narrow ? 86 : 96)",
       "description": "Where the last survey (2025) sits: leaves room for the pet names and counts on the right."
+    },
+    {
+      "name": "selectedPet",
+      "value": "",
+      "description": "Persistent keyboard-accessible pet focus supplied by the page control."
+    },
+    {
+      "name": "hoverPet",
+      "value": null,
+      "on": [
+        {
+          "events": "@rankLines:pointerover, @rankPoints:pointerover",
+          "update": "datum.species"
+        },
+        {
+          "events": "@rankLines:pointerout, @rankPoints:pointerout",
+          "update": "null"
+        }
+      ],
+      "description": "Temporary focus; selection remains after the pointer leaves."
+    },
+    {
+      "name": "focusPet",
+      "update": "hoverPet || selectedPet",
+      "description": "Hover takes precedence over the persistent focus."
     }
   ],
   "data": [
@@ -362,17 +387,17 @@
                 "field": "species"
               },
               "strokeWidth": {
-                "value": 3
+                "signal": "focusPet === datum.species ? 5 : 3"
               },
               "strokeOpacity": {
-                "value": 0.85
+                "signal": "!focusPet || focusPet === datum.species ? 0.85 : 0.12"
               }
             }
           },
-          "interactive": false
+          "interactive": true
         }
       ],
-      "interactive": false
+      "interactive": true
     },
     {
       "type": "symbol",
@@ -405,7 +430,7 @@
             "value": 2
           },
           "opacity": {
-            "value": 1
+            "signal": "!focusPet || focusPet === datum.species ? 1 : 0.25"
           },
           "tooltip": {
             "signal": "{'Pet type': datum.species, 'Survey year': datum.year, 'Rank by number of animals': datum.animalRank, 'Estimated animals': format(datum.animals_thousands * 1000, ',.0f'), 'Owning households': format(datum.owning_households_thousands * 1000, ',.0f'), 'Households owning this pet': format(datum.household_ownership_pct, ',') + '%', 'Animals per owning household': format(datum.animals_per_owning_household, ',')}"
@@ -449,13 +474,13 @@
             "value": 12
           },
           "fontWeight": {
-            "value": 400
+            "signal": "focusPet === datum.species ? 600 : 400"
           },
           "fill": {
             "signal": "colorMuted"
           },
           "opacity": {
-            "value": 1
+            "signal": "!focusPet || focusPet === datum.species ? 1 : 0.4"
           },
           "tooltip": {
             "signal": "{'Pet type': datum.species, 'Survey year': datum.year, 'Rank by number of animals': datum.animalRank, 'Estimated animals': format(datum.animals_thousands * 1000, ',.0f'), 'Owning households': format(datum.owning_households_thousands * 1000, ',.0f'), 'Households owning this pet': format(datum.household_ownership_pct, ',') + '%', 'Animals per owning household': format(datum.animals_per_owning_household, ',')}"
@@ -499,13 +524,13 @@
             "value": 12
           },
           "fontWeight": {
-            "value": 400
+            "signal": "focusPet === datum.species ? 600 : 400"
           },
           "fill": {
             "signal": "colorMuted"
           },
           "opacity": {
-            "value": 1
+            "signal": "!focusPet || focusPet === datum.species ? 1 : 0.4"
           },
           "tooltip": {
             "signal": "{'Pet type': datum.species, 'Survey year': datum.year, 'Rank by number of animals': datum.animalRank, 'Estimated animals': format(datum.animals_thousands * 1000, ',.0f'), 'Owning households': format(datum.owning_households_thousands * 1000, ',.0f'), 'Households owning this pet': format(datum.household_ownership_pct, ',') + '%', 'Animals per owning household': format(datum.animals_per_owning_household, ',')}"
