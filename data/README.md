@@ -17,10 +17,14 @@ Original downloads, supporting validation tables and development tools are kept 
 | `au_household_spending_2025.csv` | Spending dendrogram. |
 | `au_housing_regions_2021.geojson` | National housing dot-density map: 337 statistical regions, simplified boundaries and three Census dwelling counts. |
 | `au_barriers_2025.csv` | Barrier comparisons. |
-| `sa_council_animals_per_1000_residents_2025.csv` | Local proportional-symbol map, council rate map and density scatterplot. |
+| `sa_council_animals_per_1000_residents_2025.csv` | Local proportional-symbol map, council rate map, density scatterplot and council-rate box plots. |
 | `sa_council_boundaries_2025.geojson` | Local map geometry and council centroids for proportional symbols. |
 
 Source IDs, dates and report-page fields remain in the supplied CSVs. Full source citations and methodological limits are in the website's sources footer.
+
+## Council-rate box plots
+
+The Section 5 box plots in `js/council_distribution.vg.json` reuse all 136 council/species rows. Each species has 68 equally weighted council rates. Vega computes the lower quartile, median and upper quartile; whiskers show the actual minimum and maximum, rather than 1.5-IQR fences. The middle half spans 184.461025–295.49965 dogs and 44.022575–71.9931 cats per 1,000 residents. These distributions describe councils, not a population-weighted statewide rate or household pet ownership. No additional data file is downloaded.
 
 ## Proportional-symbol map
 

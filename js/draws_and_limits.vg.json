@@ -89,13 +89,18 @@
     },
     {
       "name": "height",
-      "update": "noteY + 36",
-      "description": "How tall the whole chart is: the grids plus the two-line note."
+      "update": "noteY + length(waffleReadingLines) * 17 + 8",
+      "description": "Grids followed by the full wrapped reading key."
     },
     {
       "name": "pinnedKey",
       "value": null,
       "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
+    },
+    {
+      "name": "waffleReadingLines",
+      "update": "wrapChartText(['Coloured squares: owners who gave this reason.', 'Grey squares: owners who did not give this reason.', 'Each grid totals 100. People could give several reasons.'], width - 12, 12, fontBody)",
+      "description": "Explain both fills and the denominator without suggesting different reasons are mutually exclusive."
     }
   ],
   "title": {
@@ -296,7 +301,7 @@
             "signal": "(narrow ? datum.r * rowHeight : 0) + 24"
           },
           "tooltip": {
-            "signal": "{'Pet type': datum.species, 'Reason': datum.reason, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Each square': 'One percentage point', 'Survey year': 2025}"
+            "signal": "\"In the 2025 survey, \" + (datum.percent) + \"% of owners of \" + (lower(datum.species)) + \" cited “\" + (datum.reason) + \"” as a reason for getting their pet. The survey included \" + (format(datum.sample_n, ',.0f')) + \" owners of this pet type. Each square represents one percentage point, or one owner in every 100.\""
           },
           "opacity": {
             "signal": "pinnedKey === null || pinnedKey === datum.species + '|' + datum.reason ? 1 : 0.25"
@@ -338,7 +343,7 @@
             "signal": "datum.filled ? 1 : 0.35"
           },
           "tooltip": {
-            "signal": "{'Pet type': datum.species, 'Reason': datum.reason, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Each square': 'One percentage point', 'Survey year': 2025}"
+            "signal": "\"In the 2025 survey, \" + (datum.percent) + \"% of owners of \" + (lower(datum.species)) + \" cited “\" + (datum.reason) + \"” as a reason for getting their pet. The survey included \" + (format(datum.sample_n, ',.0f')) + \" owners of this pet type. Each square represents one percentage point, or one owner in every 100.\""
           },
           "opacity": {
             "signal": "pinnedKey === null || pinnedKey === datum.species + '|' + datum.reason ? 1 : 0.25"
@@ -377,7 +382,7 @@
             "signal": "noteY"
           },
           "text": {
-            "signal": "narrow ? ['These answers describe hopes, not measured health benefits.', 'Owners could give several reasons, so grids do not add up.'] : ['These answers describe hopes, not measured health benefits.', 'Owners could give several reasons, so the grids do not add up to 100.']"
+            "signal": "waffleReadingLines"
           }
         }
       }

@@ -188,7 +188,8 @@
         '#chart10_chart': {marks: ['councilSymbols'], key: datum => datum.code},
         '#chart11_chart': {marks: ['councilAreas'], key: datum => datum.code},
         '#chart12_chart': {marks: ['councilPoints', 'calloutText'], key: datum => datum.code},
-        '#chart13_chart': {marks: ['squares', 'waffleLabels'], key: datum => datum.species + '|' + datum.reason}
+        '#chart13_chart': {marks: ['distributionBoxes', 'distributionMedians', 'distributionWhiskers', 'distributionLowCaps', 'distributionHighCaps'], key: datum => datum.pet},
+        '#chart14_chart': {marks: ['squares', 'waffleLabels'], key: datum => datum.species + '|' + datum.reason}
     };
     const connectedClickViews = new WeakSet();
 
@@ -217,7 +218,7 @@
             await update([...saIds, '#chart12_chart'], {pinnedKey: key, selectedCouncil: council, hoverCode: null});
             showCouncil(council);
         } else {
-            const hoverSignal = {'#chart5_chart': 'hoverCode', '#chart3_chart': 'hoverYear', '#chart4_chart': 'hoverGroup', '#chart8_chart': 'hoverKey', '#chart9_chart': 'hoverReason'}[id];
+            const hoverSignal = {'#chart5_chart': 'hoverCode', '#chart3_chart': 'hoverYear', '#chart4_chart': 'hoverGroup', '#chart8_chart': 'hoverKey', '#chart9_chart': 'hoverReason', '#chart13_chart': 'hoverPet'}[id];
             const changes = {pinnedKey: key};
             if (hoverSignal) changes[hoverSignal] = null;
             await update([id], changes);

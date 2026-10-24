@@ -70,6 +70,7 @@ var themeSignals = {
     colorPage: "--color-page",
     colorSurface: "--color-surface",
     colorBorder: "--color-border",
+    colorBaseline: "--color-baseline",
     colorChartPanel: "--color-chart-panel",
     colorMapWater: "--color-map-water",
     colorMapLand: "--color-map-land",
@@ -116,6 +117,13 @@ function applyTheme(spec, hostWidth) {
         }
         var property = themeSignals[signal.name];
         var value = property ? styles.getPropertyValue(property).trim() : "";
+        if (signal.name === "legendTextSize") {
+            var shrink = hostWidth > 0 ? Math.min(1, hostWidth / 344) : 1;
+            signal.value = (parseFloat(styles.getPropertyValue("--legend-text-size")) || 13) / shrink;
+        }
+        if (signal.name === "legendTextWeight") {
+            signal.value = parseInt(styles.getPropertyValue("--legend-text-weight"), 10) || 400;
+        }
         // Only replace the backup if style.css really has a value.
         if (value) {
             signal.value = value;
@@ -185,6 +193,17 @@ function embedChart(container, specUrl) {
             return document.fonts.ready.then(function() {
                 return vegaEmbed(container, applyTheme(spec, host.getBoundingClientRect().width), embedOptions);
             }).then(function(result) {
+                // Long sentence tooltips must stay inside a narrow viewport,
+                // even when the default handler flips them left of the pointer.
+                var showTooltip = result.view.tooltip();
+                result.view.tooltip(function(handler, event, item, value) {
+                    showTooltip.call(this, handler, event, item, value);
+                    var popup = document.getElementById("vg-tooltip-element");
+                    if (!popup || !popup.classList.contains("visible")) return;
+                    var bounds = popup.getBoundingClientRect();
+                    popup.style.left = Math.max(10, Math.min(bounds.left, window.innerWidth - bounds.width - 10)) + "px";
+                    popup.style.top = Math.max(10, Math.min(bounds.top, window.innerHeight - bounds.height - 10)) + "px";
+                });
                 // Titles wrap to the fitted width, which is only known after the
                 // first layout. If that adds a line, more layout passes make room
                 // for it, so the title is never pushed above the chart. Repeat
@@ -204,6 +223,9 @@ function embedChart(container, specUrl) {
         })
         .then(function (result) {
             // Fonts are ready before embedding, so no second sizing pass is needed.
+            var controlsTarget = document.getElementById(host.dataset.controlsTarget);
+            var bindings = host.querySelector(".vega-bindings");
+            if (controlsTarget && bindings) controlsTarget.replaceChildren(bindings);
             var svg = host.querySelector("svg");
             if (svg) {
                 function fitSvg() {
@@ -269,8 +291,9 @@ function drawCharts() {
     embedChart("#chart10_chart", "js/sa_pet_symbols.vg.json");
     embedChart("#chart11_chart", "js/sa_councils_map.vg.json");
     embedChart("#chart12_chart", "js/density_scatter.vg.json");
+    embedChart("#chart13_chart", "js/council_distribution.vg.json");
     // Section 6: waffle charts compare three dog/cat motivations.
-    embedChart("#chart13_chart", "js/draws_and_limits.vg.json");
+    embedChart("#chart14_chart", "js/draws_and_limits.vg.json");
     window.chartsReady = Promise.all(chartJobs).then(function() {
         drawing = false;
         // Fill paired cards after the charts have finished drawing.
@@ -287,6 +310,30 @@ function freeSpace(figure) {
     var source = figure.querySelector(".chart-source");
     return source ? parseFloat(getComputedStyle(source).marginTop) || 0 : 0;
 }
+// Equal source blocks put their divider and first text line at the same height.
+// Map headings and grey hosts also share heights, without changing map scales.
+function alignPairedDetails() {
+    document.querySelectorAll(".shared-pet-panels, .map-pair").forEach(function(pair) {
+        function equalHeight(selector) {
+            var elements = Array.from(pair.querySelectorAll(selector));
+            elements.forEach(function(element) { element.style.minHeight = ""; });
+            if (!sideLayout.matches || elements.length !== 2) return;
+            var height = Math.ceil(Math.max.apply(null, elements.map(function(element) {
+                return element.getBoundingClientRect().height;
+            })));
+            elements.forEach(function(element) { element.style.minHeight = height + "px"; });
+        }
+        equalHeight(".chart-source");
+        if (pair.classList.contains("map-pair")) {
+            equalHeight(".chart-heading");
+            equalHeight(".chart-subtitle");
+            equalHeight(".chart-figure > [id^='chart']");
+            pair.querySelectorAll(".chart-figure > [id^='chart']").forEach(function(host) {
+                host.style.background = sideLayout.matches ? "var(--color-chart-panel)" : "";
+            });
+        }
+    });
+}
 function fillPairedCards() {
     document.querySelectorAll("[data-fill-height]").forEach(function(host) {
         var view = chartViews["#" + host.id];
@@ -298,6 +345,18 @@ function fillPairedCards() {
         var extra = view.signal("extraHeight");
         // Grow into this card's gap; shrink back if the partner now has one.
         var next = Math.max(0, Math.round(extra + freeSpace(figure) - partnerFree));
+        // This pair shares a frame: align the grey panels rather than captions,
+        // whose different line counts otherwise leave the bump chart shorter.
+        if (pair.classList.contains("shared-pet-panels")) {
+            var svg = host.querySelector("svg");
+            var partnerSvg = partners[0] && partners[0].querySelector("svg");
+            if (svg && partnerSvg && sideLayout.matches) {
+                var box = svg.getBoundingClientRect();
+                var scale = box.height / Number(svg.getAttribute("height")) || 1;
+                next = Math.max(0, Math.round(extra +
+                    (partnerSvg.getBoundingClientRect().bottom - box.bottom) / scale));
+            } else next = 0;
+        }
         // Vega's resize resets the SVG's inline style, so repaint its panel after.
         if (Math.abs(next - extra) > 1) view.signal("extraHeight", next).runAsync().then(function() {
             requestAnimationFrame(function() { alignSideText(); paintChartPanels(); });
@@ -329,6 +388,21 @@ function alignSideText() {
         var top = sideLayout.matches && figure ? chartContentTop(figure) : null;
         narrative.style.paddingTop = top === null ? "" :
             Math.max(0, Math.round(top - figure.getBoundingClientRect().top)) + "px";
+        var details = narrative.querySelector(".housing-map-details");
+        if (details) {
+            details.style.marginTop = "";
+            var map = figure.querySelector("svg");
+            if (sideLayout.matches && map) {
+                var gap = map.getBoundingClientRect().bottom - details.getBoundingClientRect().bottom;
+                if (gap > 0) details.style.marginTop = (18 + gap) + "px";
+                else if (gap < -1) {
+                    var view = chartViews["#chart5_chart"];
+                    var scale = map.getBoundingClientRect().height / Number(map.getAttribute("height")) || 1;
+                    if (view) view.signal("sidebarExtraHeight", view.signal("sidebarExtraHeight") - gap / scale)
+                        .runAsync().then(scheduleFill);
+                }
+            }
+        }
     });
 }
 // Chart panels: every chart sits on the same light grey as the maps, but the
@@ -349,11 +423,25 @@ function paintChartPanels() {
         svg.style.background = "linear-gradient(to bottom, transparent " + start +
             "px, var(--color-chart-panel) " + start + "px)";
     });
+    if (sideLayout.matches) {
+        var paired = Array.from(document.querySelectorAll(".shared-pet-panels .chart-figure svg"));
+        if (paired.length === 2) {
+            var top = Math.max.apply(null, paired.map(function(svg) {
+                return svg.getBoundingClientRect().top + parseFloat(svg.style.background.match(/transparent ([\d.]+)px/)[1]);
+            }));
+            paired.forEach(function(svg) {
+                var start = top - svg.getBoundingClientRect().top;
+                svg.style.background = "linear-gradient(to bottom, transparent " + start +
+                    "px, var(--color-chart-panel) " + start + "px)";
+            });
+        }
+    }
 }
 var fillFrame;
 function scheduleFill() {
     cancelAnimationFrame(fillFrame);
     fillFrame = requestAnimationFrame(function() {
+        alignPairedDetails();
         fillPairedCards();
         alignSideText();
         paintChartPanels();

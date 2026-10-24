@@ -60,7 +60,11 @@
                     </svg>
                 </h1>
 
-                <p class="subtitle">Why Australians welcome pets into their homes.</p>
+                <p class="subtitle">Pet-loving homes, shaped by space, budgets and daily life.</p>
+                <p class="header-byline">
+                    <span>By <a href="https://github.com/aldrin-adira">Aldrin Maqyl Bin Adira</a></span>
+                    <span>&middot; Published <time datetime="2026-10-21">21 October 2026</time></span>
+                </p>
             </div>
 
             <aside class="hero-stats" aria-label="Australia in 2025, Animal Medicines Australia">
@@ -86,6 +90,15 @@
             </aside>
         </header>
 
+        <nav class="chapter-nav" aria-label="Explore the story">
+            <a href="#section-1-title">01 · Around the world</a>
+            <a href="#section-2-title">02 · Homes</a>
+            <a href="#section-3-title">03 · Pet choices</a>
+            <a href="#section-4-title">04 · Costs</a>
+            <a href="#section-5-title">05 · Local differences</a>
+            <a href="#section-6-title">06 · The bond</a>
+        </nav>
+
         <!-- MAIN STORY: six sections, one after another. Each section has a header (number, heading and a one-line summary), one or more findings with their charts, and (except the last) a sentence leading into the next section. Each chart box has an id like "chart1_chart"; js/vega_lite_vis.js finds the box by that id and draws the chart inside it. Under each chart, the figcaption says where the numbers come from. -->
 
         <main class="sections" id="story">
@@ -107,25 +120,22 @@
                         <aside class="narrative">
                             <h3>A shared bond, different surveys</h3>
                             <p>
-                                These surveys cover 43 countries, mostly in Europe. Australia has one of the highest
-                                reported shares of homes with a dog. Each country is shaded by its reported percentage
-                                of <strong>households owning a dog</strong>.
+                                Almost half of Australian households own a dog. This map puts that figure beside
+                                42 other countries, mostly in Europe. Darker shading means a higher share of homes
+                                with a dog. Survey years and methods differ; this is not a global league table.
                             </p>
-                            <p class="method-note">
-                                The map compares the same measure in every country. The dot rows below compare dogs and
-                                cats separately; their percentages cannot be added because some homes have both. Survey
-                                years and methods differ. Malaysia is not part of this selection, so it appears grey.
-                            </p>
+                            <div class="country-controls">
+                                <div class="chart-toolbar">
+                                    <label for="country-select">Compare a country</label>
+                                    <select id="country-select" data-control="country">
+                                        <option value="">All countries</option>
+                                    </select>
+                                </div>
+                            </div>
                         </aside>
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
                         <figure class="chart-container chart-figure">
-                            <div class="chart-toolbar">
-                                <label for="country-select">Compare a country</label>
-                                <select id="country-select" data-control="country">
-                                    <option value="">All countries</option>
-                                </select>
-                            </div>
                             <div id="chart1_chart"></div>
                             <figcaption class="chart-source">
                                 Sources:
@@ -140,9 +150,9 @@
                         <aside class="narrative">
                             <h3>A strong position in this selection</h3>
                             <p>
-                                Australia ranks fourth for dog ownership in this selection, and eighth for cats. These
-                                are selected-country rankings, not world rankings. Choose a country to follow its dog
-                                and cat figures across both charts.
+                                Australia ranks fourth for dogs and eighth for cats among these 43 countries.
+                                The dots show how it compares with every country, including places where cats
+                                are more common than dogs. Choose a country above to highlight both pets.
                             </p>
                             <p class="section-callout">
                                 <strong>49%</strong><span>of Australian homes own a dog.</span>
@@ -177,8 +187,9 @@
                         <aside class="narrative">
                             <h3>More households; a higher share</h3>
                             <p>
-                                Pet ownership rose from 62% in 2016 to 73% in 2025. Pet-owning households grew from 5.7
-                                million to 7.7 million. Both the share of homes and the number of homes matter.
+                                Pet-owning households grew from 5.7 million in 2016 to 7.7 million in 2025.
+                                Ownership also became more common: 73 in every 100 homes had a pet, up from 62.
+                                The increase was more than population growth alone.
                             </p>
                             <p class="section-callout">
                                 <strong>+11</strong><span>more homes in every 100 have a pet: from 62 to 73.</span>
@@ -195,13 +206,12 @@
                     </div>
                     <div class="story-row row-side">
                         <aside class="narrative">
-                            <h3>Housing shapes what is possible</h3>
+                            <h3>Ownership differs between households</h3>
                             <p>
-                                Families with children at home and households paying off a housing loan each report 85%
-                                ownership. Apartment
-                                households report 57%: the closest comparison for Malaysians living in flats and
-                                condominiums. These are differences between groups; they do not prove that housing
-                                causes ownership.
+                                Pet ownership reaches 85% among families with children at home and households paying
+                                off a housing loan, compared with 57% in apartments or flats.
+                                These groups overlap; the differences do not establish a cause.
+                                Each dot shows a group's rate; its short line connects it to the national 73% benchmark.
                             </p>
                             <p class="section-callout">
                                 <strong>73%</strong><span>The national benchmark helps put each group in context.</span>
@@ -218,28 +228,33 @@
                     </div>
                     <div class="story-row row-side row-side-right">
                         <aside class="narrative">
-                            <h3>Different homes across Australia</h3>
+                            <h3>City living changes the housing mix</h3>
                             <p>
-                                The previous chart shows lower pet ownership among apartment households. This map adds
-                                the housing context: compare where detached houses and apartments or flats were counted
-                                across Australia in the 2021 Census.
+                                Apartments or flats make up <strong>77% of occupied homes in Sydney Inner City</strong>
+                                and <strong>86% in Melbourne City</strong>. Switch home types to explore the housing
+                                behind the national comparison. The map shows homes, not where pet owners live.
                             </p>
                             <p class="method-note">
-                                Each dot represents about 2,000 occupied homes. These are housing counts; the pet
-                                ownership comparisons come from a separate 2025 survey. Dots are placed at random inside
-                                each Census region, not at real home addresses.
+                                Housing counts are from the 2021 Census; pet ownership comes from a separate 2025
+                                survey. Each dot represents about 2,000 homes, placed within its region rather than
+                                at real addresses.
                             </p>
+                            <div class="housing-map-details">
+                                <div id="housing-map-controls" class="housing-map-controls"></div>
+                                <p class="method-note">
+                                    Choose a home type. Hover for regional counts; click to hold a highlight.
+                                </p>
+                                <p class="method-note">
+                                    All occupied homes also includes terrace houses, townhouses and other home types. Counts are rounded
+                                    separately by region. Mainland Australia and Tasmania are shown; Christmas Island,
+                                    the Cocos (Keeling) Islands and Norfolk Island are omitted.
+                                </p>
+                            </div>
                         </aside>
                         <figure class="chart-container chart-figure">
                             <h3 class="chart-heading">Occupied homes by type across Australia</h3>
                             <p class="chart-subtitle">Australia · 2021 Census · Each dot represents about 2,000 occupied homes</p>
-                            <div id="chart5_chart"></div>
-                            <p class="method-note">
-                                Choose a home type below the map. Hover for regional counts; click to hold a highlight.
-                                All occupied homes also includes terrace houses, townhouses and other home types. Counts are rounded
-                                separately by region. Mainland Australia and Tasmania are shown; Christmas Island,
-                                the Cocos (Keeling) Islands and Norfolk Island are omitted.
-                            </p>
+                            <div id="chart5_chart" data-controls-target="housing-map-controls"></div>
                             <figcaption class="chart-source">
                                 Source: <a href="#source-housing">Australian Bureau of Statistics, 2021 Census</a>,
                                 type of home by Census region.
@@ -261,10 +276,9 @@
                     <aside class="narrative">
                         <h3>One dog, or a tank of fish</h3>
                         <p>
-                            Dogs reach the most homes, yet fish have led the animal count in every survey since
-                            2016: about 12.1 million fish compared with 7.4 million dogs in 2025. Below them, birds
-                            briefly passed dogs in 2019, then slipped to fourth as cats moved up. Follow a line to
-                            trace one pet's rank.
+                            Dogs reach the most homes, but fish are more numerous: 12.1 million fish compared with
+                            7.4 million dogs in 2025. Birds briefly passed dogs in 2019, then fell to fourth as
+                            cats moved up. Follow a line to trace one pet's rank.
                         </p>
                         <p class="method-note">
                             Four national surveys, 2016 to 2025. Equal rank gaps do not mean equal differences in
@@ -279,8 +293,8 @@
                             pet's column to compare its published reasons.
                         </p>
                         <p class="method-note">
-                            Hatching means outside the published top five, not zero. Owners could give several
-                            reasons.
+                                Hatching means outside the published top five, not zero. Owners could give several
+                                reasons. Each published cell shows its percentage; hover for the sample size.
                         </p>
                     </aside>
                     <div class="chart-toolbar shared-pet-toolbar">
@@ -321,20 +335,19 @@
                         <aside class="narrative">
                             <h3>Food takes the largest share</h3>
                             <p>
-                                A dog-owning home spends about 2,520 Australian dollars a year on its dogs (about 6,960
-                                ringgit); a cat-owning home about 1,656 Australian dollars (about 4,570 ringgit). Food
-                                is the largest single cost, 1,090 Australian dollars for dogs and 884 Australian dollars
-                                for cats, but health care comes next: 745 Australian dollars for dogs and 490 Australian
-                                dollars for cats once veterinary visits, medicines, parasite treatments, supplements and
-                                insurance are added together.
+                                A dog-owning home spends about <strong>6,960 ringgit a year</strong> on its dogs;
+                                a cat-owning home about <strong>4,570 ringgit</strong> on its cats.
+                                Food is the largest single cost. Health care adds another 745 Australian dollars
+                                for dogs and 490 for cats, so feeding is only part of the budget.
                             </p>
                             <p class="method-note">
-                                Follow each pet through broad cost groups to the reported categories. Branch width shows
-                                dollars on one scale; labels retain even the smallest costs. The dog categories sum to
-                                2,521 Australian dollars, one Australian dollar above the published total because of
-                                rounding. Ringgit figures convert Australian prices at the 2025 average rate of 2.76
-                                ringgit per Australian dollar (<a href="#source-bnm">Bank Negara Malaysia</a>); they are
-                                not Malaysian prices.
+                                Read left to right: pet, cost group, then individual expense. Wider branches mean more
+                                spending. Hover or click a cost to follow it through both pets.
+                            </p>
+                            <p class="method-note">
+                                The chart uses Australian dollars; tooltips also show ringgit at the 2025 average
+                                rate of 2.76 (<a href="#source-bnm">Bank Negara Malaysia</a>).
+                                These are converted Australian costs, not Malaysian prices.
                             </p>
                         </aside>
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
@@ -350,16 +363,13 @@
                         <aside class="narrative">
                             <h3>Wanting a pet is only the start</h3>
                             <p>
-                                Housing restrictions, cost and responsibility can stand between wanting a pet and
-                                getting one. Current owners most often name ongoing costs (26%); people without a pet
-                                most often say their home or lifestyle is not suitable (31%). Compare reasons within
-                                each side: the two sides ask different groups of people.
+                                Current owners most often name <strong>ongoing costs (26%)</strong> as a barrier to
+                                another pet. People without a pet most often say their <strong>home or lifestyle
+                                is unsuitable (31%)</strong>. Compare within each side: these are different groups.
                             </p>
                             <p class="method-note">
-                                These are reasons people gave, not measured causes. Malaysia has a similar housing
-                                question: strata by-laws let condominium residents keep pets unless an animal causes
-                                nuisance or danger, though management can add rules by special resolution (<a
-                                    href="#source-strata">The Star, 2026</a>).
+                                These are people's reported reasons, not measured causes. For Malaysian readers,
+                                the practical question is familiar: can a pet fit the home, household rules and budget?
                             </p>
                         </aside>
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
@@ -386,10 +396,9 @@
                 <div class="story-frame">
                     <div class="section-brief">
                         <p>
-                            Large populations can produce large pet totals. A rate divides by residents to make council
-                            comparisons fairer. The left map sizes one circle by each council’s animal total; the right map
-                            shows how common recorded animals are for the number of people. Both maps show the same species
-                            and area, so places line up.
+                            Where are the most animals, and where are they most common per person?
+                            The circles answer the first question; the shading answers the second.
+                            Select one council to compare its total and rate across the maps and scatterplot.
                         </p>
                         <p class="method-note">
                             68 local councils · Animal records: 30 May 2025 · Population: 30 June 2025. Recorded animals
@@ -438,9 +447,8 @@
                             <p class="chart-subtitle">Circle area shows <span data-species-label>dogs</span> on council records · 2025</p>
                             <div id="chart10_chart"></div>
                             <p class="method-note map-note">
-                                Each circle represents one council. Its area is proportional to the selected animal total,
-                                on one scale for dogs and cats. Hover over a circle for exact values. Circle centres
-                                represent councils, not animal addresses.
+                                Circle area uses the same scale for dogs and cats. Centres represent councils,
+                                not animal addresses. Hover for exact counts.
                             </p>
                             <figcaption class="chart-source">
                                 Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
@@ -467,7 +475,7 @@
                 <div class="chapter-panels panels-featured local-panels">
                     <div class="story-row row-side">
                         <aside class="narrative">
-                            <h3>Crowding makes a difference</h3>
+                            <h3>Fewer dogs per person in crowded areas</h3>
                             <p>
                                 Councils where people live closer together tend to record fewer dogs per resident. Cats
                                 show a weaker pattern.
@@ -481,6 +489,32 @@
 
                         <figure class="chart-container chart-figure">
                             <div id="chart12_chart"></div>
+                            <figcaption class="chart-source">
+                                Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
+                                <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <div class="story-row row-side row-side-right">
+                        <aside class="narrative">
+                            <h3>Dog rates vary more between councils</h3>
+                            <p>
+                                The middle half of councils have about <strong>184 to 295 dogs</strong> per 1,000
+                                residents, compared with <strong>44 to 72 cats</strong>. The wider dog box shows
+                                that typical council dog rates are more spread out.
+                            </p>
+                            <p class="method-note">
+                                The maps locate the differences; these boxes show their spread.
+                                Every council counts once, regardless of population. These are animals on council
+                                records, not the share of homes with a pet.
+                            </p>
+                            <p class="method-note">
+                                Hover over a box for exact values. Click it to hold the comparison in focus;
+                                click empty chart space to clear it.
+                            </p>
+                        </aside>
+                        <figure class="chart-container chart-figure">
+                            <div id="chart13_chart"></div>
                             <figcaption class="chart-source">
                                 Sources: <a href="#source-daco">Dogs and Cats Online (2025)</a>;
                                 <a href="#source-abs">Australian Bureau of Statistics (2025)</a>.
@@ -508,15 +542,15 @@
                                 owning a pet improves health.
                             </p>
                             <p class="section-conclusion">
-                                Whether in Sydney or Kuala Lumpur, lasting companionship takes a suitable home,
-                                affordable care and time. Matching those commitments to the household helps the bond
-                                last.
+                                More Australian homes now include a pet, but ownership is uneven and care has an
+                                ongoing cost. For a household in Sydney or Kuala Lumpur, the useful question is
+                                the same: which companion fits the home, budget and daily routine?
                             </p>
                         </aside>
                         <!-- Chart host: the matching embedChart call loads its documented Vega specification. -->
 
                         <figure class="chart-container chart-figure">
-                            <div id="chart13_chart"></div>
+                            <div id="chart14_chart"></div>
                             <figcaption class="chart-source">
                                 Source: <a href="#source-ama">Animal Medicines Australia (2025)</a>, page 22.
                             </figcaption>
@@ -549,7 +583,7 @@
                             <a href="https://github.com/aldrin-adira">Aldrin Maqyl Bin Adira</a><br />
                             <strong>FIT3179 – Monash University Malaysia</strong><br />
                             <!-- This date describes this edition, not an unrelated repository commit. -->
-                            Updated <time id="published-date" datetime="2026-10-21">21 October 2026</time><br />
+                            Updated <time id="published-date" datetime="2026-10-24">24 October 2026</time><br />
                             <a href="https://github.com/aldrin-adira/FIT3179_Data_Visualisation_2">Project repository</a>
                             and
                             <a href="https://github.com/aldrin-adira/FIT3179_Data_Visualisation_2/tree/main/data">project data files</a>
@@ -643,12 +677,6 @@
                             costs for Malaysian readers in Section 4.
                         </p>
 
-                        <p id="source-strata">
-                            N. Albakri,
-                            <a
-                                href="https://www.thestar.com.my/news/true-or-not/2026/07/29/quickcheck-can-your-condo-management-stop-you-from-keeping-a-pet">Pet rules in strata housing</a>, The Star, 29 July 2026, on By-Law 14, Third Schedule, Strata Management (Maintenance and
-                            Management) Regulations 2015. Used in Section 4.
-                        </p>
                     </div>
 
                     <div class="pure-u-1 pure-u-md-1-2 source-column">

@@ -154,6 +154,11 @@
       "name": "focusGroup",
       "update": "pinnedKey !== null ? pinnedKey : hoverGroup",
       "description": "Pinned selection takes precedence over temporary hover."
+    },
+    {
+      "name": "colorBaseline",
+      "value": "#9b8b6c",
+      "description": "Dark sandy baseline marks, supplied by --color-baseline in css/style.css."
     }
   ],
   "data": [
@@ -300,7 +305,11 @@
           },
           "domain": false,
           "ticks": false,
-          "grid": false,
+          "grid": true,
+          "gridColor": {
+            "signal": "colorBorder"
+          },
+          "gridOpacity": 0.3,
           "labelPadding": 8,
           "labelColor": {
             "signal": "colorMuted"
@@ -320,6 +329,13 @@
           "titleFontWeight": 500,
           "titlePadding": 8,
           "encode": {
+            "grid": {
+              "update": {
+                "y2": {
+                  "signal": "-plotHeight + headerHeight"
+                }
+              }
+            },
             "labels": {
               "update": {
                 "text": {
@@ -480,7 +496,7 @@
                 "signal": "datum.block * blockHeight + 4"
               },
               "fill": {
-                "signal": "(focusGroup !== null ? length(data('focusedHousehold')) > 0 && datum.dimension === data('focusedHousehold')[0].dimension : datum.emphasis) ? colorAccent : colorBorder"
+                "signal": "(focusGroup !== null ? length(data('focusedHousehold')) > 0 && datum.dimension === data('focusedHousehold')[0].dimension : datum.emphasis) ? colorAccent : colorMuted"
               }
             }
           },
@@ -522,10 +538,10 @@
                 "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? 600 : 400"
               },
               "fill": {
-                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
+                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorMuted"
               },
               "tooltip": {
-                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label + ({'At least AUD 100000 annually': ' (about 276,000 ringgit or more)', 'Below AUD 50000 annually': ' (under about 138,000 ringgit)'}[datum.group] || ''), 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published share owning a pet' : '100% minus the published share without a pet'}"
+                "signal": "\"In the “\" + (datum.label) + \"” group, \" + (format(datum.pct, ',')) + \"% of households owned pets in 2025. \" + (datum.difference === 0 ? 'This equals the national rate of ' : 'This is ' + format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : 'below') + ' the national rate of ') + \"\" + (nationalRate) + \"%. \" + (datum.derivation === 'reported' ? 'This share was published in the survey.' : 'This share is calculated as 100% minus the published share without a pet.') + \"\" + (({'At least AUD 100000 annually':' This income is about 276,000 ringgit or more a year.','Below AUD 50000 annually':' This income is under about 138,000 ringgit a year.'}[datum.group] || '')) + \"\""
               }
             }
           },
@@ -534,7 +550,7 @@
         },
         {
           "type": "rule",
-          "description": "Grey lollipop sticks connect group rates to the benchmark. Hover highlights the matching stick and dot in blue; mouseout restores default household emphasis.",
+          "description": "Sandy lollipop sticks connect group rates to the benchmark. Hover highlights the matching stick and dot in blue; mouseout restores default household emphasis.",
           "from": {
             "data": "groups"
           },
@@ -560,10 +576,10 @@
                 "signal": "datum.block * blockHeight + headerHeight + (datum.rank - 1) * rowHeight + (narrow ? 30 : rowHeight / 2)"
               },
               "stroke": {
-                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
+                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBaseline"
               },
               "tooltip": {
-                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label + ({'At least AUD 100000 annually': ' (about 276,000 ringgit or more)', 'Below AUD 50000 annually': ' (under about 138,000 ringgit)'}[datum.group] || ''), 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published share owning a pet' : '100% minus the published share without a pet'}"
+                "signal": "\"In the “\" + (datum.label) + \"” group, \" + (format(datum.pct, ',')) + \"% of households owned pets in 2025. \" + (datum.difference === 0 ? 'This equals the national rate of ' : 'This is ' + format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : 'below') + ' the national rate of ') + \"\" + (nationalRate) + \"%. \" + (datum.derivation === 'reported' ? 'This share was published in the survey.' : 'This share is calculated as 100% minus the published share without a pet.') + \"\" + (({'At least AUD 100000 annually':' This income is about 276,000 ringgit or more a year.','Below AUD 50000 annually':' This income is under about 138,000 ringgit a year.'}[datum.group] || '')) + \"\""
               }
             }
           },
@@ -590,10 +606,10 @@
                 "value": 130
               },
               "fill": {
-                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
+                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBaseline"
               },
               "tooltip": {
-                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label + ({'At least AUD 100000 annually': ' (about 276,000 ringgit or more)', 'Below AUD 50000 annually': ' (under about 138,000 ringgit)'}[datum.group] || ''), 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published share owning a pet' : '100% minus the published share without a pet'}"
+                "signal": "\"In the “\" + (datum.label) + \"” group, \" + (format(datum.pct, ',')) + \"% of households owned pets in 2025. \" + (datum.difference === 0 ? 'This equals the national rate of ' : 'This is ' + format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : 'below') + ' the national rate of ') + \"\" + (nationalRate) + \"%. \" + (datum.derivation === 'reported' ? 'This share was published in the survey.' : 'This share is calculated as 100% minus the published share without a pet.') + \"\" + (({'At least AUD 100000 annually':' This income is about 276,000 ringgit or more a year.','Below AUD 50000 annually':' This income is under about 138,000 ringgit a year.'}[datum.group] || '')) + \"\""
               }
             }
           },
@@ -640,10 +656,10 @@
                 "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? 600 : 400"
               },
               "fill": {
-                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorBorder"
+                "signal": "(focusGroup !== null ? datum.label === focusGroup : datum.emphasis) ? colorAccent : colorMuted"
               },
               "tooltip": {
-                "signal": "{'Comparison': datum.dimension_label, 'Household group': datum.label + ({'At least AUD 100000 annually': ' (about 276,000 ringgit or more)', 'Below AUD 50000 annually': ' (under about 138,000 ringgit)'}[datum.group] || ''), 'Households owning pets': format(datum.pct, ',') + '%', 'National ownership rate': nationalRate + '%', 'Difference from national rate': format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : datum.difference < 0 ? 'below' : 'equal to') , 'Value basis': datum.derivation === 'reported' ? 'Published share owning a pet' : '100% minus the published share without a pet'}"
+                "signal": "\"In the “\" + (datum.label) + \"” group, \" + (format(datum.pct, ',')) + \"% of households owned pets in 2025. \" + (datum.difference === 0 ? 'This equals the national rate of ' : 'This is ' + format(abs(datum.difference), ',') + ' percentage points ' + (datum.difference > 0 ? 'above' : 'below') + ' the national rate of ') + \"\" + (nationalRate) + \"%. \" + (datum.derivation === 'reported' ? 'This share was published in the survey.' : 'This share is calculated as 100% minus the published share without a pet.') + \"\" + (({'At least AUD 100000 annually':' This income is about 276,000 ringgit or more a year.','Below AUD 50000 annually':' This income is under about 138,000 ringgit a year.'}[datum.group] || '')) + \"\""
               }
             }
           },

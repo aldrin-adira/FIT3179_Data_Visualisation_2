@@ -109,8 +109,8 @@
     },
     {
       "name": "colorPetBirds",
-      "description": "Colour: the colour for birds (green). This is only a backup; the real colour comes from --color-pet-birds in css/style.css.",
-      "value": "#1e6b2a"
+      "description": "Colour: the colour for birds (slate blue). This is only a backup; the real colour comes from --color-pet-birds in css/style.css.",
+      "value": "#4b668b"
     },
     {
       "name": "colorPetSmallMammals",
@@ -144,7 +144,7 @@
     },
     {
       "name": "narrow",
-      "description": "True when the chart is less than 760 pixels wide (for example on a phone). Other parts check it to use shorter words, upright pet names and a stacked key.",
+      "description": "True when the chart is less than 760 pixels wide. Use shorter labels and upright pet names.",
       "update": "containerSize()[0] < 760"
     },
     {
@@ -165,7 +165,7 @@
     {
       "name": "height",
       "description": "How tall the whole chart is: the grid plus room underneath for the key.",
-      "update": "gridHeight + (narrow ? 96 : 56)"
+      "update": "gridHeight + (stackedLegend ? 96 : 56)"
     },
     {
       "name": "legendY",
@@ -186,6 +186,21 @@
       "name": "colorAccent",
       "value": "#005a9c",
       "description": "Selection outline supplied by --color-accent in css/style.css."
+    },
+    {
+      "name": "stackedLegend",
+      "update": "width - labelWidth < 370",
+      "description": "Place the not-published key beside the colour scale whenever both keys fit; stack them only on small screens."
+    },
+    {
+      "name": "legendTextSize",
+      "value": 13,
+      "description": "Shared legend text size from --legend-text-size in css/style.css."
+    },
+    {
+      "name": "legendTextWeight",
+      "value": 400,
+      "description": "Shared legend text weight from --legend-text-weight in css/style.css."
     }
   ],
   "data": [
@@ -459,7 +474,7 @@
     {
       "orient": "top",
       "scale": "x",
-      "description": "The pet names along the top of the grid, each in its pet colour. On a phone they stand upright to fit.",
+      "description": "Horizontal pet names on wide charts; narrow columns rotate the names to keep readable type. Small mammals wraps to two lines when horizontal.",
       "labelFont": {
         "signal": "fontBody"
       },
@@ -473,23 +488,30 @@
               "field": "value"
             },
             "text": {
-              "signal": "datum.value"
+              "signal": "bandwidth('x') >= 48 && datum.value === 'Small mammals' ? ['Small', 'mammals'] : datum.value"
             },
             "fontSize": {
-              "signal": "narrow ? 11 : 13"
+              "value": 12
             },
             "angle": {
-              "signal": "narrow ? -90 : 0"
+              "signal": "bandwidth('x') < 48 ? -90 : 0"
             },
             "align": {
-              "signal": "narrow ? 'left' : 'center'"
+              "signal": "bandwidth('x') < 48 ? 'left' : 'center'"
             },
             "baseline": {
-              "signal": "narrow ? 'middle' : 'bottom'"
+              "signal": "bandwidth('x') < 48 ? 'middle' : 'bottom'"
+            },
+            "lineHeight": {
+              "value": 13
+            },
+            "dy": {
+              "signal": "bandwidth('x') >= 48 && datum.value === 'Small mammals' ? -13 : 0"
             }
           }
         }
-      }
+      },
+      "labelPadding": 8
     }
   ],
   "marks": [
@@ -534,7 +556,7 @@
             "value": 13
           },
           "fontSize": {
-            "signal": "narrow ? 11 : 13"
+            "value": 13
           }
         }
       }
@@ -571,7 +593,7 @@
             "signal": "pinnedKey !== null ? (pinnedKey === datum.species + '|' + datum.reason ? 1 : 0.25) : (!selectedPet || selectedPet === datum.species ? 1 : 0.25)"
           },
           "tooltip": {
-            "signal": "datum.published_cell ? {'Pet type': datum.species, 'Reason': datum.label, 'Owners giving this reason': datum.percent + '%', 'Owners surveyed': format(datum.sample_n, ',.0f'), 'Survey year': 2025} : {'Pet type': datum.species, 'Reason': datum.label, 'Value': 'Not published: outside this pet\\'s top five reasons', 'Interpretation': 'An unpublished value is not zero'}"
+            "signal": "datum.published_cell ? (\"In the 2025 survey, \" + (datum.percent) + \"% of owners of \" + (lower(datum.species)) + \" cited “\" + (datum.label) + \"” as a reason for getting their pet. The survey included \" + (format(datum.sample_n, ',.0f')) + \" owners of this pet type.\") : (\"The percentage of owners of \" + (lower(datum.species)) + \" citing “\" + (datum.label) + \"” was not published in the 2025 report because it was outside this pet type’s top five reasons. An unpublished value is not zero.\")"
           },
           "stroke": {
             "signal": "pinnedKey === datum.species + '|' + datum.reason ? colorAccent : colorChartPanel"
@@ -586,6 +608,53 @@
       },
       "interactive": true,
       "name": "motivationCells"
+    },
+    {
+      "name": "motivationValues",
+      "type": "text",
+      "interactive": false,
+      "from": {
+        "data": "cells"
+      },
+      "description": "Published percentages can be read without hovering. Unpublished cells stay blank and hatched.",
+      "encode": {
+        "update": {
+          "x": {
+            "scale": "x",
+            "field": "species",
+            "band": 0.5
+          },
+          "y": {
+            "scale": "y",
+            "field": "reason",
+            "band": 0.5
+          },
+          "text": {
+            "signal": "datum.published_cell ? datum.percent + '%' : ''"
+          },
+          "align": {
+            "value": "center"
+          },
+          "baseline": {
+            "value": "middle"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "signal": "bandwidth('x') < 48 ? 13 : 12"
+          },
+          "fontWeight": {
+            "value": 400
+          },
+          "fill": {
+            "signal": "datum.percent >= 34 ? '#ffffff' : '#000000'"
+          },
+          "opacity": {
+            "signal": "pinnedKey !== null ? (pinnedKey === datum.species + '|' + datum.reason ? 1 : 0.25) : (!selectedPet || selectedPet === datum.species ? 1 : 0.25)"
+          }
+        }
+      }
     },
     {
       "type": "rule",
@@ -651,9 +720,6 @@
           "baseline": {
             "value": "top"
           },
-          "fontSize": {
-            "value": 12
-          },
           "font": {
             "signal": "fontBody"
           },
@@ -670,10 +736,17 @@
           },
           "text": {
             "value": "Share of owners: 0% to 60%"
+          },
+          "fontSize": {
+            "signal": "legendTextSize"
+          },
+          "fontWeight": {
+            "signal": "legendTextWeight"
           }
         }
       },
-      "interactive": false
+      "interactive": false,
+      "name": "legendText0"
     },
     {
       "type": "rect",
@@ -681,10 +754,10 @@
       "encode": {
         "update": {
           "x": {
-            "signal": "narrow ? labelWidth : labelWidth + 190"
+            "signal": "stackedLegend ? labelWidth : labelWidth + 190"
           },
           "y": {
-            "signal": "narrow ? legendY + 50 : legendY + 2"
+            "signal": "stackedLegend ? legendY + 50 : legendY + 2"
           },
           "width": {
             "value": 26
@@ -717,16 +790,16 @@
         },
         "update": {
           "x": {
-            "signal": "(narrow ? labelWidth : labelWidth + 190) + max(0, datum.offset - 26)"
+            "signal": "(stackedLegend ? labelWidth : labelWidth + 190) + max(0, datum.offset - 26)"
           },
           "y": {
-            "signal": "(narrow ? legendY + 50 : legendY + 2) + min(datum.offset, 26)"
+            "signal": "(stackedLegend ? legendY + 50 : legendY + 2) + min(datum.offset, 26)"
           },
           "x2": {
-            "signal": "(narrow ? labelWidth : labelWidth + 190) + min(datum.offset, 26)"
+            "signal": "(stackedLegend ? labelWidth : labelWidth + 190) + min(datum.offset, 26)"
           },
           "y2": {
-            "signal": "(narrow ? legendY + 50 : legendY + 2) + max(0, datum.offset - 26)"
+            "signal": "(stackedLegend ? legendY + 50 : legendY + 2) + max(0, datum.offset - 26)"
           },
           "strokeOpacity": {
             "signal": "datum.offset < 52 ? 1 : 0"
@@ -742,9 +815,6 @@
           "baseline": {
             "value": "middle"
           },
-          "fontSize": {
-            "value": 12
-          },
           "font": {
             "signal": "fontBody"
           },
@@ -754,17 +824,24 @@
         },
         "update": {
           "x": {
-            "signal": "(narrow ? labelWidth : labelWidth + 190) + 34"
+            "signal": "(stackedLegend ? labelWidth : labelWidth + 190) + 34"
           },
           "y": {
-            "signal": "(narrow ? legendY + 50 : legendY + 2) + 13"
+            "signal": "(stackedLegend ? legendY + 50 : legendY + 2) + 13"
           },
           "text": {
             "signal": "narrow ? ['Not published: outside', 'this pet\\'s top five'] : 'Not published: outside this pet\\'s top five reasons'"
+          },
+          "fontSize": {
+            "signal": "legendTextSize"
+          },
+          "fontWeight": {
+            "signal": "legendTextWeight"
           }
         }
       },
-      "interactive": false
+      "interactive": false,
+      "name": "legendText1"
     }
   ]
 }

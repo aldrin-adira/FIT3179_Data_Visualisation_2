@@ -1,0 +1,714 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Horizontal box-and-whisker plots comparing the distribution of recorded dogs and cats per 1,000 residents across 68 South Australian councils in 2025. Boxes show the middle half; whiskers show the full minimum-to-maximum range.",
+  "padding": 5,
+  "autosize": {
+    "type": "fit-x",
+    "contains": "padding"
+  },
+  "title": {
+    "text": "Spread of dog and cat rates across councils",
+    "subtitle": "68 South Australian councils, 2025",
+    "anchor": "start",
+    "offset": 18,
+    "font": {
+      "signal": "fontHeading"
+    },
+    "fontSize": 22,
+    "fontWeight": 400,
+    "color": {
+      "signal": "colorHeading"
+    },
+    "subtitleFont": {
+      "signal": "fontBody"
+    },
+    "subtitleFontSize": 13,
+    "subtitleColor": {
+      "signal": "colorMuted"
+    }
+  },
+  "signals": [
+    {
+      "name": "width",
+      "init": "containerSize()[0]"
+    },
+    {
+      "name": "height",
+      "value": 430
+    },
+    {
+      "name": "plotHeight",
+      "value": 230
+    },
+    {
+      "name": "legendY",
+      "value": 302
+    },
+    {
+      "name": "colorPetDogs",
+      "value": "#9c6500"
+    },
+    {
+      "name": "colorPetCats",
+      "value": "#7a376b"
+    },
+    {
+      "name": "colorHeading",
+      "value": "#0b2540"
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725"
+    },
+    {
+      "name": "colorBorder",
+      "value": "#868d96"
+    },
+    {
+      "name": "colorChartPanel",
+      "value": "#f4f6f7"
+    },
+    {
+      "name": "fontBody",
+      "value": "Fira Sans"
+    },
+    {
+      "name": "fontHeading",
+      "value": "DM Serif Display"
+    },
+    {
+      "name": "legendTextSize",
+      "value": 13
+    },
+    {
+      "name": "legendTextWeight",
+      "value": 400
+    },
+    {
+      "name": "pinnedKey",
+      "value": null,
+      "description": "Click a box to keep that species in focus; click empty space to clear it."
+    },
+    {
+      "name": "hoverPet",
+      "value": null,
+      "on": [
+        {
+          "events": "@distributionBoxes:pointerover, @distributionMedians:pointerover, @distributionWhiskers:pointerover",
+          "update": "datum.pet"
+        },
+        {
+          "events": "@distributionBoxes:pointerout, @distributionMedians:pointerout, @distributionWhiskers:pointerout",
+          "update": "null"
+        }
+      ]
+    },
+    {
+      "name": "focusPet",
+      "update": "pinnedKey || hoverPet"
+    }
+  ],
+  "data": [
+    {
+      "name": "rates",
+      "url": "data/selected/sa_council_animals_per_1000_residents_2025.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "recorded_animals_per_1000_residents": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "pet",
+          "expr": "datum.species === 'Dog' ? 'Dogs' : 'Cats'"
+        }
+      ]
+    },
+    {
+      "name": "summaries",
+      "source": "rates",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": [
+            "pet"
+          ],
+          "fields": [
+            "recorded_animals_per_1000_residents",
+            "recorded_animals_per_1000_residents",
+            "recorded_animals_per_1000_residents",
+            "recorded_animals_per_1000_residents",
+            "recorded_animals_per_1000_residents",
+            "recorded_animals_per_1000_residents"
+          ],
+          "ops": [
+            "min",
+            "q1",
+            "median",
+            "q3",
+            "max",
+            "count"
+          ],
+          "as": [
+            "minimum",
+            "q1",
+            "median",
+            "q3",
+            "maximum",
+            "count"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "keyItems",
+      "values": [
+        {
+          "i": 0,
+          "label": "Box: middle half of councils"
+        },
+        {
+          "i": 1,
+          "label": "Centre line: middle value"
+        },
+        {
+          "i": 2,
+          "label": "Whiskers: lowest to highest"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "rate",
+      "type": "linear",
+      "domain": [
+        0,
+        520
+      ],
+      "range": [
+        12,
+        {
+          "signal": "width - 12"
+        }
+      ],
+      "zero": true
+    },
+    {
+      "name": "petColour",
+      "type": "ordinal",
+      "domain": [
+        "Dogs",
+        "Cats"
+      ],
+      "range": {
+        "signal": "[colorPetDogs, colorPetCats]"
+      }
+    }
+  ],
+  "marks": [
+    {
+      "type": "group",
+      "name": "distributionPlot",
+      "encode": {
+        "update": {
+          "width": {
+            "signal": "width"
+          },
+          "height": {
+            "signal": "plotHeight"
+          }
+        }
+      },
+      "axes": [
+        {
+          "orient": "bottom",
+          "scale": "rate",
+          "values": [
+            0,
+            100,
+            200,
+            300,
+            400,
+            500
+          ],
+          "domain": false,
+          "ticks": false,
+          "grid": true,
+          "gridColor": {
+            "signal": "colorBorder"
+          },
+          "gridOpacity": 0.2,
+          "labelFont": {
+            "signal": "fontBody"
+          },
+          "labelFontSize": 12,
+          "labelColor": {
+            "signal": "colorMuted"
+          },
+          "title": "Animals on council records per 1,000 residents",
+          "titleFont": {
+            "signal": "fontBody"
+          },
+          "titleFontSize": 12,
+          "titleColor": {
+            "signal": "colorMuted"
+          },
+          "titlePadding": 12,
+          "encode": {
+            "grid": {
+              "update": {
+                "y2": {
+                  "value": -206
+                }
+              }
+            },
+            "title": {
+              "update": {
+                "text": {
+                  "signal": "wrapChartText('Animals on council records per 1,000 residents', width - 8, 12, fontBody)"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "marks": [
+        {
+          "type": "text",
+          "name": "distributionPetLabels",
+          "from": {
+            "data": "summaries"
+          },
+          "interactive": false,
+          "encode": {
+            "update": {
+              "x": {
+                "value": 12
+              },
+              "y": {
+                "signal": "(datum.pet === 'Dogs' ? 78 : 184) - 44"
+              },
+              "text": {
+                "field": "pet"
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fontSize": {
+                "value": 15
+              },
+              "fontWeight": {
+                "value": 600
+              },
+              "fill": {
+                "scale": "petColour",
+                "field": "pet"
+              },
+              "opacity": {
+                "signal": "!focusPet || focusPet === datum.pet ? 1 : 0.28"
+              }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "name": "distributionWhiskers",
+          "from": {
+            "data": "summaries"
+          },
+          "interactive": true,
+          "encode": {
+            "update": {
+              "x": {
+                "scale": "rate",
+                "field": "minimum"
+              },
+              "x2": {
+                "scale": "rate",
+                "field": "maximum"
+              },
+              "y": {
+                "signal": "datum.pet === 'Dogs' ? 78 : 184"
+              },
+              "stroke": {
+                "scale": "petColour",
+                "field": "pet"
+              },
+              "strokeWidth": {
+                "value": 2
+              },
+              "opacity": {
+                "signal": "!focusPet || focusPet === datum.pet ? 1 : 0.28"
+              },
+              "tooltip": {
+                "signal": "\"Across \" + (datum.count) + \" councils, recorded \" + (lower(datum.pet)) + \" range from \" + (format(datum.minimum, '.1f')) + \" to \" + (format(datum.maximum, '.1f')) + \" per 1,000 residents. The middle half of councils fall between \" + (format(datum.q1, '.1f')) + \" and \" + (format(datum.q3, '.1f')) + \", with a middle value of \" + (format(datum.median, '.1f')) + \" per 1,000 residents. Each council counts once, regardless of its population.\""
+              }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "name": "distributionLowCaps",
+          "from": {
+            "data": "summaries"
+          },
+          "interactive": true,
+          "encode": {
+            "update": {
+              "x": {
+                "scale": "rate",
+                "field": "minimum"
+              },
+              "y": {
+                "signal": "(datum.pet === 'Dogs' ? 78 : 184) - 9"
+              },
+              "y2": {
+                "signal": "(datum.pet === 'Dogs' ? 78 : 184) + 9"
+              },
+              "stroke": {
+                "scale": "petColour",
+                "field": "pet"
+              },
+              "strokeWidth": {
+                "value": 2
+              },
+              "opacity": {
+                "signal": "!focusPet || focusPet === datum.pet ? 1 : 0.28"
+              },
+              "tooltip": {
+                "signal": "\"Across \" + (datum.count) + \" councils, recorded \" + (lower(datum.pet)) + \" range from \" + (format(datum.minimum, '.1f')) + \" to \" + (format(datum.maximum, '.1f')) + \" per 1,000 residents. The middle half of councils fall between \" + (format(datum.q1, '.1f')) + \" and \" + (format(datum.q3, '.1f')) + \", with a middle value of \" + (format(datum.median, '.1f')) + \" per 1,000 residents. Each council counts once, regardless of its population.\""
+              }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "name": "distributionHighCaps",
+          "from": {
+            "data": "summaries"
+          },
+          "interactive": true,
+          "encode": {
+            "update": {
+              "x": {
+                "scale": "rate",
+                "field": "maximum"
+              },
+              "y": {
+                "signal": "(datum.pet === 'Dogs' ? 78 : 184) - 9"
+              },
+              "y2": {
+                "signal": "(datum.pet === 'Dogs' ? 78 : 184) + 9"
+              },
+              "stroke": {
+                "scale": "petColour",
+                "field": "pet"
+              },
+              "strokeWidth": {
+                "value": 2
+              },
+              "opacity": {
+                "signal": "!focusPet || focusPet === datum.pet ? 1 : 0.28"
+              },
+              "tooltip": {
+                "signal": "\"Across \" + (datum.count) + \" councils, recorded \" + (lower(datum.pet)) + \" range from \" + (format(datum.minimum, '.1f')) + \" to \" + (format(datum.maximum, '.1f')) + \" per 1,000 residents. The middle half of councils fall between \" + (format(datum.q1, '.1f')) + \" and \" + (format(datum.q3, '.1f')) + \", with a middle value of \" + (format(datum.median, '.1f')) + \" per 1,000 residents. Each council counts once, regardless of its population.\""
+              }
+            }
+          }
+        },
+        {
+          "type": "rect",
+          "name": "distributionBoxes",
+          "from": {
+            "data": "summaries"
+          },
+          "interactive": true,
+          "encode": {
+            "update": {
+              "x": {
+                "scale": "rate",
+                "field": "q1"
+              },
+              "x2": {
+                "scale": "rate",
+                "field": "q3"
+              },
+              "y": {
+                "signal": "(datum.pet === 'Dogs' ? 78 : 184) - 17"
+              },
+              "height": {
+                "value": 34
+              },
+              "fill": {
+                "scale": "petColour",
+                "field": "pet"
+              },
+              "fillOpacity": {
+                "value": 0.3
+              },
+              "stroke": {
+                "scale": "petColour",
+                "field": "pet"
+              },
+              "strokeWidth": {
+                "value": 1.5
+              },
+              "opacity": {
+                "signal": "!focusPet || focusPet === datum.pet ? 1 : 0.28"
+              },
+              "tooltip": {
+                "signal": "\"Across \" + (datum.count) + \" councils, recorded \" + (lower(datum.pet)) + \" range from \" + (format(datum.minimum, '.1f')) + \" to \" + (format(datum.maximum, '.1f')) + \" per 1,000 residents. The middle half of councils fall between \" + (format(datum.q1, '.1f')) + \" and \" + (format(datum.q3, '.1f')) + \", with a middle value of \" + (format(datum.median, '.1f')) + \" per 1,000 residents. Each council counts once, regardless of its population.\""
+              }
+            }
+          }
+        },
+        {
+          "type": "rule",
+          "name": "distributionMedians",
+          "from": {
+            "data": "summaries"
+          },
+          "interactive": true,
+          "encode": {
+            "update": {
+              "x": {
+                "scale": "rate",
+                "field": "median"
+              },
+              "y": {
+                "signal": "(datum.pet === 'Dogs' ? 78 : 184) - 17"
+              },
+              "y2": {
+                "signal": "(datum.pet === 'Dogs' ? 78 : 184) + 17"
+              },
+              "stroke": {
+                "scale": "petColour",
+                "field": "pet"
+              },
+              "strokeWidth": {
+                "value": 3
+              },
+              "opacity": {
+                "signal": "!focusPet || focusPet === datum.pet ? 1 : 0.28"
+              },
+              "tooltip": {
+                "signal": "\"Across \" + (datum.count) + \" councils, recorded \" + (lower(datum.pet)) + \" range from \" + (format(datum.minimum, '.1f')) + \" to \" + (format(datum.maximum, '.1f')) + \" per 1,000 residents. The middle half of councils fall between \" + (format(datum.q1, '.1f')) + \" and \" + (format(datum.q3, '.1f')) + \", with a middle value of \" + (format(datum.median, '.1f')) + \" per 1,000 residents. Each council counts once, regardless of its population.\""
+              }
+            }
+          }
+        },
+        {
+          "type": "text",
+          "name": "distributionMedianLabels",
+          "from": {
+            "data": "summaries"
+          },
+          "interactive": false,
+          "encode": {
+            "update": {
+              "x": {
+                "scale": "rate",
+                "field": "median"
+              },
+              "y": {
+                "signal": "(datum.pet === 'Dogs' ? 78 : 184) + 38"
+              },
+              "align": {
+                "value": "center"
+              },
+              "text": {
+                "signal": "'Middle value: ' + format(datum.median, '.0f')"
+              },
+              "font": {
+                "signal": "fontBody"
+              },
+              "fontSize": {
+                "value": 12
+              },
+              "fill": {
+                "signal": "colorMuted"
+              },
+              "opacity": {
+                "signal": "!focusPet || focusPet === datum.pet ? 1 : 0.28"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "rect",
+      "name": "boxKey",
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "value": 14
+          },
+          "y": {
+            "signal": "legendY - 8"
+          },
+          "width": {
+            "value": 42
+          },
+          "height": {
+            "value": 16
+          },
+          "fill": {
+            "signal": "colorBorder"
+          },
+          "fillOpacity": {
+            "value": 0.3
+          },
+          "stroke": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "name": "medianKey",
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "value": 35
+          },
+          "y": {
+            "signal": "legendY + 48 - 10"
+          },
+          "y2": {
+            "signal": "legendY + 48 + 10"
+          },
+          "stroke": {
+            "signal": "colorMuted"
+          },
+          "strokeWidth": {
+            "value": 3
+          }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "name": "whiskerKey",
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "value": 10
+          },
+          "x2": {
+            "value": 60
+          },
+          "y": {
+            "signal": "legendY + 96"
+          },
+          "stroke": {
+            "signal": "colorMuted"
+          },
+          "strokeWidth": {
+            "value": 2
+          }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "name": "whiskerKeyCap0",
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "value": 10
+          },
+          "y": {
+            "signal": "legendY + 88"
+          },
+          "y2": {
+            "signal": "legendY + 104"
+          },
+          "stroke": {
+            "signal": "colorMuted"
+          },
+          "strokeWidth": {
+            "value": 2
+          }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "name": "whiskerKeyCap1",
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "value": 60
+          },
+          "y": {
+            "signal": "legendY + 88"
+          },
+          "y2": {
+            "signal": "legendY + 104"
+          },
+          "stroke": {
+            "signal": "colorMuted"
+          },
+          "strokeWidth": {
+            "value": 2
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "name": "distributionLegendLabels",
+      "interactive": false,
+      "from": {
+        "data": "keyItems"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "value": 80
+          },
+          "y": {
+            "signal": "legendY + datum.i * 48 - 8"
+          },
+          "text": {
+            "signal": "wrapChartText(datum.label, width - 88, legendTextSize, fontBody)"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "signal": "legendTextSize"
+          },
+          "fontWeight": {
+            "signal": "legendTextWeight"
+          },
+          "lineHeight": {
+            "signal": "legendTextSize * 1.25"
+          },
+          "fill": {
+            "signal": "colorMuted"
+          }
+        }
+      }
+    }
+  ],
+  "usermeta": {
+    "idiom": "Box-and-whisker plot. The box is Q1 to Q3, the centre line is the median, and whiskers are minimum and maximum (not 1.5-IQR fences). Quartiles use Vega aggregation over all 68 councils for each species.",
+    "weighting": "Every council contributes one rate, regardless of its population. This describes variation between councils and is not a state population-weighted rate or a household ownership estimate.",
+    "source": "The same 136 council/species records as the maps and scatterplot; no new download or external runtime source.",
+    "interaction": "Hover for the five-number summary and count; click a species box to pin it; click empty space to clear. Direct names preserve meaning without colour."
+  }
+}

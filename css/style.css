@@ -12,13 +12,16 @@
    apart so colour-blind readers can tell them apart; do not add green next
    to the red-brown colours. */
 :root {
+    --legend-text-size: 13px;
+    --legend-text-weight: 400;
     --color-page: #dadfef; /* Page background; chart annotation background */
     --color-surface: #ffffff; /* Chart card background */
     --color-text: #000000; /* Main body text */
     --color-heading: #0b2540; /* Page, section and chart headings */
     --color-muted: #252725; /* Supporting text, captions and chart labels */
     --color-accent: #005a9c; /* Questions, links, keyboard focus and chart highlights */
-    --color-border: #868d96; /* Dividers, gridlines and baseline chart marks */
+    --color-border: #868d96; /* Dividers and gridlines */
+    --color-baseline: #a39d90; /* Dark sand for chart marks without a colour encoding */
     --color-chart-panel: #f4f6f7; /* Light grey background of every chart */
     --color-map-water: var(--color-chart-panel); /* Map background, outside the land shapes */
     --color-map-land: #e9e7de; /* Unshaded council shapes behind the symbol map's circles */
@@ -28,14 +31,14 @@
     --color-neutral: #512d22; /* Retained neutral palette token */
 
     /* Pet type colours: each pet always has the same colour in every chart.
-       None of them is blue or red-brown, so they never get mixed up with the
-       colours above. Each is dark enough to read as text on white. Pets must
+       The main dog/cat pair uses amber and plum. Birds use muted slate blue
+       to avoid a green-versus-red comparison. Pets must
        always be named on the chart too, because with seven colours some look
        alike to colour-blind readers. */
     --color-pet-dogs: #9c6500; /* Amber */
     --color-pet-cats: #7a376b; /* Plum */
     --color-pet-fish: #007f80; /* Teal */
-    --color-pet-birds: #1e6b2a; /* Green */
+    --color-pet-birds: #4b668b; /* Slate blue */
     --color-pet-small-mammals: #7759d1; /* Violet */
     --color-pet-reptiles: #d6336c; /* Raspberry */
     --color-pet-other: #555555; /* Grey */
@@ -129,6 +132,11 @@ a:hover {
 .subtitle {
     color: var(--color-heading);
     font-size: 1.1rem;
+}
+.header-byline {
+    color: var(--color-muted);
+    font-size: 0.94rem;
+    line-height: 1.5;
 }
 .title-paw {
     fill: var(--color-aus-orange);
@@ -230,7 +238,7 @@ a:hover {
 }
 .chart-source {
     border-top: 1px solid var(--color-border);
-    font-size: 0.74rem;
+    font-size: 0.82rem;
     line-height: 1.6;
     color: var(--color-muted);
 }
@@ -240,13 +248,25 @@ a:hover {
 }
 
 /* Hover details use the same colours and type as the chart cards. */
+.chapter-nav {
+    border-block: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+.chapter-nav a {
+    padding-block: 6px;
+    text-underline-offset: 4px;
+}
 #vg-tooltip-element.vg-tooltip {
     font: 400 0.8rem/1.4 var(--font-body);
     color: var(--color-text);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     box-shadow: none;
-    max-width: calc(100vw - 20px);
+    max-width: min(40ch, calc(100vw - 20px));
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 #vg-tooltip-element.vg-tooltip td.key {
     color: var(--color-muted);

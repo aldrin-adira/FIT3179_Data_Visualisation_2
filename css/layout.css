@@ -65,6 +65,15 @@ footer {
 .main-title > p {
     margin-top: 18px;
 }
+.chapter-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding: 14px max(var(--page-gutter), calc((100% - var(--content-width)) / 2));
+}
+.section-title h2 {
+    scroll-margin-top: 20px;
+}
 .hero-stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -178,6 +187,20 @@ footer {
         margin-top: 20px;
         padding-top: 14px;
         border-top: 1px solid var(--color-border);
+    }
+    /* Centre each callout in the space left below its narrative text. */
+    .panels-featured .row-side .narrative:has(> .section-callout) {
+        display: flex;
+        flex-direction: column;
+        row-gap: 0;
+        align-self: stretch;
+    }
+    .panels-featured .row-side .narrative:has(> .section-callout) > * {
+        flex-shrink: 0;
+    }
+    .panels-featured .row-side .narrative:has(> .section-callout) > .section-callout {
+        margin-top: auto;
+        margin-bottom: auto;
     }
     /* A long note inside a side-row card uses two short columns instead of
        one narrow column beside empty card space. */
@@ -298,6 +321,21 @@ footer {
 }
 .chart-source {
     padding-top: 10px;
+}
+.housing-map-details {
+    margin-top: 18px;
+}
+.housing-map-details > p {
+    margin-top: 12px;
+}
+.housing-map-controls label {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 6px;
+}
+.housing-map-controls select {
+    max-width: 100%;
 }
 /* The map introduction and paired maps use the shared column grid. */
 .section-brief {

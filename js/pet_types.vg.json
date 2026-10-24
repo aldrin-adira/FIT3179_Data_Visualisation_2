@@ -82,8 +82,8 @@
     },
     {
       "name": "colorPetBirds",
-      "value": "#1e6b2a",
-      "description": "Colour: the colour for birds (green). This is only a backup; the real colour comes from --color-pet-birds in css/style.css."
+      "value": "#4b668b",
+      "description": "Colour: the colour for birds (slate blue). This is only a backup; the real colour comes from --color-pet-birds in css/style.css."
     },
     {
       "name": "colorPetSmallMammals",
@@ -118,17 +118,17 @@
     {
       "name": "narrow",
       "update": "width < 540",
-      "description": "True below 540 pixels: the title wraps, dots are smaller, side margins are slightly narrower and the note uses three lines. No data are removed."
+      "description": "True below 540 pixels: dots are smaller and side margins are slightly narrower. No data are removed."
     },
     {
       "name": "height",
-      "update": "430 + extraHeight",
-      "description": "Seven rank rows between the year labels and the note; rows spread out when the card is filled."
+      "update": "(narrow ? 370 : 388) + extraHeight",
+      "description": "Seven rank rows with space for the final pet labels; rows spread out when the card is filled."
     },
     {
       "name": "leftX",
-      "update": "narrow ? 96 : 104",
-      "description": "Where the first survey (2016) sits: leaves room for the pet names and counts on the left."
+      "update": "narrow ? 134 : 142",
+      "description": "First survey position, leaving room for rank numbers, pet names and counts."
     },
     {
       "name": "rightX",
@@ -245,6 +245,18 @@
         2025
       ],
       "description": "The four survey years, written along the top."
+    },
+    {
+      "name": "rankTicks",
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
     }
   ],
   "scales": [
@@ -269,7 +281,7 @@
         7
       ],
       "range": {
-        "signal": "[58, height - (narrow ? 92 : 74)]"
+        "signal": "[58, height - 32]"
       },
       "zero": false
     },
@@ -288,9 +300,100 @@
       "range": {
         "signal": "[colorPetDogs,colorPetCats,colorPetFish,colorPetBirds,colorPetSmallMammals,colorPetReptiles,colorPetOther]"
       }
+    },
+    {
+      "name": "petShape",
+      "type": "ordinal",
+      "domain": [
+        "Dogs",
+        "Cats",
+        "Fish",
+        "Birds",
+        "Small mammals",
+        "Reptiles",
+        "Other pets"
+      ],
+      "range": [
+        "circle",
+        "square",
+        "diamond",
+        "triangle-up",
+        "triangle-down",
+        "cross",
+        "triangle-right"
+      ]
     }
   ],
   "marks": [
+    {
+      "name": "rankHeading",
+      "type": "text",
+      "interactive": false,
+      "description": "Label the numbered rank column beside the pet labels.",
+      "encode": {
+        "update": {
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fill": {
+            "signal": "colorMuted"
+          },
+          "x": {
+            "value": 0
+          },
+          "y": {
+            "value": 14
+          },
+          "text": {
+            "value": "Rank"
+          },
+          "fontWeight": {
+            "value": 600
+          }
+        }
+      }
+    },
+    {
+      "name": "rankLabels",
+      "type": "text",
+      "interactive": false,
+      "description": "Ranks 1 to 7 aligned with the line rows, with rank 1 at the top.",
+      "from": {
+        "data": "rankTicks"
+      },
+      "encode": {
+        "update": {
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fill": {
+            "signal": "colorMuted"
+          },
+          "x": {
+            "value": 12
+          },
+          "y": {
+            "scale": "rank",
+            "field": "data"
+          },
+          "text": {
+            "field": "data"
+          },
+          "align": {
+            "value": "center"
+          },
+          "baseline": {
+            "value": "middle"
+          }
+        }
+      }
+    },
     {
       "type": "rule",
       "description": "A faint vertical guide under each survey year.",
@@ -308,7 +411,7 @@
             "value": 34
           },
           "y2": {
-            "signal": "height - (narrow ? 76 : 58)"
+            "signal": "height - 16"
           },
           "stroke": {
             "signal": "colorBorder"
@@ -443,7 +546,11 @@
             "signal": "!focusPet || focusPet === datum.species ? 1 : 0.25"
           },
           "tooltip": {
-            "signal": "{'Pet type': datum.species, 'Survey year': datum.year, 'Rank by number of animals': datum.animalRank, 'Estimated animals': format(datum.animals_thousands * 1000, ',.0f'), 'Owning households': format(datum.owning_households_thousands * 1000, ',.0f'), 'Households owning this pet': format(datum.household_ownership_pct, ',') + '%', 'Animals per owning household': format(datum.animals_per_owning_household, ',')}"
+            "signal": "\"In \" + (datum.year) + \", Australia had an estimated \" + (format(datum.animals_thousands * 1000, ',.0f')) + \" \" + (lower(datum.species)) + \", ranking \" + (datum.animalRank) + \" among seven pet types by number of animals. About \" + (format(datum.owning_households_thousands * 1000, ',.0f')) + \" households (\" + (format(datum.household_ownership_pct, ',')) + \"% of households) owned them, averaging \" + (format(datum.animals_per_owning_household, ',')) + \" animals per owning household.\""
+          },
+          "shape": {
+            "scale": "petShape",
+            "field": "species"
           }
         }
       },
@@ -493,7 +600,7 @@
             "signal": "!focusPet || focusPet === datum.species ? 1 : 0.4"
           },
           "tooltip": {
-            "signal": "{'Pet type': datum.species, 'Survey year': datum.year, 'Rank by number of animals': datum.animalRank, 'Estimated animals': format(datum.animals_thousands * 1000, ',.0f'), 'Owning households': format(datum.owning_households_thousands * 1000, ',.0f'), 'Households owning this pet': format(datum.household_ownership_pct, ',') + '%', 'Animals per owning household': format(datum.animals_per_owning_household, ',')}"
+            "signal": "\"In \" + (datum.year) + \", Australia had an estimated \" + (format(datum.animals_thousands * 1000, ',.0f')) + \" \" + (lower(datum.species)) + \", ranking \" + (datum.animalRank) + \" among seven pet types by number of animals. About \" + (format(datum.owning_households_thousands * 1000, ',.0f')) + \" households (\" + (format(datum.household_ownership_pct, ',')) + \"% of households) owned them, averaging \" + (format(datum.animals_per_owning_household, ',')) + \" animals per owning household.\""
           }
         }
       },
@@ -543,41 +650,11 @@
             "signal": "!focusPet || focusPet === datum.species ? 1 : 0.4"
           },
           "tooltip": {
-            "signal": "{'Pet type': datum.species, 'Survey year': datum.year, 'Rank by number of animals': datum.animalRank, 'Estimated animals': format(datum.animals_thousands * 1000, ',.0f'), 'Owning households': format(datum.owning_households_thousands * 1000, ',.0f'), 'Households owning this pet': format(datum.household_ownership_pct, ',') + '%', 'Animals per owning household': format(datum.animals_per_owning_household, ',')}"
+            "signal": "\"In \" + (datum.year) + \", Australia had an estimated \" + (format(datum.animals_thousands * 1000, ',.0f')) + \" \" + (lower(datum.species)) + \", ranking \" + (datum.animalRank) + \" among seven pet types by number of animals. About \" + (format(datum.owning_households_thousands * 1000, ',.0f')) + \" households (\" + (format(datum.household_ownership_pct, ',')) + \"% of households) owned them, averaging \" + (format(datum.animals_per_owning_household, ',')) + \" animals per owning household.\""
           }
         }
       },
       "name": "lastSurveyLabels"
-    },
-    {
-      "type": "text",
-      "description": "Reading note: ranks show order only, and close ranks are within survey error.",
-      "interactive": false,
-      "encode": {
-        "update": {
-          "x": {
-            "value": 0
-          },
-          "y": {
-            "signal": "height - (narrow ? 46 : 30)"
-          },
-          "text": {
-            "signal": "narrow ? ['Ranked by estimated animals in each survey.', 'Labels give counts. Close ranks (5 to 7)', 'may swap, as surveys are estimates.'] : ['Ranked by estimated number of animals in each survey; rank 1 is the largest.', 'Labels give counts. Close ranks, such as 5 to 7, may swap places, as surveys are estimates.']"
-          },
-          "lineHeight": {
-            "value": 17
-          },
-          "font": {
-            "signal": "fontBody"
-          },
-          "fontSize": {
-            "value": 12
-          },
-          "fill": {
-            "signal": "colorMuted"
-          }
-        }
-      }
     }
   ],
   "usermeta": {
@@ -585,7 +662,8 @@
     "scales": {
       "x": "Survey year on a point scale; surveys are three years apart, so equal spacing is honest.",
       "rank": "Ordinal rank mapped to equal vertical spacing; #1 is the most animals.",
-      "colour": "Species identity only."
+      "colour": "Species identity only.",
+      "petShape": "Species identity repeated through point shape, so paths can be followed without distinguishing their colours. Direct names appear at both ends."
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},

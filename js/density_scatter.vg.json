@@ -115,8 +115,8 @@
     },
     {
       "name": "height",
-      "description": "Plot and axis height; the reading note floats inside the plot without moving data marks.",
-      "update": "plotHeight + 64"
+      "description": "Reserve space below the axis for the reading note on compact charts; wide charts retain the floating note.",
+      "update": "plotHeight + (narrow ? 90 + length(readingLines) * 17 : 64)"
     },
     {
       "name": "plotRight",
@@ -490,7 +490,7 @@
                 "signal": "focusCode === datum.code ? 1 : 0"
               },
               "tooltip": {
-                "signal": "{'Council': datum.name, 'Pet type': datum.pet, 'Animals on council records': format(datum.recorded_at_home_animals, ',.0f'), 'Animals per 1,000 residents': format(datum.rate, '.1f'), 'Population density': format(datum.density, ',.2f') + ' residents per square kilometre', 'Residents': format(datum.residents_2025, ',.0f')}"
+                "signal": "\"In the council of \" + (datum.name) + \", 2025 records list \" + (format(datum.recorded_at_home_animals, ',.0f')) + \" \" + (lower(datum.pet)) + \" for \" + (format(datum.residents_2025, ',.0f')) + \" residents. That is \" + (format(datum.rate, '.1f')) + \" recorded animals per 1,000 residents.\" + \" Population density is \" + (format(datum.density, ',.2f')) + \" residents per square kilometre.\""
               }
             }
           },
@@ -618,7 +618,7 @@
                 "signal": "narrow && datum.name === 'Adelaide' ? 0 : 1"
               },
               "tooltip": {
-                "signal": "{'Council': datum.name, 'Pet type': datum.pet, 'Animals on council records': format(datum.recorded_at_home_animals, ',.0f'), 'Animals per 1,000 residents': format(datum.rate, '.1f'), 'Population density': format(datum.density, ',.2f') + ' residents per square kilometre', 'Residents': format(datum.residents_2025, ',.0f')}"
+                "signal": "\"In the council of \" + (datum.name) + \", 2025 records list \" + (format(datum.recorded_at_home_animals, ',.0f')) + \" \" + (lower(datum.pet)) + \" for \" + (format(datum.residents_2025, ',.0f')) + \" residents. That is \" + (format(datum.rate, '.1f')) + \" recorded animals per 1,000 residents.\" + \" Population density is \" + (format(datum.density, ',.2f')) + \" residents per square kilometre.\""
               }
             }
           },
@@ -666,16 +666,16 @@
     {
       "type": "text",
       "name": "densityReadingNote",
-      "description": "Left-aligned reading note floating on the right at the 400 animals per 1,000 residents gridline.",
+      "description": "Reading note beneath the axis on compact charts, floating at the 400 gridline on wide charts, so it does not cover council points.",
       "interactive": false,
       "zindex": 2,
       "encode": {
         "update": {
           "x": {
-            "signal": "width - readingWidth - 20"
+            "signal": "narrow ? 4 : width - readingWidth - 20"
           },
           "y": {
-            "signal": "scale('y', 400)"
+            "signal": "narrow ? plotHeight + 84 : scale('y', 400)"
           },
           "text": {
             "signal": "readingLines"

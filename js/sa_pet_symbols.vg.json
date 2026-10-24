@@ -205,6 +205,16 @@
       "name": "pinnedKey",
       "value": null,
       "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
+    },
+    {
+      "name": "legendTextSize",
+      "value": 13,
+      "description": "Shared legend text size from --legend-text-size in css/style.css."
+    },
+    {
+      "name": "legendTextWeight",
+      "value": 400,
+      "description": "Shared legend text weight from --legend-text-weight in css/style.css."
     }
   ],
   "data": [
@@ -465,7 +475,7 @@
                 "signal": "focusCode === datum.code ? 1 : 0"
               },
               "tooltip": {
-                "signal": "{'Council': datum.name, 'Pet type': speciesWord, 'On council records': format(datum.animals, ',.0f'), 'Residents': format(datum.residents, ',.0f'), 'Recorded animals per 1,000 residents': format(datum.rate, '.1f')}"
+                "signal": "\"In the council of \" + (datum.name) + \", 2025 records list \" + (format(datum.animals, ',.0f')) + \" \" + (lower(speciesWord)) + \" for \" + (format(datum.residents, ',.0f')) + \" residents. That is \" + (format(datum.rate, '.1f')) + \" recorded animals per 1,000 residents.\""
               },
               "description": {
                 "signal": "datum.name + ': ' + format(datum.animals, ',.0f') + ' ' + lower(speciesWord) + ' on council records.'"
@@ -492,17 +502,18 @@
           "font": {
             "signal": "fontBody"
           },
-          "fontSize": {
-            "value": 12
-          },
-          "fontWeight": {
-            "value": 600
-          },
           "fill": {
             "signal": "colorMuted"
+          },
+          "fontSize": {
+            "signal": "legendTextSize"
+          },
+          "fontWeight": {
+            "signal": "legendTextWeight"
           }
         }
-      }
+      },
+      "name": "legendText0"
     },
     {
       "type": "symbol",
@@ -564,14 +575,18 @@
           "font": {
             "signal": "fontBody"
           },
-          "fontSize": {
-            "value": 11
-          },
           "fill": {
             "signal": "colorMuted"
+          },
+          "fontSize": {
+            "signal": "legendTextSize"
+          },
+          "fontWeight": {
+            "signal": "legendTextWeight"
           }
         }
-      }
+      },
+      "name": "legendText1"
     }
   ],
   "usermeta": {

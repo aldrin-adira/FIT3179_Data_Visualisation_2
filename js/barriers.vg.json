@@ -377,7 +377,7 @@
             "signal": "focusReason === null || datum.reason === focusReason ? 1 : 0.3"
           },
           "tooltip": {
-            "signal": "{'Reason': datum.label, 'Current owners wanting another pet': datum.owners + '%', 'People without a pet who want one': datum.non_owners + '%'}"
+            "signal": "\"“\" + (datum.label) + \"” was cited as a reason for not getting a pet by \" + (datum.owners) + \"% of current owners wanting another pet and \" + (datum.non_owners) + \"% of people without a pet who want one.\""
           }
         }
       },
@@ -414,7 +414,7 @@
             "signal": "focusReason === null || datum.reason === focusReason ? 1 : 0.3"
           },
           "tooltip": {
-            "signal": "{'Reason': datum.label, 'Respondent group': 'Current owners wanting another pet', 'Share reporting this reason': datum.owners + '%'}"
+            "signal": "\"Among current owners wanting another pet, \" + (datum.owners) + \"% cited “\" + (datum.label) + \"” as a reason for not getting one.\""
           }
         }
       },
@@ -451,7 +451,7 @@
             "signal": "focusReason === null || datum.reason === focusReason ? 1 : 0.3"
           },
           "tooltip": {
-            "signal": "{'Reason': datum.label, 'Respondent group': 'People without a pet who want one', 'Share reporting this reason': datum.non_owners + '%'}"
+            "signal": "\"Among people without a pet who want one, \" + (datum.non_owners) + \"% cited “\" + (datum.label) + \"” as a reason for not getting one.\""
           }
         }
       },
@@ -501,7 +501,7 @@
             "signal": "focusReason === null || datum.reason === focusReason ? 1 : 0.3"
           },
           "tooltip": {
-            "signal": "{'Reason': datum.label, 'Respondent group': 'Current owners wanting another pet', 'Share reporting this reason': datum.owners + '%'}"
+            "signal": "\"Among current owners wanting another pet, \" + (datum.owners) + \"% cited “\" + (datum.label) + \"” as a reason for not getting one.\""
           }
         }
       },
@@ -550,7 +550,7 @@
             "signal": "focusReason === null || datum.reason === focusReason ? 1 : 0.3"
           },
           "tooltip": {
-            "signal": "{'Reason': datum.label, 'Respondent group': 'People without a pet who want one', 'Share reporting this reason': datum.non_owners + '%'}"
+            "signal": "\"Among people without a pet who want one, \" + (datum.non_owners) + \"% cited “\" + (datum.label) + \"” as a reason for not getting one.\""
           }
         }
       },

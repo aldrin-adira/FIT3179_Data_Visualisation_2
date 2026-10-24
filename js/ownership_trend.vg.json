@@ -156,6 +156,11 @@
       "name": "readingLines",
       "update": "wrapChartText(['As Australia gains households, pet-owning homes can', 'increase even when the share with a pet falls.'], readingWidth, 12, fontBody)",
       "description": "Wrap source lines that each have fewer than sixty characters; font measurement can only shorten each line."
+    },
+    {
+      "name": "colorBaseline",
+      "value": "#9b8b6c",
+      "description": "Dark sandy baseline marks, supplied by --color-baseline in css/style.css."
     }
   ],
   "data": [
@@ -310,6 +315,7 @@
       "gridColor": {
         "signal": "colorBorder"
       },
+      "gridOpacity": 0.3,
       "labelColor": {
         "signal": "colorMuted"
       },
@@ -343,6 +349,7 @@
       "gridColor": {
         "signal": "colorBorder"
       },
+      "gridOpacity": 0.3,
       "labelColor": {
         "signal": "colorMuted"
       },
@@ -371,7 +378,7 @@
   "marks": [
     {
       "type": "line",
-      "description": "Grey line joins the surveys chronologically, from 2016 to 2025.",
+      "description": "Sandy line joins the surveys chronologically, from 2016 to 2025.",
       "from": {
         "data": "trend"
       },
@@ -381,7 +388,7 @@
             "value": "linear"
           },
           "stroke": {
-            "signal": "colorBorder"
+            "signal": "colorBaseline"
           },
           "strokeWidth": {
             "value": 3
@@ -405,7 +412,7 @@
     },
     {
       "type": "symbol",
-      "description": "Grey survey dots; 2019 is blue by default. Hover or click transfers blue emphasis to another survey, and clearing a pin restores the 2019 emphasis.",
+      "description": "Sandy survey dots; 2019 is blue by default. Hover or click transfers blue emphasis to another survey, and clearing a pin restores the 2019 emphasis.",
       "from": {
         "data": "trend"
       },
@@ -428,13 +435,13 @@
             "field": "pet_households_millions_rounded"
           },
           "tooltip": {
-            "signal": "{'Survey year': datum.year, 'Households owning pets': format(datum.household_ownership_pct, ',') + '%', 'Pet-owning households': format(datum.pet_households_millions_rounded, '.1f') + ' million', 'Adults surveyed': format(datum.sample_n, ',.0f')}"
+            "signal": "\"In \" + (datum.year) + \", \" + (format(datum.household_ownership_pct, ',')) + \"% of Australian households owned pets, or about \" + (format(datum.pet_households_millions_rounded, '.1f')) + \" million households. The survey included \" + (format(datum.sample_n, ',.0f')) + \" adults.\""
           },
           "stroke": {
-            "signal": "(focusYear !== null ? datum.year === focusYear : datum.highlight) ? colorAccent : colorBorder"
+            "signal": "(focusYear !== null ? datum.year === focusYear : datum.highlight) ? colorAccent : colorBaseline"
           },
           "fill": {
-            "signal": "(focusYear !== null ? datum.year === focusYear : datum.highlight) ? colorAccent : colorBorder"
+            "signal": "(focusYear !== null ? datum.year === focusYear : datum.highlight) ? colorAccent : colorBaseline"
           }
         }
       },
@@ -487,10 +494,10 @@
             "signal": "(narrow && !datum.highlight) ? '' + datum.year : [datum.year, datum.detail]"
           },
           "tooltip": {
-            "signal": "{'Survey year': datum.year, 'Households owning pets': format(datum.household_ownership_pct, ',') + '%', 'Pet-owning households': format(datum.pet_households_millions_rounded, '.1f') + ' million', 'Adults surveyed': format(datum.sample_n, ',.0f')}"
+            "signal": "\"In \" + (datum.year) + \", \" + (format(datum.household_ownership_pct, ',')) + \"% of Australian households owned pets, or about \" + (format(datum.pet_households_millions_rounded, '.1f')) + \" million households. The survey included \" + (format(datum.sample_n, ',.0f')) + \" adults.\""
           },
           "fill": {
-            "signal": "(focusYear !== null ? datum.year === focusYear : datum.highlight) ? colorAccent : colorBorder"
+            "signal": "(focusYear !== null ? datum.year === focusYear : datum.highlight) ? colorAccent : colorMuted"
           }
         }
       },

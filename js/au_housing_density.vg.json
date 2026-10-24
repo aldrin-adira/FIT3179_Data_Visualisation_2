@@ -73,8 +73,13 @@
     },
     {
       "name": "plotHeight",
-      "update": "min(540, width * 0.78)",
+      "update": "min(540, width * 0.78) + sidebarExtraHeight",
       "description": "Fit the whole mainland and Tasmania within the available card width."
+    },
+    {
+      "name": "sidebarExtraHeight",
+      "value": 0,
+      "description": "Extra desktop height needed to align the right-hand notes and controls with the map bottom."
     },
     {
       "name": "height",
@@ -117,7 +122,9 @@
       "update": "pinnedKey || hoverCode",
       "on": [
         {
-          "events": {"signal": "housingType"},
+          "events": {
+            "signal": "housingType"
+          },
           "update": "null",
           "force": true
         }
@@ -265,7 +272,7 @@
                 "signal": "focusCode === datum.code ? 1.5 : 0.3"
               },
               "tooltip": {
-                "signal": "{'Region': datum.name, 'Home type': housingType, 'Occupied homes': format(datum.count, ',.0f'), 'Census year': 2021, 'Each dot represents': 'About 2,000 homes', 'Dot locations': 'Placed at random inside each region, not at real addresses'}"
+                "signal": "\"In \" + (datum.name) + \", the 2021 Census counted \" + (format(datum.count, ',.0f')) + \" \" + (housingType === 'Detached houses' ? 'occupied detached houses' : housingType === 'Apartments or flats' ? 'occupied apartments or flats' : 'occupied homes overall') + \". Each dot represents about 2,000 homes. Dots are placed at random inside the region, not at real addresses.\""
               }
             }
           }
@@ -295,7 +302,7 @@
                 "signal": "focusCode && focusCode !== datum.code ? 0.22 : 0.8"
               },
               "tooltip": {
-                "signal": "{'Region': datum.name, 'Home type': housingType, 'Occupied homes': format(datum.count, ',.0f'), 'Census year': 2021, 'Each dot represents': 'About 2,000 homes', 'Dot locations': 'Placed at random inside each region, not at real addresses'}"
+                "signal": "\"In \" + (datum.name) + \", the 2021 Census counted \" + (format(datum.count, ',.0f')) + \" \" + (housingType === 'Detached houses' ? 'occupied detached houses' : housingType === 'Apartments or flats' ? 'occupied apartments or flats' : 'occupied homes overall') + \". Each dot represents about 2,000 homes. Dots are placed at random inside the region, not at real addresses.\""
               }
             }
           }

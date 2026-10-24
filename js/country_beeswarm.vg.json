@@ -190,6 +190,21 @@
       "name": "activeCountry",
       "update": "pinnedKey || hoverIso",
       "description": "Pinned selection takes precedence over temporary hover."
+    },
+    {
+      "name": "colorBaseline",
+      "value": "#9b8b6c",
+      "description": "Dark sandy baseline marks, supplied by --color-baseline in css/style.css."
+    },
+    {
+      "name": "legendTextSize",
+      "value": 13,
+      "description": "Shared legend text size from --legend-text-size in css/style.css."
+    },
+    {
+      "name": "legendTextWeight",
+      "value": 400,
+      "description": "Shared legend text weight from --legend-text-weight in css/style.css."
     }
   ],
   "data": [
@@ -235,9 +250,9 @@
         },
         {
           "type": "formula",
-          "description": "Default fill: Australia uses the row species colour; other countries use grey.",
+          "description": "Default fill: Australia uses the row species colour; other countries use sand.",
           "as": "colour",
-          "expr": "datum.iso3 === 'AUS' ? (datum.species === 'Dogs' ? colorPetDogs : colorPetCats) : colorBorder"
+          "expr": "datum.iso3 === 'AUS' ? (datum.species === 'Dogs' ? colorPetDogs : colorPetCats) : colorBaseline"
         }
       ]
     },
@@ -299,9 +314,9 @@
       "transform": [
         {
           "type": "formula",
-          "description": "Use the CSS species colours for highlighted dots and grey for comparison countries.",
+          "description": "Use the CSS species colours for highlighted dots and sand for comparison countries.",
           "as": "colour",
-          "expr": "datum.key === 'dogs' ? colorPetDogs : datum.key === 'cats' ? colorPetCats : colorBorder"
+          "expr": "datum.key === 'dogs' ? colorPetDogs : datum.key === 'cats' ? colorPetCats : colorBaseline"
         }
       ]
     },
@@ -562,7 +577,7 @@
         {
           "type": "symbol",
           "name": "dots",
-          "description": "One dot per country per pet, with x fixed at the reported percentage. Australia uses the row species colour by default. Hover transfers that colour to the hovered country and increases its dot areas by 50%; other countries become grey. Packing retains the base radius.",
+          "description": "One dot per country per pet, with x fixed at the reported percentage. Australia uses the row species colour by default. Hover transfers that colour to the hovered country and increases its dot areas by 50%; other countries become sandy. Packing retains the base radius.",
           "from": {
             "data": "packedCountries"
           },
@@ -577,7 +592,7 @@
                 "signal": "PI * radius * radius * (activeCountry === datum.iso3 ? 1.5 : 1)"
               },
               "fill": {
-                "signal": "activeCountry ? (activeCountry === datum.iso3 ? (datum.species === 'Dogs' ? colorPetDogs : colorPetCats) : colorBorder) : datum.colour"
+                "signal": "activeCountry ? (activeCountry === datum.iso3 ? (datum.species === 'Dogs' ? colorPetDogs : colorPetCats) : colorBaseline) : datum.colour"
               },
               "stroke": {
                 "signal": "focusIso === datum.iso3 ? (datum.species === 'Dogs' ? colorPetDogs : colorPetCats) : colorChartPanel"
@@ -586,7 +601,7 @@
                 "signal": "focusIso === datum.iso3 ? 1 : 1"
               },
               "tooltip": {
-                "signal": "{'Country': datum.country, 'Pet type': datum.species, 'Households owning this pet': format(datum.value, ',') + '%', 'Survey data year': datum.data_year, 'Rank among selected countries': datum.rank}"
+                "signal": "\"In \" + (datum.country) + \", \" + (format(datum.value, ',')) + \"% of households owned \" + (lower(datum.species)) + \" in \" + (datum.data_year) + \". This placed the country at rank \" + (datum.rank) + \" among the 43 selected countries for this pet type.\""
               },
               "x": {
                 "field": "x"
@@ -635,7 +650,7 @@
                 "signal": "fontBody"
               },
               "fill": {
-                "signal": "activeCountry && activeCountry !== 'AUS' ? colorBorder : (datum.datum.species === 'Dogs' ? colorPetDogs : colorPetCats)"
+                "signal": "activeCountry && activeCountry !== 'AUS' ? colorMuted : (datum.datum.species === 'Dogs' ? colorPetDogs : colorPetCats)"
               }
             }
           }
@@ -764,7 +779,7 @@
     },
     {
       "type": "symbol",
-      "description": "Legend symbols show dog amber, cat plum and comparison grey.",
+      "description": "Legend symbols show dog amber, cat plum and comparison sandy.",
       "from": {
         "data": "legend"
       },
@@ -797,9 +812,6 @@
         "enter": {
           "baseline": {
             "value": "middle"
-          },
-          "fontSize": {
-            "value": 12
           }
         },
         "update": {
@@ -817,9 +829,16 @@
           },
           "fill": {
             "signal": "colorMuted"
+          },
+          "fontSize": {
+            "signal": "legendTextSize"
+          },
+          "fontWeight": {
+            "signal": "legendTextWeight"
           }
         }
-      }
+      },
+      "name": "legendText0"
     },
     {
       "type": "text",

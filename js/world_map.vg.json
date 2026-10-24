@@ -135,7 +135,7 @@
     {
       "name": "height",
       "description": "How tall the whole chart is: the map, then the key title, then the rows of key boxes.",
-      "update": "legendY + 22 + ceil(5 / legendColumns) * 20"
+      "update": "legendStart + ceil(5 / legendColumns) * legendRowHeight"
     },
     {
       "name": "hoverIso",
@@ -166,6 +166,25 @@
       "name": "pinnedKey",
       "value": null,
       "description": "Main-mark selection pinned by a click. Empty chart space clears it; the loader preserves it across responsive redraws."
+    },
+    {
+      "name": "legendTextSize",
+      "value": 13,
+      "description": "Shared legend text size from --legend-text-size in css/style.css."
+    },
+    {
+      "name": "legendTextWeight",
+      "value": 400,
+      "description": "Shared legend text weight from --legend-text-weight in css/style.css."
+    },
+    {
+      "name": "legendRowHeight",
+      "update": "max(24, ceil(legendTextSize * 1.5) + 6)",
+      "description": "Keep legend rows clear when text is enlarged to remain readable on small phones."
+    },
+    {
+      "name": "legendStart",
+      "update": "legendY + ceil(legendTextSize * 1.5) + 14"
     }
   ],
   "data": [
@@ -391,7 +410,7 @@
                 "signal": "focusIso === datum.iso ? 1 : 0"
               },
               "tooltip": {
-                "signal": "isValid(datum.value) ? {'Country': datum.country || ({'Hong Kong S.A.R.': 'Hong Kong Special Administrative Region', 'Macao S.A.R': 'Macao Special Administrative Region', 'Bajo Nuevo Bank (Petrel Is.)': 'Bajo Nuevo Bank (Petrel Island)'}[datum.properties.name] || datum.properties.name), 'Households owning a dog': format(datum.value, ',') + '%', 'Survey data year': datum.year, 'Rank among selected countries': datum.rank} : {'Country': datum.country || ({'Hong Kong S.A.R.': 'Hong Kong Special Administrative Region', 'Macao S.A.R': 'Macao Special Administrative Region', 'Bajo Nuevo Bank (Petrel Is.)': 'Bajo Nuevo Bank (Petrel Island)'}[datum.properties.name] || datum.properties.name), 'Data availability': 'No selected data'}"
+                "signal": "isValid(datum.value) ? (\"In \" + (datum.country || ({'Hong Kong S.A.R.':'Hong Kong Special Administrative Region','Macao S.A.R':'Macao Special Administrative Region','Bajo Nuevo Bank (Petrel Is.)':'Bajo Nuevo Bank (Petrel Island)'}[datum.properties.name] || datum.properties.name)) + \", \" + (format(datum.value, ',')) + \"% of households owned a dog in \" + (datum.year) + \". This placed the country at rank \" + (datum.rank) + \" among the 43 selected countries.\") : (\"No selected survey data are available here for \" + (datum.country || ({'Hong Kong S.A.R.':'Hong Kong Special Administrative Region','Macao S.A.R':'Macao Special Administrative Region','Bajo Nuevo Bank (Petrel Is.)':'Bajo Nuevo Bank (Petrel Island)'}[datum.properties.name] || datum.properties.name)) + \". Grey shading does not mean zero dog ownership.\")"
               }
             }
           },
@@ -489,12 +508,6 @@
       "description": "The title of the colour key.",
       "encode": {
         "enter": {
-          "fontSize": {
-            "value": 12
-          },
-          "fontWeight": {
-            "value": 600
-          },
           "baseline": {
             "value": "top"
           }
@@ -514,10 +527,17 @@
           },
           "fill": {
             "signal": "colorMuted"
+          },
+          "fontSize": {
+            "signal": "legendTextSize"
+          },
+          "fontWeight": {
+            "signal": "legendTextWeight"
           }
         }
       },
-      "interactive": false
+      "interactive": false,
+      "name": "legendText0"
     },
     {
       "type": "rect",
@@ -532,7 +552,7 @@
             "signal": "datum.i % legendColumns * (legendWidth / legendColumns)"
           },
           "y": {
-            "signal": "legendY + 22 + floor(datum.i / legendColumns) * 20"
+            "signal": "legendStart + floor(datum.i / legendColumns) * legendRowHeight"
           },
           "width": {
             "value": 14
@@ -564,9 +584,6 @@
       "interactive": false,
       "encode": {
         "enter": {
-          "fontSize": {
-            "value": 11
-          },
           "baseline": {
             "value": "middle"
           },
@@ -579,16 +596,23 @@
             "signal": "datum.i % legendColumns * (legendWidth / legendColumns) + 19"
           },
           "y": {
-            "signal": "legendY + 22 + floor(datum.i / legendColumns) * 20 + 7"
+            "signal": "legendStart + floor(datum.i / legendColumns) * legendRowHeight + 7"
           },
           "font": {
             "signal": "fontBody"
           },
           "fill": {
             "signal": "colorMuted"
+          },
+          "fontSize": {
+            "signal": "legendTextSize"
+          },
+          "fontWeight": {
+            "signal": "legendTextWeight"
           }
         }
-      }
+      },
+      "name": "legendText1"
     }
   ]
 }
