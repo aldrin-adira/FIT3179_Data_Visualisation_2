@@ -479,7 +479,7 @@ footer a {
 .closing-text {
     border-top: 1px solid var(--color-border);
     color: var(--color-heading);
-    font-family: var(--font-heading);
+    font-family: var(--font-body);
     font-size: 1.3rem;
     line-height: 1.45;
 }
