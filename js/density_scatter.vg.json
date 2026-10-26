@@ -44,7 +44,7 @@
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
-    "readingNote": "Crowded areas may have smaller homes and different lifestyles. How fully owners record pets also varies between councils.",
+    "readingNote": "Council averages do not describe each household. This pattern alone cannot show that crowding reduces pet ownership.",
     "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
@@ -165,8 +165,8 @@
     },
     {
       "name": "readingLines",
-      "update": "wrapChartText(['Crowded areas may have smaller homes', 'and different lifestyles. How fully owners', 'record pets also varies between councils.'], readingWidth, 12, fontBody)",
-      "description": "Original reading note wraps into short lines within the chart."
+      "update": "wrapChartText([\"Council averages do not describe each household.\",\"This pattern alone cannot show that crowding\",\"reduces pet ownership.\"], readingWidth, 12, fontBody)",
+      "description": "Explain why a council-level pattern cannot establish a cause for individual households."
     }
   ],
   "data": [
@@ -291,9 +291,9 @@
         },
         {
           "type": "formula",
-          "description": "Write the label text, for example \"Adelaide Plains: 493 dogs\".",
+          "description": "Write the label text, for example \"Adelaide Plains: 493 dogs per 1,000\". The rate is stated so it is not mistaken for a total.",
           "as": "text",
-          "expr": "datum.name === 'Adelaide' ? 'City of Adelaide: ' + format(datum.rate, '.0f') + ' dogs' : 'Adelaide Plains: ' + format(datum.rate, '.0f') + ' dogs'"
+          "expr": "datum.name === 'Adelaide' ? 'City of Adelaide: ' + format(datum.rate, '.0f') + ' dogs per 1,000' : 'Adelaide Plains: ' + format(datum.rate, '.0f') + ' dogs per 1,000'"
         }
       ]
     }

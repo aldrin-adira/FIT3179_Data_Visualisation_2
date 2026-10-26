@@ -37,24 +37,25 @@
        alike to colour-blind readers. */
     --color-pet-dogs: #9c6500; /* Amber */
     --color-pet-cats: #7a376b; /* Plum */
-    --color-pet-fish: #007f80; /* Teal */
+    --color-pet-fish: #007b7c; /* Teal */
     --color-pet-birds: #4b668b; /* Slate blue */
     --color-pet-small-mammals: #7759d1; /* Violet */
-    --color-pet-reptiles: #d6336c; /* Raspberry */
+    --color-pet-reptiles: #c72e63; /* Raspberry */
     --color-pet-other: #555555; /* Grey */
 
     /* Pale-to-dark shades of one pet's colour, for maps about one pet
        (for example dogs per council): pale = small number, dark = big number.
-       The middle of each ramp is that pet's normal colour from above. */
-    --color-pet-dogs-light: #fbe8d4;
-    --color-pet-dogs-mid-light: #e5c18b; /* Second class of the dog-rate map */
-    --color-pet-dogs-mid-dark: #9c6500; /* Fourth class of the dog-rate map */
-    --color-pet-dogs-dark: #4e3300;
-    --color-pet-cats-light: #f8e6f2;
-    /* Intermediate stops restored from the original cat-rate map. */
-    --color-pet-cats-mid-light: #b98eae;
-    --color-pet-cats-mid-dark: #642b57;
-    --color-pet-cats-dark: #4e1f43;
+       Each ramp passes through that pet's normal colour from above. The
+       in-between stops are mixed in CIELAB so the five rate classes step
+       evenly in lightness and stay distinct. */
+    --color-pet-dogs-light: #fbe8d4; /* Lightness 93 */
+    --color-pet-dogs-mid-light: #d0a46f; /* Second dog class, lightness 70 */
+    --color-pet-dogs-mid-dark: #744b02; /* Fourth dog class, lightness 36 */
+    --color-pet-dogs-dark: #4e3300; /* Lightness 24 */
+    --color-pet-cats-light: #f8e6f2; /* Lightness 93 */
+    --color-pet-cats-mid-light: #cca7c1; /* Second cat class, lightness 72 */
+    --color-pet-cats-mid-dark: #99618b; /* Third cat class, lightness 49 */
+    --color-pet-cats-dark: #4e1f43; /* Lightness 20 */
 }
 
 /* 2. TYPOGRAPHY SETTINGS: fonts and text sizes, all in one place.
@@ -202,7 +203,7 @@ a:hover {
     line-height: 1.65;
 }
 .section-callout {
-    border-top: 1px solid var(--color-border);
+    border-top: 0;
 }
 .section-callout strong {
     font-family: var(--font-heading);
@@ -215,15 +216,12 @@ a:hover {
     color: var(--color-heading);
     font-size: 0.94rem;
 }
-.section-transition {
+.section-transition,
+.section-conclusion {
     border-top: 1px solid var(--color-border);
     color: var(--color-muted);
     font-size: 0.94rem;
-}
-.section-conclusion {
-    border-top: 3px solid var(--color-aus-orange);
-    color: var(--color-heading);
-    font-weight: 500;
+    font-weight: 400;
 }
 /* Frames: each finding and its chart share one card, so the text and the
    chart it explains read as one unit. Charts have no frame of their own.
@@ -245,6 +243,32 @@ a:hover {
 .chart-status {
     color: var(--color-muted);
     padding: 20px;
+}
+/* Each chart keeps its sources tucked away until the reader opens them. */
+.chart-source-disclosure > summary {
+    width: fit-content;
+    padding: 6px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    color: var(--color-text);
+    cursor: pointer;
+}
+.chart-source-disclosure > summary:hover {
+    background: var(--color-chart-panel);
+}
+.chart-source-disclosure > summary:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+.chart-source-disclosure .source-hide,
+.chart-source-disclosure[open] .source-show {
+    display: none;
+}
+.chart-source-disclosure[open] .source-hide {
+    display: inline;
+}
+.chart-source-text {
+    margin-top: 8px;
 }
 
 /* Hover details use the same colours and type as the chart cards. */
@@ -309,17 +333,22 @@ a:hover {
     color: var(--color-heading);
     font-weight: 500;
 }
+/* The housing map's home-type control (a Vega binding) matches the page's
+   other control labels. */
+.housing-map-controls label {
+    color: var(--color-heading);
+    font-size: .8rem;
+    font-weight: 500;
+}
 .chart-toolbar span, .map-actions span {
     color: var(--color-muted);
     font-size: .82rem;
 }
 .map-explorer {
     border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
 }
 .shared-pet-toolbar {
     border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
 }
 .selection-readout {
     font-size: .84rem;
@@ -418,7 +447,39 @@ footer a {
     }
 }
 @media print {
+    .chart-source-disclosure > summary {
+        display: none;
+    }
+    /* Native disclosure contents remain visible even without JavaScript. */
+    .chart-source-disclosure::details-content {
+        content-visibility: visible;
+    }
     #footer-content[hidden] {
         display: block !important;
     }
+}
+/* Summary takeaways reuse the callout figure style: accent number in the
+   heading font, a short explanation, then a muted link back to the chapter. */
+.takeaways strong {
+    font-family: var(--font-heading);
+    color: var(--color-accent);
+    font-weight: 400;
+    font-size: 2.6rem;
+    line-height: 1;
+}
+.takeaways span {
+    color: var(--color-heading);
+    font-size: 0.94rem;
+    line-height: 1.5;
+}
+.takeaways a {
+    color: var(--color-muted);
+    font-size: 0.82rem;
+}
+.closing-text {
+    border-top: 1px solid var(--color-border);
+    color: var(--color-heading);
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    line-height: 1.45;
 }

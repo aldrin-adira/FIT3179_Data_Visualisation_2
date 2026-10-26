@@ -34,7 +34,8 @@
     },
     {
       "name": "height",
-      "value": 430
+      "update": "legendY + 26 + max(length(wrapChartText(data('keyItems')[0].label, width / 3 - 16, legendTextSize, fontBody)), length(wrapChartText(data('keyItems')[1].label, width / 3 - 16, legendTextSize, fontBody)), length(wrapChartText(data('keyItems')[2].label, width / 3 - 16, legendTextSize, fontBody))) * legendTextSize * 1.25 + 8",
+      "description": "Leave room for the longest legend label beneath three side-by-side keys."
     },
     {
       "name": "plotHeight",
@@ -546,7 +547,7 @@
       "encode": {
         "update": {
           "x": {
-            "value": 14
+            "signal": "width / 6 - 21"
           },
           "y": {
             "signal": "legendY - 8"
@@ -576,13 +577,13 @@
       "encode": {
         "update": {
           "x": {
-            "value": 35
+            "signal": "width / 2"
           },
           "y": {
-            "signal": "legendY + 48 - 10"
+            "signal": "legendY - 10"
           },
           "y2": {
-            "signal": "legendY + 48 + 10"
+            "signal": "legendY + 10"
           },
           "stroke": {
             "signal": "colorMuted"
@@ -600,13 +601,13 @@
       "encode": {
         "update": {
           "x": {
-            "value": 10
+            "signal": "width * 5 / 6 - 25"
           },
           "x2": {
-            "value": 60
+            "signal": "width * 5 / 6 + 25"
           },
           "y": {
-            "signal": "legendY + 96"
+            "signal": "legendY"
           },
           "stroke": {
             "signal": "colorMuted"
@@ -624,13 +625,13 @@
       "encode": {
         "update": {
           "x": {
-            "value": 10
+            "signal": "width * 5 / 6 + -25"
           },
           "y": {
-            "signal": "legendY + 88"
+            "signal": "legendY - 8"
           },
           "y2": {
-            "signal": "legendY + 104"
+            "signal": "legendY + 8"
           },
           "stroke": {
             "signal": "colorMuted"
@@ -648,13 +649,13 @@
       "encode": {
         "update": {
           "x": {
-            "value": 60
+            "signal": "width * 5 / 6 + 25"
           },
           "y": {
-            "signal": "legendY + 88"
+            "signal": "legendY - 8"
           },
           "y2": {
-            "signal": "legendY + 104"
+            "signal": "legendY + 8"
           },
           "stroke": {
             "signal": "colorMuted"
@@ -675,13 +676,13 @@
       "encode": {
         "update": {
           "x": {
-            "value": 80
+            "signal": "width * (datum.i + 0.5) / 3"
           },
           "y": {
-            "signal": "legendY + datum.i * 48 - 8"
+            "signal": "legendY + 18"
           },
           "text": {
-            "signal": "wrapChartText(datum.label, width - 88, legendTextSize, fontBody)"
+            "signal": "wrapChartText(datum.label, width / 3 - 16, legendTextSize, fontBody)"
           },
           "baseline": {
             "value": "top"
@@ -700,9 +701,13 @@
           },
           "fill": {
             "signal": "colorMuted"
+          },
+          "align": {
+            "value": "center"
           }
         }
-      }
+      },
+      "description": "Each key gets one third of the chart width, with its explanation wrapped below its symbol."
     }
   ],
   "usermeta": {

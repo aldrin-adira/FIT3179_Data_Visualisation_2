@@ -189,7 +189,6 @@
         '#chart11_chart': {marks: ['councilAreas'], key: datum => datum.code},
         '#chart12_chart': {marks: ['councilPoints', 'calloutText'], key: datum => datum.code},
         '#chart13_chart': {marks: ['distributionBoxes', 'distributionMedians', 'distributionWhiskers', 'distributionLowCaps', 'distributionHighCaps'], key: datum => datum.pet},
-        '#chart14_chart': {marks: ['squares', 'waffleLabels'], key: datum => datum.species + '|' + datum.reason}
     };
     const connectedClickViews = new WeakSet();
 
@@ -299,6 +298,24 @@
         }
         moveCamera(scope, regions[button.dataset.mapRegion], button.dataset.mapRegion);
     }));
+
+    // Printed charts include their sources. Restore each reader's choices
+    // after printing rather than leaving all the screen disclosures open.
+    let sourcePrintState = null;
+    function showPrintSources(printing) {
+        if (printing && sourcePrintState === null) {
+            sourcePrintState = Array.from(document.querySelectorAll('.chart-source-disclosure'))
+                .map(details => ({details, open: details.open}));
+            sourcePrintState.forEach(({details}) => { details.open = true; });
+        } else if (!printing && sourcePrintState !== null) {
+            sourcePrintState.forEach(({details, open}) => { details.open = open; });
+            sourcePrintState = null;
+        }
+    }
+    window.addEventListener('beforeprint', () => showPrintSources(true));
+    window.addEventListener('afterprint', () => showPrintSources(false));
+    const printMedia = window.matchMedia('print');
+    printMedia.addEventListener('change', event => showPrintSources(event.matches));
 
     // Footer is collapsed initially. Deep links reveal it before scrolling;
     // this also handles source anchors loaded directly from another page.

@@ -35,7 +35,7 @@
     {
       "name": "colorPetDogsDark",
       "description": "Colour: the darkest shade of the colour for dogs (amber). This is only a backup; the real colour comes from --color-pet-dogs-dark in css/style.css.",
-      "value": "#4b2800"
+      "value": "#4e3300"
     },
     {
       "name": "width",
@@ -79,12 +79,12 @@
     },
     {
       "name": "colorPetDogsMidLight",
-      "value": "#e5c18b",
+      "value": "#d0a46f",
       "description": "Second dog-rate class; the theme reads --color-pet-dogs-mid-light."
     },
     {
       "name": "colorPetDogsMidDark",
-      "value": "#764300",
+      "value": "#754c00",
       "description": "Fourth dog-rate class; the theme reads --color-pet-dogs-mid-dark."
     },
     {
@@ -120,11 +120,11 @@
             ],
             "consume": true
           },
-          "update": "clamp(zoom*pow(1.001,-event.deltaY),1,12)"
+          "update": "x() >= 0 && x() <= width && y() >= 0 && y() <= plotHeight ? clamp(zoom*pow(1.001,-event.deltaY),1,12) : zoom"
         },
         {
           "events": "dblclick",
-          "update": "1"
+          "update": "x() >= 0 && x() <= width && y() >= 0 && y() <= plotHeight ? 1 : zoom"
         }
       ]
     },
@@ -142,18 +142,18 @@
         },
         {
           "events": "dblclick",
-          "update": "[0,0]"
+          "update": "x() >= 0 && x() <= width && y() >= 0 && y() <= plotHeight ? [0,0] : pan"
         }
       ]
     },
     {
       "name": "dragStart",
       "value": null,
-      "description": "Record the initial pointer and pan positions to avoid cumulative drag error.",
+      "description": "Start a drag only inside the map viewport; the legend must not move the map.",
       "on": [
         {
           "events": "pointerdown",
-          "update": "[x(),y(),pan[0],pan[1]]"
+          "update": "x() >= 0 && x() <= width && y() >= 0 && y() <= plotHeight ? [x(),y(),pan[0],pan[1]] : null"
         },
         {
           "events": "window:pointerup",
@@ -203,13 +203,13 @@
     },
     {
       "name": "colorPetCatsMidLight",
-      "value": "#b98eae",
-      "description": "Theme colour supplied by css/style.css through the shared loader."
+      "value": "#cca7c1",
+      "description": "Second cat-rate class; the theme reads --color-pet-cats-mid-light."
     },
     {
       "name": "colorPetCatsMidDark",
-      "value": "#642b57",
-      "description": "Theme colour supplied by css/style.css through the shared loader."
+      "value": "#99618b",
+      "description": "Third cat-rate class; the theme reads --color-pet-cats-mid-dark."
     },
     {
       "name": "colorMapWater",
@@ -235,6 +235,11 @@
       "name": "legendTextWeight",
       "value": 400,
       "description": "Shared legend text weight from --legend-text-weight in css/style.css."
+    },
+    {
+      "name": "colorMuted",
+      "value": "#252725",
+      "description": "Shared text colour for both map legends."
     }
   ],
   "data": [
@@ -376,7 +381,7 @@
         "signal": "breaks"
       },
       "range": {
-        "signal": "species === 'Dog' ? [colorPetDogsLight, colorPetDogsMidLight, colorPetDogs, colorPetDogsMidDark, colorPetDogsDark] : [colorPetCatsLight, colorPetCatsMidLight, colorPetCats, colorPetCatsMidDark, colorPetCatsDark]"
+        "signal": "species === 'Dog' ? [colorPetDogsLight, colorPetDogsMidLight, colorPetDogs, colorPetDogsMidDark, colorPetDogsDark] : [colorPetCatsLight, colorPetCatsMidLight, colorPetCatsMidDark, colorPetCats, colorPetCatsDark]"
       }
     }
   ],
@@ -486,6 +491,12 @@
       },
       "titleFontWeight": {
         "signal": "legendTextWeight"
+      },
+      "labelColor": {
+        "signal": "colorMuted"
+      },
+      "titleColor": {
+        "signal": "colorMuted"
       }
     }
   ],

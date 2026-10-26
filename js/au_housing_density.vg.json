@@ -54,7 +54,7 @@
     },
     {
       "name": "housingType",
-      "value": "Detached houses",
+      "value": "Apartments or flats",
       "bind": {
         "input": "select",
         "options": [
@@ -62,7 +62,7 @@
           "Apartments or flats",
           "All occupied homes"
         ],
-        "name": "Home type: "
+        "name": "Choose a home type"
       },
       "description": "Choose one dwelling count; all options retain the same homes-per-dot scale."
     },

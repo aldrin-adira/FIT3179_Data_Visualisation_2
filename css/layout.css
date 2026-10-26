@@ -186,7 +186,7 @@ footer {
     .panels-featured .row-side .narrative .section-callout {
         margin-top: 20px;
         padding-top: 14px;
-        border-top: 1px solid var(--color-border);
+        border-top: 0;
     }
     /* Centre each callout in the space left below its narrative text. */
     .panels-featured .row-side .narrative:has(> .section-callout) {
@@ -271,7 +271,7 @@ footer {
     display: block;
     max-width: 28ch;
 }
-/* Paired callouts sit on the text row's bottom edge, so their rules align
+/* Paired callouts sit on the text row's bottom edge, so their text aligns
    even when the two paragraphs differ in length. */
 @media (min-width: 1101px) {
     .panels-even .narrative {
@@ -286,13 +286,11 @@ footer {
         margin-bottom: 14px;
     }
 }
-.section-transition {
+.section-transition,
+.section-conclusion {
     margin-top: 24px;
     padding-top: 12px;
     max-width: var(--measure);
-}
-.section-conclusion {
-    padding-top: 12px;
 }
 /* Frame padding: the frame (style.css) holds the text and chart, so the chart
    itself needs no padding. Captions follow their charts. */
@@ -576,5 +574,38 @@ footer h3 {
     .chart-toolbar,
     .map-explorer {
         display: none;
+    }
+}
+/* Summary: one takeaway per chapter, five across on wide screens, then a
+   two-column grid and a single column on phones. */
+.takeaways {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px var(--column-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.takeaways li {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.takeaways a {
+    margin-top: auto;
+}
+.closing-text {
+    max-width: var(--measure);
+    margin-top: 24px;
+    padding-top: 16px;
+}
+@media (max-width: 1100px) {
+    .takeaways {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 600px) {
+    .takeaways {
+        grid-template-columns: minmax(0, 1fr);
     }
 }

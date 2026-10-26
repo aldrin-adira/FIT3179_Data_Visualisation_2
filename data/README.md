@@ -13,7 +13,7 @@ Original downloads, supporting validation tables and development tools are kept 
 | `au_ownership_trend.csv` | Four national ownership surveys. |
 | `au_selected_demographics_2025.csv` | Household comparisons. |
 | `au_pet_types_trend.csv` | Pet-type ranks across four surveys. |
-| `au_motivations_top5_2025.csv` | Motivation heatmap and closing waffle charts. |
+| `au_motivations_top5_2025.csv` | Motivation heatmap. |
 | `au_household_spending_2025.csv` | Spending dendrogram. |
 | `au_housing_regions_2021.geojson` | National housing dot-density map: 337 statistical regions, simplified boundaries and three Census dwelling counts. |
 | `au_barriers_2025.csv` | Barrier comparisons. |

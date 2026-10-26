@@ -292,8 +292,6 @@ function drawCharts() {
     embedChart("#chart11_chart", "js/sa_councils_map.vg.json");
     embedChart("#chart12_chart", "js/density_scatter.vg.json");
     embedChart("#chart13_chart", "js/council_distribution.vg.json");
-    // Section 6: waffle charts compare three dog/cat motivations.
-    embedChart("#chart14_chart", "js/draws_and_limits.vg.json");
     window.chartsReady = Promise.all(chartJobs).then(function() {
         drawing = false;
         // Fill paired cards after the charts have finished drawing.

@@ -357,9 +357,9 @@
         },
         {
           "type": "formula",
-          "description": "Make a list of starting points, 8 pixels apart, for the diagonal lines.",
+          "description": "Space diagonal lines 12 pixels apart so unpublished cells stay distinct without dominating the published values.",
           "as": "offsets",
-          "expr": "sequence(4, 320, 8)"
+          "expr": "sequence(4, 320, 12)"
         },
         {
           "type": "flatten",
@@ -382,9 +382,9 @@
       "transform": [
         {
           "type": "formula",
-          "description": "Make a list of starting points, 8 pixels apart, for the key's diagonal lines.",
+          "description": "Space diagonal lines 12 pixels apart so unpublished cells stay distinct without dominating the published values.",
           "as": "offsets",
-          "expr": "sequence(4, 60, 8)"
+          "expr": "sequence(4, 60, 12)"
         },
         {
           "type": "flatten",
@@ -394,6 +394,28 @@
           ],
           "as": [
             "offset"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "publishedExtremes",
+      "source": "published",
+      "description": "Find the lowest and highest published percentages across all pet types; missing cells are excluded.",
+      "transform": [
+        {
+          "type": "aggregate",
+          "fields": [
+            "percent",
+            "percent"
+          ],
+          "ops": [
+            "min",
+            "max"
+          ],
+          "as": [
+            "minimum",
+            "maximum"
           ]
         }
       ]
@@ -616,7 +638,7 @@
       "from": {
         "data": "cells"
       },
-      "description": "Published percentages can be read without hovering. Unpublished cells stay blank and hatched.",
+      "description": "Default labels show global extremes; choosing a pet reveals all its published percentages, and pinning a cell reveals its value.",
       "encode": {
         "update": {
           "x": {
@@ -630,7 +652,7 @@
             "band": 0.5
           },
           "text": {
-            "signal": "datum.published_cell ? datum.percent + '%' : ''"
+            "signal": "datum.published_cell && (selectedPet === datum.species || pinnedKey === datum.species + '|' + datum.reason || datum.percent === data('publishedExtremes')[0].minimum || datum.percent === data('publishedExtremes')[0].maximum) ? datum.percent + '%' : ''"
           },
           "align": {
             "value": "center"
@@ -684,6 +706,9 @@
           },
           "y2": {
             "signal": "scale('y', datum.reason) + max(0, min(datum.offset, bandwidth('x') + bandwidth('y')) - bandwidth('x'))"
+          },
+          "strokeOpacity": {
+            "signal": "!selectedPet || selectedPet === datum.species ? 0.55 : 0.2"
           }
         }
       }
@@ -802,7 +827,7 @@
             "signal": "(stackedLegend ? legendY + 50 : legendY + 2) + max(0, datum.offset - 26)"
           },
           "strokeOpacity": {
-            "signal": "datum.offset < 52 ? 1 : 0"
+            "signal": "0.55"
           }
         }
       }

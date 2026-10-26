@@ -107,7 +107,7 @@
     },
     {
       "name": "plotTop",
-      "value": 34,
+      "value": 114,
       "description": "Room above the tree for the column headings."
     },
     {
@@ -197,6 +197,14 @@
     {
       "name": "focusGroup",
       "update": "length(data('focusedExpenses')) ? data('focusedExpenses')[0].group : focusKey"
+    },
+    {
+      "name": "comparisonKey",
+      "update": "!focusKey || focusKey === 'root' ? 'Food' : focusKey"
+    },
+    {
+      "name": "comparisonTitle",
+      "update": "comparisonKey === 'Dogs' || comparisonKey === 'Cats' ? 'All displayed spending' : length(data('focusedExpenses')) ? data('focusedExpenses')[0].label : comparisonKey"
     }
   ],
   "data": [
@@ -526,6 +534,59 @@
           "expr": "datum.category === focusKey"
         }
       ]
+    },
+    {
+      "name": "comparisonTotals",
+      "source": "spend",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "comparisonKey === 'Dogs' || comparisonKey === 'Cats' || datum.category === comparisonKey || datum.group === comparisonKey"
+        },
+        {
+          "type": "aggregate",
+          "groupby": [
+            "species"
+          ],
+          "fields": [
+            "annual_aud"
+          ],
+          "ops": [
+            "sum"
+          ],
+          "as": [
+            "amount"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "comparisonRows",
+      "values": [
+        {
+          "species": "Dogs"
+        },
+        {
+          "species": "Cats"
+        }
+      ],
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "comparisonTotals",
+          "key": "species",
+          "fields": [
+            "species"
+          ],
+          "values": [
+            "amount"
+          ],
+          "as": [
+            "amount"
+          ],
+          "default": null
+        }
+      ]
     }
   ],
   "scales": [
@@ -559,6 +620,109 @@
   ],
   "marks": [
     {
+      "name": "comparisonHeading",
+      "type": "text",
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "value": 8
+          },
+          "y": {
+            "value": 0
+          },
+          "text": {
+            "signal": "wrapChartText(comparisonTitle + ' (Australian dollars / year)', width - 16, 13, fontBody)"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 13
+          },
+          "fill": {
+            "signal": "colorMuted"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "lineHeight": {
+            "value": 16
+          }
+        }
+      }
+    },
+    {
+      "name": "comparisonAmounts",
+      "type": "text",
+      "interactive": false,
+      "from": {
+        "data": "comparisonRows"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "datum.species === 'Dogs' ? 8 : width / 2"
+          },
+          "y": {
+            "value": 38
+          },
+          "text": {
+            "signal": "datum.species + ': ' + (isValid(datum.amount) ? '$' + format(datum.amount, ',.0f') : 'Not published')"
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "signal": "narrow ? 13 : 16"
+          },
+          "fontWeight": {
+            "value": 600
+          },
+          "fill": {
+            "scale": "colour",
+            "field": "species"
+          },
+          "baseline": {
+            "value": "top"
+          }
+        }
+      }
+    },
+    {
+      "name": "comparisonInstruction",
+      "type": "text",
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "value": 8
+          },
+          "y": {
+            "value": 62
+          },
+          "text": {
+            "value": "Hover or click a cost to compare both pets."
+          },
+          "font": {
+            "signal": "fontBody"
+          },
+          "fontSize": {
+            "value": 12
+          },
+          "fill": {
+            "signal": "colorMuted"
+          },
+          "baseline": {
+            "value": "top"
+          }
+        }
+      }
+    },
+    {
       "type": "text",
       "description": "Column headings: Pet, Type of cost and Category. The amount column has its own heading below.",
       "interactive": false,
@@ -571,7 +735,7 @@
             "signal": "datum.depth === 3 ? leafX + 10 : rootX + (leafX - rootX) * datum.depth / 3"
           },
           "y": {
-            "value": 8
+            "value": 88
           },
           "align": {
             "signal": "datum.depth === 3 ? 'left' : 'center'"
@@ -604,7 +768,7 @@
             "signal": "width"
           },
           "y": {
-            "value": 8
+            "value": 88
           },
           "align": {
             "value": "right"

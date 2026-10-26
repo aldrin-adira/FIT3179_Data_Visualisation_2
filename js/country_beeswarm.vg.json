@@ -42,7 +42,7 @@
     },
     "codeGuide": "Signals set the responsive layout and theme. Data transforms derive values; scales map them to positions and colours; marks draw the chart.",
     "projections": {},
-    "readingNote": "Australia stands further above the typical country for dogs than cats. Different survey methods limit close country comparisons.",
+    "readingNote": "A single pet-ownership rate would hide Australia’s stronger tilt towards dogs. Survey differences limit precise country comparisons.",
     "clickSelection": "story-interactions.js pins a main-mark selection in pinnedKey and clears it on an empty-space click. Species hues, quantitative colours, symbol areas and plotted positions retain their meanings."
   },
   "signals": [
@@ -178,7 +178,7 @@
     },
     {
       "name": "readingLines",
-      "update": "wrapChartText(['Australia stands further above the typical country', 'for dogs than cats. Different survey methods limit', 'close country comparisons.'], min(300, width - 40), 12, fontBody)",
+      "update": "wrapChartText([\"A single pet-ownership rate would hide\",\"Australia’s stronger tilt towards dogs.\",\"Survey differences limit precise country comparisons.\"], min(300, width - 40), 12, fontBody)",
       "description": "Wrap a note capped at 300 pixels. Each source line has at most ten words and sixty characters; wrapping can only shorten it."
     },
     {
@@ -293,22 +293,25 @@
     },
     {
       "name": "legend",
-      "description": "Highlighted dog observations are amber and cat observations plum; other countries are grey.",
+      "description": "Sand dots are comparison countries. The amber dog dot and plum cat dot are the highlighted country, named beside them: Australia by default, or the hovered or clicked country.",
       "values": [
         {
           "i": 0,
-          "country": "Dogs",
-          "key": "dogs"
+          "country": "Other countries",
+          "key": "grey",
+          "dx": 0
         },
         {
           "i": 1,
-          "country": "Cats",
-          "key": "cats"
+          "country": "",
+          "key": "dogs",
+          "dx": 158
         },
         {
           "i": 2,
-          "country": "Other countries",
-          "key": "grey"
+          "country": "",
+          "key": "cats",
+          "dx": 172
         }
       ],
       "transform": [
@@ -317,6 +320,17 @@
           "description": "Use the CSS species colours for highlighted dots and sand for comparison countries.",
           "as": "colour",
           "expr": "datum.key === 'dogs' ? colorPetDogs : datum.key === 'cats' ? colorPetCats : colorBaseline"
+        }
+      ]
+    },
+    {
+      "name": "highlightCountry",
+      "source": "countries",
+      "description": "The country whose dots are coloured: the hovered or clicked country, otherwise Australia. Its name labels the coloured legend dots.",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.iso3 === (activeCountry || 'AUS') && datum.species === 'Dogs'"
         }
       ]
     },
@@ -741,7 +755,7 @@
     },
     {
       "type": "text",
-      "description": "The axis title under the percentages: \"Share of households owning at least one\".",
+      "description": "The axis title under the percentages; shorter on narrow screens, where the row names identify the pet.",
       "interactive": false,
       "encode": {
         "enter": {
@@ -756,9 +770,6 @@
           },
           "fontWeight": {
             "value": 500
-          },
-          "text": {
-            "value": "Share of households owning at least one"
           }
         },
         "update": {
@@ -773,13 +784,16 @@
           },
           "fill": {
             "signal": "colorMuted"
+          },
+          "text": {
+            "signal": "narrow ? 'Share of households owning that pet' : 'Share of households owning the pet in each row'"
           }
         }
       }
     },
     {
       "type": "symbol",
-      "description": "Legend symbols show dog amber, cat plum and comparison sandy.",
+      "description": "Legend symbols: sand for comparison countries, then the amber dog and plum cat colours of the highlighted country.",
       "from": {
         "data": "legend"
       },
@@ -787,7 +801,7 @@
       "encode": {
         "update": {
           "x": {
-            "signal": "legendX + 7 + datum.i * (narrow ? 90 : 120)"
+            "signal": "legendX + 7 + datum.dx"
           },
           "y": {
             "signal": "legendY + 8"
@@ -803,7 +817,7 @@
     },
     {
       "type": "text",
-      "description": "Direct legend labels identify dog, cat and comparison symbols.",
+      "description": "Direct legend labels: \"Other countries\", then the highlighted country's name after its dog and cat dots.",
       "from": {
         "data": "legend"
       },
@@ -816,13 +830,13 @@
         },
         "update": {
           "x": {
-            "signal": "legendX + 18 + datum.i * (narrow ? 90 : 120)"
+            "signal": "legendX + 18 + datum.dx"
           },
           "y": {
             "signal": "legendY + 8"
           },
           "text": {
-            "field": "country"
+            "signal": "datum.key === 'cats' ? (length(data('highlightCountry')) ? data('highlightCountry')[0].country : 'Australia') : datum.country"
           },
           "font": {
             "signal": "fontBody"
